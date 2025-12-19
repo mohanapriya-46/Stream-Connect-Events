@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizer Dashboard - Event Platform</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- AOS for Animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .sidebar { 
+            min-height: 100vh; 
+            background: rgba(33, 37, 41, 0.95);
+            position: fixed; 
+            width: 260px; 
+            backdrop-filter: blur(10px);
+            box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+        }
+        .sidebar .nav-link { 
+            color: #ced4da; 
+            padding: 12px 20px; 
+            transition: all 0.3s ease;
+            border-radius: 0 20px 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .sidebar .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .sidebar .nav-link:hover::before { left: 100%; }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover { 
+            background: linear-gradient(135deg, #0d6efd, #6610f2); 
+            color: #fff; 
+            border-left: 4px solid #fff;
+            transform: translateX(5px);
+        }
+        .content { 
+            margin-left: 260px; 
+            padding: 30px; 
+            background: url('https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') fixed;
+            background-size: cover;
+            background-attachment: fixed;
+            position: relative;
+        }
+        .content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(5px);
+            z-index: -1;
+        }
+        .card { 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+            border: none; 
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: rgba(255,255,255,0.95);
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        .section { display: none; }
+        .section.active { display: block; }
+        .nav-tabs .nav-link { 
+            font-weight: 500; 
+            border: none;
+            border-radius: 15px 15px 0 0;
+            margin-right: 5px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            transition: all 0.3s ease;
+        }
+        .nav-tabs .nav-link.active {
+            background: linear-gradient(135deg, #0d6efd, #6610f2);
+            color: white;
+        }
+        .nav-tabs .nav-link:hover { transform: scale(1.05); }
+        .btn {
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        .btn:hover::before { left: 100%; }
+        .btn:hover { transform: scale(1.05); }
+        .tab-content {
+            animation: fadeInUp 0.6s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-body { animation: slideInLeft 0.5s ease; }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .list-group-item {
+            transition: background-color 0.3s ease;
+            border-radius: 10px;
+            margin-bottom: 5px;
+        }
+        .list-group-item:hover { background-color: #f8f9fa; transform: scale(1.02); }
+        h2 { 
+            background: linear-gradient(135deg, #0d6efd, #6610f2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+        canvas { border-radius: 15px; }
+    </style>
+</head>
+<body data-aos-easing="ease" data-aos-duration="800">
+
+    <!-- Sidebar -->
+    <div class="sidebar d-flex flex-column p-4 text-white" data-aos="fade-right">
+        <h4 class="text-center mb-5">Organizer Dashboard</h4>
+        <nav class="nav flex-column">
+            <a class="nav-link active" href="#" data-section="dashboard"><i class="fas fa-tachometer-alt me-3"></i>Dashboard</a>
+            <a class="nav-link" href="#" data-section="create-event"><i class="fas fa-plus-circle me-3"></i>Create Event</a>
+            <a class="nav-link" href="#" data-section="manage-events"><i class="fas fa-edit me-3"></i>Manage Events</a>
+            <a class="nav-link" href="#" data-section="attendees"><i class="fas fa-users me-3"></i>Attendee Management</a>
+            <a class="nav-link" href="#" data-section="live-control"><i class="fas fa-broadcast-tower me-3"></i>Live Event Control</a>
+            <a class="nav-link" href="#" data-section="recorded"><i class="fas fa-video me-3"></i>Upload Recorded Video</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section active">
+            <h2 data-aos="fade-down">My Dashboard</h2>
+            <ul class="nav nav-tabs mb-4" id="dashboardTabs" data-aos="zoom-in">
+                <li class="nav-item"><a class="nav-link active" data-tab="events-overview">Events Overview</a></li>
+                <li class="nav-item"><a class="nav-link" data-tab="attendee-count">Attendee Count</a></li>
+                <li class="nav-item"><a class="nav-link" data-tab="earnings">Earnings Summary</a></li>
+            </ul>
+
+            <div id="events-overview" class="tab-content active" data-aos="fade-up">
+                <div class="row">
+                    <div class="col-md-4" data-aos="flip-left" data-aos-delay="100">
+                        <div class="card text-white bg-primary">
+                            <div class="card-body"><h5>Total Events</h5><h3>18</h3></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4" data-aos="flip-left" data-aos-delay="200">
+                        <div class="card text-white bg-success"><div class="card-body"><h5>Upcoming</h5><h3>6</h3></div></div>
+                    </div>
+                    <div class="col-md-4" data-aos="flip-left" data-aos-delay="300">
+                        <div class="card text-white bg-info"><div class="card-body"><h5>Completed</h5><h3>12</h3></div></div>
+                    </div>
+                </div>
+                <div class="card mt-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="card-header">Recent Events</div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead><tr><th>Event</th><th>Date</th><th>Status</th><th>Attendees</th></tr></thead>
+                            <tbody>
+                                <tr><td>Tech Conference 2025</td><td>Jan 15, 2026</td><td>Upcoming</td><td>342/500</td></tr>
+                                <tr><td>Music Festival</td><td>Dec 10, 2025</td><td>Live</td><td>890/1000</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="attendee-count" class="tab-content" data-aos="fade-up">
+                <div class="card">
+                    <div class="card-body">
+                        <canvas id="attendeeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="earnings" class="tab-content" data-aos="fade-up">
+                <div class="row">
+                    <div class="col-md-6" data-aos="slide-up">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>Total Earnings</h5><h3>$45,780</h3>
+                                <p>Platform fee deducted: $4,578</p>
+                                <p><strong>Net Earnings: $41,202</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" data-aos="slide-up" data-aos-delay="200">
+                        <canvas id="earningsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Event Section -->
+        <div id="create-event" class="section">
+            <h2 data-aos="fade-down">Create New Event</h2>
+            <div class="card" data-aos="zoom-in">
+                <div class="card-body">
+                    <ul class="nav nav-pills mb-4" id="createTabs">
+                        <li class="nav-item"><a class="nav-link active" data-tab="event-details">Event Details</a></li>
+                        <li class="nav-item"><a class="nav-link" data-tab="location">Location</a></li>
+                        <li class="nav-item"><a class="nav-link" data-tab="pricing">Free / Paid</a></li>
+                        <li class="nav-item"><a class="nav-link" data-tab="preview">Preview & Confirm</a></li>
+                    </ul>
+
+                    <div id="event-details" class="tab-content active" data-aos="fade-up">
+                        <form>
+                            <div class="mb-3"><label>Event Title</label><input type="text" class="form-control" placeholder="e.g. Annual Tech Summit"></div>
+                            <div class="mb-3"><label>Description</label><textarea class="form-control" rows="5"></textarea></div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3"><label>Start Date & Time</label><input type="datetime-local" class="form-control"></div>
+                                <div class="col-md-6 mb-3"><label>End Date & Time</label><input type="datetime-local" class="form-control"></div>
+                            </div>
+                            <div class="mb-3"><label>Event Banner</label><input type="file" class="form-control"></div>
+                            <button type="button" class="btn btn-primary next-tab">Next →</button>
+                        </form>
+                    </div>
+
+                    <div id="location" class="tab-content" data-aos="fade-up">
+                        <form>
+                            <div class="mb-3">
+                                <label>Event Type</label>
+                                <select class="form-select">
+                                    <option>Online (Virtual)</option>
+                                    <option>Offline (Physical)</option>
+                                    <option>Hybrid</option>
+                                </select>
+                            </div>
+                            <div class="mb-3"><label>Venue / Meeting Link</label><input type="text" class="form-control" placeholder="e.g. Zoom link or Address"></div>
+                            <button type="button" class="btn btn-secondary prev-tab">← Previous</button>
+                            <button type="button" class="btn btn-primary next-tab">Next →</button>
+                        </form>
+                    </div>
+
+                    <div id="pricing" class="tab-content" data-aos="fade-up">
+                        <form>
+                            <div class="mb-3">
+                                <label>Ticket Type</label>
+                                <select class="form-select" id="ticketType">
+                                    <option value="free">Free Event</option>
+                                    <option value="paid">Paid Event</option>
+                                </select>
+                            </div>
+                            <div id="paidOptions" style="display:none;">
+                                <div class="mb-3"><label>Ticket Price ($)</label><input type="number" class="form-control" placeholder="50"></div>
+                                <div class="mb-3"><label>Max Attendees</label><input type="number" class="form-control" placeholder="500"></div>
+                            </div>
+                            <button type="button" class="btn btn-secondary prev-tab">← Previous</button>
+                            <button type="button" class="btn btn-success">Create Event</button>
+                        </form>
+                    </div>
+
+                    <div id="preview" class="tab-content" data-aos="fade-up">
+                        <h4>Event Preview</h4>
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <h5>[Event Title Placeholder]</h5>
+                                <p>[Description Placeholder]</p>
+                                <p><strong>Date:</strong> [Date Placeholder]</p>
+                                <p><strong>Location:</strong> [Location Placeholder]</p>
+                                <p><strong>Type:</strong> Free / Paid</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary prev-tab">← Edit</button>
+                        <button type="button" class="btn btn-success mt-3">Confirm & Publish Event</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Events -->
+        <div id="manage-events" class="section">
+            <h2 data-aos="fade-down">Manage Events</h2>
+            <div class="card" data-aos="zoom-in">
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr><th>Event</th><th>Date</th><th>Status</th><th>Attendees</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr data-aos="fade-up" data-aos-delay="100">
+                                <td>Tech Conference 2025</td><td>Jan 15, 2026</td><td>Upcoming</td><td>342/500</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">Edit</button>
+                                    <button class="btn btn-sm btn-warning">Upload Materials</button>
+                                    <button class="btn btn-sm btn-danger">Cancel</button>
+                                    <button class="btn btn-sm btn-info">View Active Users</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendee Management -->
+        <div id="attendees" class="section">
+            <h2 data-aos="fade-down">Attendee Management</h2>
+            <div class="row mb-4" data-aos="fade-up">
+                <div class="col-md-4" data-aos-delay="100">
+                    <div class="card bg-info text-white"><div class="card-body"><h5>Total Registered</h5><h3>342</h3></div></div>
+                </div>
+                <div class="col-md-4" data-aos-delay="200">
+                    <div class="card bg-success text-white"><div class="card-body"><h5>Paid</h5><h3>320</h3></div></div>
+                </div>
+                <div class="col-md-4" data-aos-delay="300">
+                    <div class="card bg-danger text-white"><div class="card-body"><h5>Failed/Unpaid</h5><h3>22</h3></div></div>
+                </div>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="400">
+                <div class="card-body">
+                    <table class="table">
+                        <thead><tr><th>Name</th><th>Email</th><th>Ticket ID</th><th>Payment Status</th><th>Checked In</th></tr></thead>
+                        <tbody>
+                            <tr><td>Alice Johnson</td><td>alice@example.com</td><td>TKT001</td><td>Success</td><td>Yes</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Event Control -->
+        <div id="live-control" class="section">
+            <h2 data-aos="fade-down">Live Event Control</h2>
+            <div class="alert alert-info" data-aos="pulse">Current Event: Tech Conference 2025 - <strong>LIVE</strong></div>
+            <div class="card mb-4" data-aos="fade-up">
+                <div class="card-body">
+                    <h5>Comments & Q&A Management</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between" data-aos="fade-right">Great session! <button class="btn btn-sm btn-danger">Hide</button></li>
+                        <li class="list-group-item d-flex justify-content-between" data-aos="fade-right" data-aos-delay="100">When is the next break? <button class="btn btn-sm btn-success">Pin</button></li>
+                    </ul>
+                </div>
+            </div>
+            <button class="btn btn-danger btn-lg" data-aos="zoom-in">End Live Event</button>
+        </div>
+
+        <!-- Upload Recorded Video -->
+        <div id="recorded" class="section">
+            <h2 data-aos="fade-down">Upload Recorded Video / Materials</h2>
+            <div class="card" data-aos="zoom-in">
+                <div class="card-body">
+                    <form data-aos="fade-up">
+                        <div class="mb-3"><label>Select Event</label>
+                            <select class="form-select"><option>Tech Conference 2025</option></select>
+                        </div>
+                        <div class="mb-3"><label>Upload Video (MP4)</label><input type="file" class="form-control" accept="video/*"></div>
+                        <div class="mb-3"><label>Or Add External Link (YouTube/Vimeo)</label><input type="url" class="form-control" placeholder="https://"></div>
+                        <div class="mb-3"><label>Additional Materials (PDF, Slides)</label><input type="file" class="form-control" multiple></div>
+                        <button type="button" class="btn btn-success">Upload & Notify Attendees</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        AOS.init({ once: true, offset: 100 });
+
+        // Sidebar Navigation
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById(this.dataset.section).classList.add('active');
+            });
+        });
+
+        // Tab Navigation (Dashboard & Create Event)
+        function setupTabs(container, tabSelector, contentSelector) {
+            container.querySelectorAll(tabSelector).forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    container.querySelectorAll(tabSelector).forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    container.querySelectorAll(contentSelector).forEach(c => c.classList.remove('active'));
+                    container.querySelector('#' + this.dataset.tab).classList.add('active');
+                });
+            });
+        }
+
+        setupTabs(document.getElementById('dashboard'), '#dashboardTabs .nav-link', '.tab-content');
+        setupTabs(document.querySelector('#create-event .card-body'), '#createTabs .nav-link', '.tab-content');
+
+        // Next/Previous in Create Event
+        document.querySelectorAll('.next-tab').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabs = document.querySelectorAll('#createTabs .nav-link');
+                const current = document.querySelector('#createTabs .nav-link.active');
+                const index = Array.from(tabs).indexOf(current);
+                if (index < tabs.length - 1) tabs[index + 1].click();
+            });
+        });
+
+        document.querySelectorAll('.prev-tab').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabs = document.querySelectorAll('#createTabs .nav-link');
+                const current = document.querySelector('#createTabs .nav-link.active');
+                const index = Array.from(tabs).indexOf(current);
+                if (index > 0) tabs[index - 1].click();
+            });
+        });
+
+        // Show paid options
+        document.getElementById('ticketType').addEventListener('change', function() {
+            document.getElementById('paidOptions').style.display = this.value === 'paid' ? 'block' : 'none';
+        });
+
+        // Charts
+        new Chart(document.getElementById('attendeeChart'), {
+            type: 'bar',
+            data: { labels: ['Event 1', 'Event 2', 'Event 3', 'Event 4'], datasets: [{ label: 'Attendees', data: [320, 450, 280, 600], backgroundColor: '#0d6efd' }] },
+            options: { responsive: true, animation: { duration: 2000, easing: 'easeInOutQuart' } }
+        });
+
+        new Chart(document.getElementById('earningsChart'), {
+            type: 'doughnut',
+            data: { labels: ['Ticket Sales', 'Sponsorship', 'Merch'], datasets: [{ data: [35000, 7000, 3780], backgroundColor: ['#198754', '#0d6efd', '#ffc107'] }] },
+            options: { responsive: true, animation: { animateRotate: true, duration: 2000 } }
+        });
+
+        // Demo alerts for actions
+        document.querySelectorAll('button').forEach(btn => {
+            if (btn.textContent.includes('Edit') || btn.textContent.includes('Cancel') || btn.textContent.includes('Upload') || btn.textContent.includes('Create') || btn.textContent.includes('Publish')) {
+                btn.addEventListener('click', () => alert('Action: ' + btn.textContent + ' (Connect to backend API for real functionality)'));
+            }
+        });
+    </script>
+</body>
+</html>

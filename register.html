@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration | Stream Connect Events</title>
+    <link rel="icon" href="project logo" type="image/icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'deep-blue': '#0A0A2A',
+                        'purple-gradient': '#1A1A50',
+                        'cyan-accent': '#00FFFF',
+                        'purple-accent': '#8B5CF6'
+                    },
+                    keyframes: {
+                        'float': { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-20px)' } },
+                        'pulse-glow': { '0%, 100%': { boxShadow: '0 0 20px #00FFFF' }, '50%': { boxShadow: '0 0 50px #00FFFF' } },
+                        'morph': { '0%': { borderRadius: '30%' }, '50%': { borderRadius: '60%' }, '100%': { borderRadius: '30%' } },
+                        'wave': { '0%, 100%': { transform: 'rotate(-3deg)' }, '50%': { transform: 'rotate(3deg)' } },
+                        'bounce-slow': { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-15px)' } }
+                    },
+                    animation: {
+                        'float-slow': 'float 8s ease-in-out infinite',
+                        'pulse-glow': 'pulse-glow 3s infinite',
+                        'morph': 'morph 5s ease-in-out infinite',
+                        'wave': 'wave 3s ease-in-out infinite',
+                        'bounce-slow': 'bounce-slow 4s ease-in-out infinite'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background: linear-gradient(to bottom, #0A0A2A, #1A1A50); color: #FFFFFF; }
+        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(0, 255, 255, 0.4); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6); }
+        .glow-btn { background: linear-gradient(45deg, #00FFFF, #8B5CF6); box-shadow: 0 0 25px rgba(0, 255, 255, 0.7); transition: all 0.4s ease; position: relative; overflow: hidden; z-index: 10; }
+        .glow-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent); transition: left 0.6s; }
+        .glow-btn:hover::before { left: 100%; }
+        .glow-btn:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 0 50px rgba(0, 255, 255, 0.9); }
+        .input-field { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(0, 255, 255, 0.3); transition: all 0.4s; }
+        .input-field:focus { border-color: #00FFFF; box-shadow: 0 0 20px rgba(0, 255, 255, 0.4); background: rgba(255, 255, 255, 0.12); transform: scale(1.02); }
+        .floating-particle { position: absolute; background: rgba(0, 255, 255, 0.6); border-radius: 50%; animation: float-slow 10s ease-in-out infinite; pointer-events: none; }
+        .navbar-glass { background: rgba(10, 10, 42, 0.7); backdrop-filter: blur(12px); }
+        .tab-active { border-bottom: 4px solid; animation: pulse-glow 2s infinite; }
+    </style>
+</head>
+<body class="antialiased text-white min-h-screen">
+
+    <!-- Preloader -->
+    <div id="preloader" class="fixed inset-0 bg-deep-blue z-50 flex items-center justify-center">
+        <div class="relative">
+            <h1 class="text-5xl font-bold text-cyan-accent animate-pulse">Stream Connect</h1>
+            <div class="absolute -inset-6 bg-gradient-to-r from-cyan-accent/30 to-purple-accent/30 rounded-full blur-2xl animate-pulse"></div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 w-full z-40 navbar-glass border-b border-cyan-accent/30">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-bold text-cyan-accent">Stream<span class="text-purple-accent">Connect</span></a>
+            <a href="index.html" class="glow-btn px-8 py-3 rounded-full text-deep-blue font-bold">← Back to Home</a>
+        </div>
+    </nav>
+
+    <!-- Main Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden px-6 pt-20">
+        <!-- Background -->
+        <img src="https://thumbs.dreamstime.com/b/glowing-futuristic-neon-grid-perspective-abstract-background-view-purple-cyan-tones-cinematic-cyberpunk-wallpaper-401725041.jpg" 
+             alt="Futuristic neon grid" class="absolute inset-0 w-full h-full object-cover opacity-40 -z-10">
+
+        <!-- Floating Particles -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="floating-particle w-3 h-3 top-10 left-20" style="animation-delay: 0s;"></div>
+            <div class="floating-particle w-4 h-4 top-1/4 right-10" style="animation-delay: 2s;"></div>
+            <div class="floating-particle w-2 h-2 bottom-20 left-1/3" style="animation-delay: 4s;"></div>
+            <div class="floating-particle w-5 h-5 top-1/2 right-1/4" style="animation-delay: 1s;"></div>
+            <div class="floating-particle w-3 h-3 bottom-40 right-20" style="animation-delay: 3s;"></div>
+            <div class="floating-particle w-4 h-4 top-40 left-40" style="animation-delay: 5s;"></div>
+        </div>
+
+        <div class="container mx-auto max-w-5xl z-10">
+            <!-- Tabs -->
+            <div class="flex justify-center mb-12 gap-8 text-2xl font-bold">
+                <button onclick="showTab('admin')" class="tab-btn tab-active border-cyan-accent text-cyan-accent" id="tab-admin">Admin</button>
+                <button onclick="showTab('organizer')" class="tab-btn border-purple-accent text-purple-accent" id="tab-organizer">Event Organizer</button>
+                <button onclick="showTab('user')" class="tab-btn border-cyan-accent text-cyan-accent" id="tab-user">Attendee</button>
+            </div>
+
+            <!-- Admin Tab -->
+            <div id="admin-tab" class="glass-card p-10 lg:p-16 rounded-3xl">
+                <div class="text-center mb-10">
+                    <div class="inline-block relative">
+                        <img src="https://thumbs.dreamstime.com/b/glowing-neon-key-lock-symbolizing-cyber-security-encryption-technology-concept-hacker-protection-digital-futuristic-331609704.jpg" alt="Neon Admin Key" class="w-40 h-40 lg:w-48 lg:h-48 rounded-full object-cover animate-morph">
+                        <div class="absolute inset-0 blur-3xl bg-gradient-to-r from-cyan-accent to-purple-accent opacity-40 animate-pulse-glow"></div>
+                    </div>
+                    <h1 class="text-5xl lg:text-6xl font-extrabold mt-8 text-cyan-accent">Admin Registration</h1>
+                    <p class="text-xl text-gray-300 mt-4">Full platform control & management</p>
+                </div>
+                <form id="adminForm" class="space-y-8">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <input type="text" placeholder="First Name" required class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                        <input type="text" placeholder="Last Name" required class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                    </div>
+                    <input type="email" placeholder="Official Email Address" required class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <input type="password" id="admin-pass" placeholder="Create Password" required minlength="8" class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                        <input type="password" placeholder="Confirm Password" required class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <input type="checkbox" id="admin-terms" required class="w-6 h-6 text-cyan-accent rounded">
+                        <label for="admin-terms" class="text-gray-300">I agree to the Terms & Privacy Policy</label>
+                    </div>
+                    <button type="button" class="glow-btn w-full py-6 rounded-2xl text-2xl font-bold text-deep-blue" onclick="handleRegister('admin')">
+                        Create Admin Account
+                    </button>
+                </form>
+            </div>
+
+            <!-- Organizer Tab -->
+            <div id="organizer-tab" class="glass-card p-10 lg:p-16 rounded-3xl hidden">
+                <div class="text-center mb-10">
+                    <div class="inline-block relative">
+                        <img src="https://images.pond5.com/neon-mic-error-icon-cyan-footage-270097902_iconl.jpeg" alt="Neon Microphone" class="w-40 h-40 lg:w-48 lg:h-48 rounded-full object-cover animate-wave">
+                        <div class="absolute inset-0 blur-3xl bg-gradient-to-r from-purple-accent to-cyan-accent opacity-40 animate-pulse-glow"></div>
+                    </div>
+                    <h1 class="text-5xl lg:text-6xl font-extrabold mt-8 text-purple-accent">Event Organizer Registration</h1>
+                    <p class="text-xl text-gray-300 mt-4">Host and stream professional live events</p>
+                </div>
+                <form id="organizerForm" class="space-y-8">
+                    <input type="text" placeholder="Full Name" required class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                    <input type="email" placeholder="Email Address" required class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                    <input type="tel" placeholder="Phone Number" required class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <input type="password" id="organizer-pass" placeholder="Create Password" required minlength="8" class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                        <input type="password" placeholder="Confirm Password" required class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <input type="checkbox" id="organizer-terms" required class="w-6 h-6 text-purple-accent rounded">
+                        <label for="organizer-terms" class="text-gray-300">I agree to the Terms & Privacy Policy</label>
+                    </div>
+                    <button type="button" class="glow-btn w-full py-6 rounded-2xl text-2xl font-bold text-deep-blue" style="background: linear-gradient(45deg, #8B5CF6, #00FFFF);" onclick="handleRegister('organizer')">
+                        Become an Organizer
+                    </button>
+                </form>
+            </div>
+
+            <!-- Attendee Tab -->
+            <div id="user-tab" class="glass-card p-10 lg:p-16 rounded-3xl hidden">
+                <div class="text-center mb-10">
+                    <div class="inline-block relative">
+                        <img src="https://thumbs.dreamstime.com/b/neon-sign-showing-user-icon-illuminated-beneath-shrouded-air-mystery-intrigue-darkness-neon-sign-416498898.jpg" alt="Neon User Profile" class="w-40 h-40 lg:w-48 lg:h-48 rounded-full object-cover animate-bounce-slow">
+                        <div class="absolute inset-0 blur-3xl bg-gradient-to-r from-cyan-accent to-purple-accent opacity-40 animate-pulse-glow"></div>
+                    </div>
+                    <h1 class="text-5xl lg:text-6xl font-extrabold mt-8 text-cyan-accent">Attendee Registration</h1>
+                    <p class="text-xl text-gray-300 mt-4">Discover and join amazing events worldwide</p>
+                </div>
+                <form id="userForm" class="space-y-8">
+                    <input type="text" placeholder="Full Name" required class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                    <input type="email" placeholder="Email Address" required class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                    <input type="tel" placeholder="Phone Number" class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                    <input type="date" placeholder="Date of Birth" required class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                    <select required class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                        <option value="" disabled selected>Country</option>
+                        <option>United States</option>
+                        <option>India</option>
+                        <option>United Kingdom</option>
+                        <!-- Add more as needed -->
+                    </select>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <input type="password" id="user-pass" placeholder="Create Password" required minlength="8" class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                        <input type="password" placeholder="Confirm Password" required class="input-field w-full p-5 rounded-2xl text-lg focus:outline-none">
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <input type="checkbox" id="user-terms" required class="w-6 h-6 text-cyan-accent rounded">
+                        <label for="user-terms" class="text-gray-300">I agree to the Terms & Privacy Policy</label>
+                    </div>
+                    <button type="button" class="glow-btn w-full py-6 rounded-2xl text-2xl font-bold text-deep-blue" onclick="handleRegister('user')">
+                        Join as Attendee
+                    </button>
+                   <a href="login.html" target="_blank">login</a>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center z-50">
+        <div class="glass-card p-12 rounded-3xl text-center max-w-md animate-bounce">
+            <div class="w-24 h-24 bg-cyan-accent/20 rounded-full mx-auto mb-6 flex items-center justify-center animate-pulse-glow">
+                <span class="text-6xl">✓</span>
+            </div>
+            <h3 id="modalTitle" class="text-4xl font-bold text-cyan-accent mb-4">Registration Successful!</h3>
+            <p id="modalMsg" class="text-xl text-gray-300 mb-10">Your account has been created.</p>
+            <button id="loginBtn" class="glow-btn px-12 py-4 rounded-full text-xl font-bold">Proceed to Login</button>
+        </div>
+    </div>
+
+    <script>
+        let currentRole = 'admin';
+
+        // Preloader & Animations
+        window.addEventListener('load', () => {
+            gsap.to("#preloader", { opacity: 0, duration: 1, ease: "power3.out", onComplete: () => document.getElementById("preloader").style.display = "none" });
+        });
+
+        // Tab Switching
+        function showTab(role) {
+            currentRole = role;
+            document.querySelectorAll('#admin-tab, #organizer-tab, #user-tab').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(role + '-tab').classList.remove('hidden');
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('tab-active'));
+            document.getElementById('tab-' + role).classList.add('tab-active');
+        }
+
+        // Registration Handler
+        function handleRegister(role) {
+            const form = document.getElementById(role + 'Form');
+            const passwordField = document.getElementById(role + '-pass');
+            const password = passwordField ? passwordField.value : form.querySelector('input[type="password"]').value;
+            const confirmPassword = form.querySelectorAll('input[type="password"]')[1]?.value || form.querySelector('input[type="password"]:last-of-type').value;
+
+            if (form.checkValidity() && password === confirmPassword) {
+                document.getElementById('modalTitle').textContent = 'Welcome!';
+                document.getElementById('modalMsg').textContent = `Your ${role === 'admin' ? 'admin' : role} account is ready!`;
+                document.getElementById('successModal').classList.remove('hidden');
+
+                // Set redirect for login button
+                const loginBtn = document.getElementById('loginBtn');
+                loginBtn.onclick = () => {
+                    window.location.href = `login-${role}.html`;
+                };
+
+                gsap.from("#successModal > div", { scale: 0.8, opacity: 0, duration: 0.6, ease: "back.out(1.7)" });
+            } else {
+                alert("Please fill all fields correctly and ensure passwords match.");
+            }
+        }
+
+        // Entrance Animations
+        gsap.from(".glass-card", { y: 100, opacity: 0, duration: 1.2, ease: "back.out(1.7)" });
+        gsap.from(".tab-btn", { y: 50, opacity: 0, stagger: 0.2, duration: 0.8, delay: 0.4, ease: "power3.out" });
+
+        // Start with Admin tab
+        showTab('admin');
+        // 4. Update the redirect to a SINGLE login.html page
+        const loginBtn = document.getElementById('loginBtn');
+        loginBtn.onclick = () => {
+            // This redirects everyone to login.html
+            window.location.href = 'login.html'; 
+        };
+    </script>
+</body>
+</html>

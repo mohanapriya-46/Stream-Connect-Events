@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - Event Platform</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- AOS for Animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, #4158d0 0%, #c850c0 46%, #ffcc70 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .sidebar { 
+            min-height: 100vh; 
+            background: rgba(33, 37, 41, 0.95);
+            position: fixed; 
+            width: 260px; 
+            backdrop-filter: blur(10px);
+            box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+        }
+        .sidebar .nav-link { 
+            color: #ced4da; 
+            padding: 12px 20px; 
+            transition: all 0.3s ease;
+            border-radius: 0 20px 20px 0;
+        }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover { 
+            background: linear-gradient(135deg, #4158d0, #c850c0); 
+            color: #fff; 
+            transform: translateX(5px);
+        }
+        .content { 
+            margin-left: 260px; 
+            padding: 30px; 
+            background: url('https://img.freepik.com/free-vector/gradient-abstract-wireframe-background_23-2149009903.jpg') fixed;
+            background-size: cover;
+            position: relative;
+        }
+        .content::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(8px);
+            z-index: -1;
+        }
+        .card { 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+            border: none; 
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: rgba(255,255,255,0.95);
+        }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .event-card img { height: 200px; object-fit: cover; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .nav-tabs .nav-link { border-radius: 15px 15px 0 0; background: #f8f9fa; }
+        .nav-tabs .nav-link.active { background: linear-gradient(135deg, #4158d0, #c850c0); color: white; }
+        .btn { border-radius: 30px; padding: 12px 30px; font-weight: 600; transition: all 0.3s; }
+        .btn:hover { transform: scale(1.05); }
+        h2 { background: linear-gradient(135deg, #4158d0, #c850c0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
+        .chat-message { border-radius: 15px; padding: 10px 15px; margin-bottom: 10px; max-width: 80%; }
+        .user-message { background: #4158d0; color: white; align-self: flex-end; }
+        .ai-message { background: #e9ecef; }
+        #videoPlayer { background: #000; border-radius: 15px; }
+    </style>
+</head>
+<body data-aos-easing="ease" data-aos-duration="800">
+
+    <!-- Sidebar -->
+    <div class="sidebar d-flex flex-column p-4 text-white" data-aos="fade-right">
+        <h4 class="text-center mb-5">User Dashboard</h4>
+        <nav class="nav flex-column">
+            <a class="nav-link active" href="#" data-section="dashboard"><i class="fas fa-home me-3"></i>My Events</a>
+            <a class="nav-link" href="#" data-section="live"><i class="fas fa-video me-3"></i>Live Streaming</a>
+            <a class="nav-link" href="#" data-section="payment"><i class="fas fa-credit-card me-3"></i>Payments</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+
+        <!-- Dashboard / My Events -->
+        <div id="dashboard" class="section active">
+            <h2 data-aos="fade-down">My Events</h2>
+            <ul class="nav nav-tabs mb-4" id="eventTabs" data-aos="zoom-in">
+                <li class="nav-item"><a class="nav-link active" data-tab="active">Active Events</a></li>
+                <li class="nav-item"><a class="nav-link" data-tab="upcoming">Upcoming</a></li>
+                <li class="nav-item"><a class="nav-link" data-tab="paid">Paid Events</a></li>
+                <li class="nav-item"><a class="nav-link" data-tab="joined">Joined Events</a></li>
+            </ul>
+
+            <div class="row" id="active" class="tab-content active" data-aos="fade-up">
+                <!-- Event Cards -->
+                <div class="col-md-4 mb-4" data-aos="flip-left" data-aos-delay="100">
+                    <div class="card event-card">
+                        <img src="https://s3-alpha.figma.com/hub/file/2236218758988477717/ec1b5002-b6b3-47ae-9b9f-91fecd726d73-cover.png" class="card-img-top" alt="Event">
+                        <div class="card-body">
+                            <h5>Tech Conference 2025</h5>
+                            <p><strong>Date:</strong> Jan 15, 2026 | <strong>Live Now</strong></p>
+                            <button class="btn btn-primary" data-event="live">Join Live</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- More cards similar -->
+            </div>
+
+            <!-- Similar rows for upcoming, paid, joined with different data -->
+            <div id="upcoming" class="tab-content row"><!-- Upcoming events cards --></div>
+            <div id="paid" class="tab-content row"><!-- Paid events cards --></div>
+            <div id="joined" class="tab-content row"><!-- Joined events cards --></div>
+        </div>
+
+        <!-- Live Streaming Page -->
+        <div id="live" class="section">
+            <h2 data-aos="fade-down">Live Event: Tech Conference 2025</h2>
+            <div class="row">
+                <div class="col-lg-8" data-aos="fade-right">
+                    <video id="videoPlayer" controls class="w-100" poster="https://www.nextiva.com/blog/wp-content/uploads/sites/10/2023/10/Virtual-meeting-platforms.jpg">
+                        <source src="sample-video.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="mt-3 d-flex justify-content-between">
+                        <span><i class="fas fa-clock"></i> Duration: <span id="duration">02:30:00</span></span>
+                        <span><i class="fas fa-users"></i> Participants: <span id="participants">342</span></span>
+                    </div>
+                </div>
+                <div class="col-lg-4" data-aos="fade-left">
+                    <div class="card h-100">
+                        <div class="card-header">Q&A Chat with AI Chatbot</div>
+                        <div class="card-body d-flex flex-column" style="max-height: 500px; overflow-y: auto;" id="chatBox">
+                            <div class="chat-message ai-message">Hello! Ask me anything about the event.</div>
+                        </div>
+                        <div class="input-group mt-3">
+                            <input type="text" id="chatInput" class="form-control" placeholder="Type your question...">
+                            <button class="btn btn-primary" id="sendChat">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Module -->
+        <div id="payment" class="section">
+            <h2 data-aos="fade-down">Payment & Tickets</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-6" data-aos="zoom-in">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>Checkout for Tech Conference 2025</h4>
+                            <img src="https://images.stripeassets.com/fzn2n1nzq965/4CXVg1cLCWtg7tPw8t2VuX/5b7978efd03a21274135bd2096c5a8cd/Checkout-social-card.png?q=80" class="img-fluid mb-4" alt="Payment">
+                            <form>
+                                <div class="mb-3"><label>Card Number</label><input type="text" class="form-control" placeholder="1234 5678 9012 3456"></div>
+                                <div class="row">
+                                    <div class="col-6 mb-3"><label>Expiry</label><input type="text" class="form-control" placeholder="MM/YY"></div>
+                                    <div class="col-6 mb-3"><label>CVC</label><input type="text" class="form-control" placeholder="123"></div>
+                                </div>
+                                <button type="button" class="btn btn-success btn-lg w-100">Pay $50 with Razorpay/Stripe</button>
+                            </form>
+                            <p class="mt-3 text-muted">Secure transaction. Invoice will be generated after payment.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        AOS.init({ once: true });
+
+        // Sidebar Navigation
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById(this.dataset.section).classList.add('active');
+            });
+        });
+
+        // Event Tabs
+        document.querySelectorAll('#eventTabs .nav-link').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('#eventTabs .nav-link').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.getElementById(this.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Join Live Button (Demo)
+        document.querySelectorAll('[data-event="live"]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelector('.sidebar .nav-link[data-section="live"]').click();
+            });
+        });
+
+        // Simple AI Chatbot Demo
+        document.getElementById('sendChat').addEventListener('click', () => {
+            const input = document.getElementById('chatInput');
+            if (input.value.trim()) {
+                const chatBox = document.getElementById('chatBox');
+                const userMsg = document.createElement('div');
+                userMsg.classList.add('chat-message', 'user-message');
+                userMsg.textContent = input.value;
+                chatBox.appendChild(userMsg);
+                const aiMsg = document.createElement('div');
+                aiMsg.classList.add('chat-message', 'ai-message');
+                aiMsg.textContent = 'AI Response: Great question! (Demo - integrate real AI)';
+                chatBox.appendChild(aiMsg);
+                chatBox.scrollTop = chatBox.scrollHeight;
+                input.value = '';
+            }
+        });
+
+        // Payment Demo Alert
+        document.querySelectorAll('.btn-success').forEach(btn => {
+            btn.addEventListener('click', () => alert('Payment Processed! Invoice Generated (Integrate Razorpay/Stripe API)'));
+        });
+    </script>
+</body>
+</html>
