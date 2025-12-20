@@ -155,7 +155,7 @@
             <p class="text-xl md:text-2xl mb-10 text-gray-300 max-w-4xl mx-auto">Seamlessly create engaging virtual events with zero lag and global reach.</p>
             <div class="flex flex-col sm:flex-row justify-center gap-6">
                 <button class="glow-btn px-10 py-4 text-lg font-bold rounded-full relative z-10">Get Started Free</button>
-                <button class="border border-cyan-accent px-10 py-4 text-lg rounded-full hover:bg-cyan-accent/20 transition relative z-10">Watch Demo</button>
+               <a href="https://www.youtube.com/watch?v=btvWIL5YZG0" class="border border-cyan-accent px-10 py-4 text-lg rounded-full hover:bg-cyan-accent/20 transition relative z-10" target="_blank" rel="noopener noreferrer">Watch Demo</a>
             </div>
         </div>
     </header>
@@ -304,134 +304,153 @@
                     <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">First Event Free for New Organizers</h2>
                     <p class="text-xl text-gray-200 mb-8 max-w-2xl mx-auto">Get started with zero risk. Host your first event completely free and experience the power of Stream Connect</p>
                     <button class="glow-btn px-12 py-4 text-xl font-bold rounded-full relative z-10">Claim Your Free Event Now</button>
+                    <ul class="space-y-3 mb-8 text-gray-300 flex-grow">
+                        <li class="flex items-center"><span class="text-cyan-accent mr-3">✓</span> 30-day window from sign-up</li>
+                        <li class="flex items-center"><span class="text-cyan-accent mr-3">✓</span> Upto 50 Users</li>
+                        <li class="flex items-center"><span class="text-cyan-accent mr-3">✓</span>  1 hour(max) Duration</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Event Categories Section -->
-    <section id="categories" class="py-24 dot-pattern">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold text-cyan-accent mb-6">Event Categories</h2>
-                <p class="text-xl text-gray-300 max-w-3xl mx-auto">Explore diverse event types powered by our streaming platform</p>
+        <section id="categories" class="py-24 dot-pattern">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold text-cyan-accent mb-6">Event Categories</h2>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto">Explore diverse event types powered by our streaming platform</p>
+        </div>
+      
+        <div class="category-carousel flex overflow-x-auto gap-6 pb-8 scrollbar-hide snap-x">
+            <!-- Added pl-6 for consistent start padding matching container -->
+            <div class="pl-6"></div>
+           
+            <div class="category-card flex-shrink-0 w-full max-w-sm sm:w-80 relative overflow-hidden rounded-2xl group cursor-pointer snap-start">
+                <img src="https://www.bizzabo.com/wp-content/uploads/2023/03/InboundMainStage3_v2-1024x574.jpg" alt="Conferences" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <h3 class="text-2xl font-bold mb-2">Conferences</h3>
+                    <p class="text-sm opacity-90">Global summits & industry gatherings</p>
+                </div>
+                <div class="absolute top-4 right-4 w-12 h-12 bg-cyan-accent/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span class="text-cyan-accent text-xl">🎤</span>
+                </div>
+            </div>
+          
+            <div class="category-card flex-shrink-0 w-full max-w-sm sm:w-80 relative overflow-hidden rounded-2xl group cursor-pointer snap-start">
+                <img src="https://www.sessionlab.com/wp-content/uploads/Collaborative-workshop.jpg" alt="Workshops" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <h3 class="text-2xl font-bold mb-2">Workshops</h3>
+                    <p class="text-sm opacity-90">Hands-on learning experiences</p>
+                </div>
+                <div class="absolute top-4 right-4 w-12 h-12 bg-purple-accent/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span class="text-purple-accent text-xl">💡</span>
+                </div>
+            </div>
+          
+            <div class="category-card flex-shrink-0 w-full max-w-sm sm:w-80 relative overflow-hidden rounded-2xl group cursor-pointer snap-start">
+                <img src="https://cdn.prod.website-files.com/63b042656c21e611f6f8be44/6899cf5fd3264f773340b57c_Zoom_AI_Notetaker.webp" alt="Webinars" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <h3 class="text-2xl font-bold mb-2">Webinars</h3>
+                    <p class="text-sm opacity-90">Expert-led educational sessions</p>
+                </div>
+                <div class="absolute top-4 right-4 w-12 h-12 bg-cyan-accent/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span class="text-cyan-accent text-xl">📊</span>
+                </div>
+            </div>
+          
+            <div class="category-card flex-shrink-0 w-full max-w-sm sm:w-80 relative overflow-hidden rounded-2xl group cursor-pointer snap-start">
+                <img src="https://users-photos.b-cdn.net/87947/media/asset/67151b4a-9e71-4411-a3bb-4230b2bfd72d_Erwann%20GERARD-11.jpg?width=1080" alt="Concerts" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <h3 class="text-2xl font-bold mb-2">Concerts</h3>
+                    <p class="text-sm opacity-90">Live music performances</p>
+                </div>
+                <div class="absolute top-4 right-4 w-12 h-12 bg-purple-accent/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span class="text-purple-accent text-xl">🎵</span>
+                </div>
+            </div>
+          
+            <div class="category-card flex-shrink-0 w-full max-w-sm sm:w-80 relative overflow-hidden rounded-2xl group cursor-pointer snap-start">
+                <img src="https://d12m9erqbesehq.cloudfront.net/wp-content/uploads/sites/2/2024/06/26011700/Virtual-Trade-Show-Booth.jpg" alt="Virtual Expos" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <h3 class="text-2xl font-bold mb-2">Virtual Expos</h3>
+                    <p class="text-sm opacity-90">Interactive trade shows & exhibitions</p>
+                </div>
+                <div class="absolute top-4 right-4 w-12 h-12 bg-cyan-accent/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span class="text-cyan-accent text-xl">🏪</span>
+                </div>
+            </div>
+           
+            <!-- Added pr-6 for consistent end padding -->
+            <div class="pr-6"></div>
+        </div>
+    </div>
+</section>
+   <!-- Pricing Section -->
+<section id="pricing" class="py-24 relative overflow-hidden">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold text-cyan-accent mb-6">Pricing Plans</h2>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto">Choose the perfect plan for your event needs</p>
+        </div>
+        
+        <!-- Grid with 4 cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-7xl mx-auto">
+           
+            <!-- Basic Card -->
+            <div class="pricing-card glass-card p-8 rounded-2xl relative overflow-hidden group transition-all duration-500 hover:shadow-2xl hover:shadow-purple-accent/20 flex flex-col justify-between min-h-[28rem]">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-accent/5 to-cyan-accent/5 opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="flex flex-col flex-grow">
+                    <img src="https://cdn.dribbble.com/userupload/43677751/file/still-2294bbcad734a19ccfb1ee7789a7d99c.png?format=webp&resize=800x600&vertical=center" alt="Basic Plan Illustration" class="w-full h-48 object-cover rounded-xl mb-6 group-hover:scale-110 transition-transform duration-700">
+                    <h3 class="text-2xl font-bold text-purple-accent mb-4">Basic</h3>
+                    <div class="text-5xl font-extrabold text-white mb-2">100<span class="text-xl text-gray-400"> per event</span></div>
+                    <ul class="space-y-3 mb-8 text-gray-300 flex-grow">
+                        <li class="flex items-center"><span class="text-purple-accent mr-3">✓</span> 1-hour duration</li>
+                        <li class="flex items-center"><span class="text-purple-accent mr-3">✓</span> upto 50 users</li>
+                    </ul>
+                </div>
+                <button class="w-full border border-purple-accent py-4 rounded-xl font-bold text-white hover:bg-purple-accent hover:text-deep-blue transition-all duration-300 mt-auto">Contact Sales</button>
             </div>
             
-            <div class="category-carousel flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory scrollbar-hide">
-                <div class="category-card flex-shrink-0 w-80 relative overflow-hidden rounded-2xl group cursor-pointer">
-                    <img src="https://fliplet.com/wp-content/uploads/2024/08/types_of_conferences_image.webp" alt="Conferences" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <h3 class="text-2xl font-bold mb-2">Conferences</h3>
-                        <p class="text-sm opacity-90">Global summits & industry gatherings</p>
-                    </div>
-                    <div class="absolute top-4 right-4 w-12 h-12 bg-cyan-accent/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="text-cyan-accent text-xl">🎤</span>
-                    </div>
-                </div>
-                
-                <div class="category-card flex-shrink-0 w-80 relative overflow-hidden rounded-2xl group cursor-pointer">
-                    <img src="https://cdn.prod.website-files.com/61cee5ec4d566db869eca133/67349bea3c6cf5b4190ca999_6569e5f56789d6e2fdd74acf_Different%2520Types%2520of%2520In-Person%2520Events.jpeg" alt="Workshops" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <h3 class="text-2xl font-bold mb-2">Workshops</h3>
-                        <p class="text-sm opacity-90">Hands-on learning experiences</p>
-                    </div>
-                    <div class="absolute top-4 right-4 w-12 h-12 bg-purple-accent/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="text-purple-accent text-xl">💡</span>
-                    </div>
-                </div>
-                
-                <div class="category-card flex-shrink-0 w-80 relative overflow-hidden rounded-2xl group cursor-pointer">
-                    <img src="https://helloaudio.fm/wp-content/uploads/2024/12/10-Types-of-Virtual-Events-Webinars-Job-Expos-Exhibitions-More-1024x683.webp" alt="Webinars" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <h3 class="text-2xl font-bold mb-2">Webinars</h3>
-                        <p class="text-sm opacity-90">Expert-led educational sessions</p>
-                    </div>
-                    <div class="absolute top-4 right-4 w-12 h-12 bg-cyan-accent/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="text-cyan-accent text-xl">📊</span>
-                    </div>
-                </div>
-                
-                <div class="category-card flex-shrink-0 w-80 relative overflow-hidden rounded-2xl group cursor-pointer">
-                    <img src="https://godreamcast.com/blog/wp-content/uploads/2025/02/Major-event-types-1024x597.jpg" alt="Concerts" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <h3 class="text-2xl font-bold mb-2">Concerts</h3>
-                        <p class="text-sm opacity-90">Live music performances</p>
-                    </div>
-                    <div class="absolute top-4 right-4 w-12 h-12 bg-purple-accent/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="text-purple-accent text-xl">🎵</span>
-                    </div>
-                </div>
-                
-                <div class="category-card flex-shrink-0 w-80 relative overflow-hidden rounded-2xl group cursor-pointer">
-                    <img src="https://www.vfairs.com/wp-content/uploads/2025/06/lobby-min-1024x618-1-1.png" alt="Virtual Expos" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <h3 class="text-2xl font-bold mb-2">Virtual Expos</h3>
-                        <p class="text-sm opacity-90">Interactive trade shows & exhibitions</p>
-                    </div>
-                    <div class="absolute top-4 right-4 w-12 h-12 bg-cyan-accent/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="text-cyan-accent text-xl">🏪</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+            <!-- Business Card (Now with image, no "Most Popular" badge) -->
+            <div class="pricing-card glass-card p-8 rounded-2xl relative overflow-hidden border-2 border-cyan-accent group transform transition-all duration-700 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-accent/50 z-10 flex flex-col justify-between min-h-[28rem]">
+                <div class="absolute inset-0 bg-gradient-to-br from-cyan-accent/10 to-purple-accent/10 opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="flex flex-col flex-grow">
+                    <img src="https://thumbs.dreamstime.com/b/futuristic-ui-mockup-glass-morphism-style-panel-bright-blue-spheres-floating-dark-purple-background-digital-387353048.jpg" alt="Business Plan Illustration" class="w-full h-48 object-cover rounded-xl mb-6 group-hover:scale-110 transition-transform duration-700">
+                    <h3 class="text-3xl font-bold text-purple-accent mb-4">Business</h3>
+                    <div class="text-6xl font-extrabold text-white mb-2">500<span class="text-xl text-gray-400"> per event</span></div>
+                    <ul class="space-y-3 mb-8 text-gray-300 flex-grow">
+                        
+                        <li class="flex items-center"><span class="text-purple-accent mr-3">✓</span> 1-2 hours duration</li>
 
-    <!-- Pricing Section -->
-    <section id="pricing" class="py-24 relative">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold text-cyan-accent mb-6">Pricing Plans</h2>
-                <p class="text-xl text-gray-300 max-w-3xl mx-auto">Choose the perfect plan for your event needs</p>
+                        <li class="flex items-center"><span class="text-purple-accent mr-3">✓</span> 250-500 users</li>
+                    </ul>
+                </div>
+                <button class="w-full border border-purple-accent py-4 rounded-xl font-bold text-white hover:bg-purple-accent hover:text-deep-blue transition-all duration-300 mt-auto">Contact Sales</button>
             </div>
             
-            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                <div class="pricing-card glass-card p-8 rounded-2xl relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-gradient-to-br from-cyan-accent/5 to-purple-accent/5"></div>
-                    <img src="https://cdn.dribbble.com/userupload/39514151/file/still-b95b047a752fbcd3d45f20de9c0d0dcb.png?format=webp&resize=400x300&vertical=center" alt="Free Plan Illustration" class="w-full h-48 object-cover rounded-xl mb-6 group-hover:scale-105 transition-transform duration-500">
-                    <h3 class="text-2xl font-bold text-cyan-accent mb-4">First Event</h3>
-                    <div class="text-5xl font-extrabold text-white mb-2">Free<span class="text-xl text-gray-400">/mo</span></div>
-                    <ul class="space-y-3 mb-8 text-gray-300">
-                        <li class="flex items-center"><span class="text-cyan-accent mr-3">✓</span> 1 Active Event</li>
-                        <li class="flex items-center"><span class="text-cyan-accent mr-3">✓</span> Basic Chat</li>
-                        <li class="flex items-center"><span class="text-cyan-accent mr-3">✓</span> Email Support</li>
+            <!-- Premium Card -->
+            <div class="pricing-card glass-card p-8 rounded-2xl relative overflow-hidden group transition-all duration-500 hover:shadow-2xl hover:shadow-purple-accent/20 flex flex-col justify-between min-h-[28rem]">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-accent/5 to-cyan-accent/5 opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="flex flex-col flex-grow">
+                    <img src="https://thumbs.dreamstime.com/b/green-glowing-futuristic-particle-wave-data-visualization-particles-form-abstract-dynamic-pattern-evoking-flow-energy-417476984.jpg" alt="Premium Plan Illustration" class="w-full h-48 object-cover rounded-xl mb-6 group-hover:scale-110 transition-transform duration-700">
+                    <h3 class="text-2xl font-bold text-purple-accent mb-4">Premium</h3>
+                    <div class="text-5xl font-extrabold text-white mb-2">1000<span class="text-xl text-gray-400"> per event</span></div>
+                    <ul class="space-y-3 mb-8 text-gray-300 flex-grow">
+                       
+                        <li class="flex items-center"><span class="text-purple-accent mr-3">✓</span> 2-5 hours duration</li>
+                        
+                        <li class="flex items-center"><span class="text-purple-accent mr-3">✓</span> 500-1000 users</li>
                     </ul>
-                    <button class="w-full border border-cyan-accent py-4 rounded-xl font-bold hover:bg-cyan-accent/20 transition-all duration-300">Start Free</button>
                 </div>
-                
-                <div class="pricing-card glass-card p-10 rounded-2xl relative overflow-hidden border-2 border-cyan-accent group transform transition-all duration-500 hover:scale-105">
-                    <span class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-cyan-accent text-deep-blue px-6 py-2 rounded-full text-sm font-bold shadow-lg z-10">Most Popular</span>
-                    <div class="absolute inset-0 bg-gradient-to-br from-cyan-accent/10 to-purple-accent/10"></div>
-                    <img src="https://www.webstacks.com/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fq9c9g16o%2Fproduction%2F11e02a1c6a808462b0b0cfdf5e5c7778ec424d30-2614x1588.png&w=3840&q=100" alt="Pro Plan Illustration" class="w-full h-48 object-cover rounded-xl mb-6 group-hover:scale-105 transition-transform duration-500">
-                    <h3 class="text-3xl font-bold text-purple-accent mb-4">Professional</h3>
-                    <div class="text-6xl font-extrabold text-white mb-2">100<span class="text-xl text-gray-400">/mo</span></div>
-                    <ul class="space-y-3 mb-8 text-gray-300">
-                        <li class="flex items-center"><span class="text-purple-accent mr-3">✓</span> Unlimited Events</li>
-                        <li class="flex items-center"><span class="text-purple-accent mr-3">✓</span> Advanced Analytics</li>
-                        <li class="flex items-center"><span class="text-purple-accent mr-3">✓</span> Priority Support</li>
-                    </ul>
-                    <button class="w-full glow-btn py-4 rounded-xl font-bold text-deep-blue">Get Professional</button>
-                </div>
-                
-                <div class="pricing-card glass-card p-8 rounded-2xl relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-accent/5 to-cyan-accent/5"></div>
-                    <img src="https://dribbble.com/shots/23358907-Illustration-for-Landing-Page" alt="Enterprise Plan Illustration" class="w-full h-48 object-cover rounded-xl mb-6 group-hover:scale-105 transition-transform duration-500">
-                    <h3 class="text-2xl font-bold text-purple-accent mb-4">Enterprise</h3>
-                    <div class="text-5xl font-extrabold text-white mb-2">Custom</div>
-                    <ul class="space-y-3 mb-8 text-gray-300">
-                        <li class="flex items-center"><span class="text-purple-accent mr-3">✓</span> Dedicated Manager</li>
-                        <li class="flex items-center"><span class="text-purple-accent mr-3">✓</span> Custom Integrations</li>
-                        <li class="flex items-center"><span class="text-purple-accent mr-3">✓</span> 24/7 Support</li>
-                    </ul>
-                    <button class="w-full border border-purple-accent py-4 rounded-xl font-bold hover:bg-purple-accent/20 transition-all duration-300">Contact Sales</button>
-                </div>
+                <button class="w-full bg-cyan-accent glow-btn py-5 rounded-xl font-bold text-deep-blue shadow-lg hover:shadow-cyan-accent/50 hover:scale-105 transition-all duration-300 mt-auto">Get Premium</button>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Testimonials Section -->
     <section id="testimonials" class="py-24 relative">
@@ -446,10 +465,10 @@
                     <img src="https://cloudratings.com/wp-content/uploads/2023/04/Gifting-_-Swag-_-Promo-Feb-2023-3-1024x536.png" alt="Testimonial 1" class="w-full h-48 object-cover rounded-xl mb-6 group-hover:scale-105 transition-transform duration-500">
                     <div class="flex items-center mb-4">
                         <div class="w-12 h-12 bg-cyan-accent rounded-full flex items-center justify-center mr-4">
-                            <span class="text-deep-blue font-bold">JR</span>
+                            <span class="text-deep-blue font-bold">DV</span>
                         </div>
                         <div>
-                            <h4 class="font-semibold text-cyan-accent">Jack Rivera</h4>
+                            <h4 class="font-semibold text-cyan-accent">Dinesh V</h4>
                             <p class="text-sm text-gray-400">Tech Conference Organizer</p>
                         </div>
                     </div>
@@ -463,10 +482,10 @@
                     <img src="https://meetings.skift.com/wp-content/uploads/2021/08/1160-x-770px-FEAT-socio-review-Aug.jpg" alt="Testimonial 2" class="w-full h-48 object-cover rounded-xl mb-6 group-hover:scale-105 transition-transform duration-500">
                     <div class="flex items-center mb-4">
                         <div class="w-12 h-12 bg-purple-accent rounded-full flex items-center justify-center mr-4">
-                            <span class="text-deep-blue font-bold">SM</span>
+                            <span class="text-deep-blue font-bold">MS</span>
                         </div>
                         <div>
-                            <h4 class="font-semibold text-purple-accent">Sarah Mitchell</h4>
+                            <h4 class="font-semibold text-purple-accent">Masood S</h4>
                             <p class="text-sm text-gray-400">Marketing Director</p>
                         </div>
                     </div>
@@ -480,10 +499,10 @@
                     <img src="https://www.slideteam.net/media/catalog/product/cache/1280x720/c/l/client_testimonials_online_crypto_trading_platform_capital_raising_pitch_deck_slide01.jpg" alt="Testimonial 3" class="w-full h-48 object-cover rounded-xl mb-6 group-hover:scale-105 transition-transform duration-500">
                     <div class="flex items-center mb-4">
                         <div class="w-12 h-12 bg-cyan-accent rounded-full flex items-center justify-center mr-4">
-                            <span class="text-deep-blue font-bold">DM</span>
+                            <span class="text-deep-blue font-bold">SB</span>
                         </div>
                         <div>
-                            <h4 class="font-semibold text-cyan-accent">David Moore</h4>
+                            <h4 class="font-semibold text-cyan-accent">Subbulakshmi B</h4>
                             <p class="text-sm text-gray-400">Music Festival Producer</p>
                         </div>
                     </div>
@@ -518,7 +537,7 @@
 
     <!-- Footer -->
     <footer class="relative py-16 overflow-hidden">
-        <img src="https://img.freepik.com/free-vector/background-luxury-gradient-design-minimalist-style_483537-1666.jpg" alt="Abstract purple gradient footer background" class="absolute inset-0 w-full h-full object-cover opacity-40">
+        <img src="https://static.vecteezy.com/system/resources/thumbnails/000/831/138/small_2x/black-with-pink-edge-overlapping-layers-background.jpg" alt="Abstract purple gradient footer background" class="absolute inset-0 w-full h-full object-cover opacity-40">
         <div class="container mx-auto px-6 relative z-10">
             <div class="grid md:grid-cols-4 gap-12 text-center md:text-left">
                 <div class="md:col-span-1">
@@ -539,9 +558,10 @@
                 
                 <div>
                     <h4 class="text-xl font-semibold mb-6 text-cyan-accent">Contact Us</h4>
-                    <p class="text-gray-300 mb-2">Email: <a href="mailto:support@streamconnect.events" class="hover:text-cyan-accent transition">support@streamconnect.events</a></p>
-                    <p class="text-gray-300 mb-2">Phone: +1 (555) 123-4567</p>
-                    <p class="text-gray-300">Address: 123 Virtual Avenue, San Francisco, CA 94105</p>
+                    <p class="text-gray-300 mb-2">Company Name: AngamTech</p>
+                    <p class="text-gray-300 mb-2">Email: <a href="mohanapriya4625@gmail.com" class="hover:text-cyan-accent transition">support@streamconnect.events</a></p>
+                    <p class="text-gray-300 mb-2">Phone: +91 8056484806</p>
+                    <p class="text-gray-300">Address: Dharmapuri,TamilNadu, India </p>
                 </div>
                 
                 <div>
