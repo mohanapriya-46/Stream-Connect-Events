@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works - Stream Connect Events</title>
+    <link rel="icon" href="project logo" type="images/icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        body { background: linear-gradient(to bottom, #0A0A2A, #1A1A50); color: #FFFFFF; }
+        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(0, 255, 255, 0.3); }
+        .glow-btn { background: linear-gradient(45deg, #00FFFF, #8B5CF6); box-shadow: 0 0 20px rgba(0, 255, 255, 0.6); }
+        .navbar-glass { background: rgba(10, 10, 42, 0.6); backdrop-filter: blur(10px); }
+        .step-circle { width: 60px; height: 60px; background: linear-gradient(45deg, #00FFFF, #8B5CF6); }
+        .timeline { position: relative; }
+        .timeline::before { content: ''; position: absolute; left: 30px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #00FFFF, #8B5CF6); }
+        .text-cyan-accent { color: #00FFFF; }
+        .text-purple-accent { color: #8B5CF6; }
+        .bg-deep-blue { background: #0A0A2A; }
+    </style>
+</head>
+<body class="antialiased text-white">
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 w-full z-40 navbar-glass border-b border-cyan-accent/20 transition-all duration-500">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-bold text-cyan-accent">Stream<span class="text-purple-600">Connect</span></a>
+            <div class="hidden lg:flex space-x-8">
+                <a href="index.html" class="hover:text-cyan-accent transition">Home</a>
+                <a href="features.html" class="hover:text-cyan-accent transition">Features</a>
+                <a href="how-it-works.html" class="text-cyan-accent font-bold">How It Works</a>
+                <a href="categories.html" class="hover:text-cyan-accent transition">Categories</a>
+                <a href="pricing.html" class="hover:text-cyan-accent transition">Pricing</a>
+                <a href="become-organizer.html" class="hover:text-cyan-accent transition">Become Organizer</a>
+                
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 relative overflow-hidden">
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-6 text-cyan-accent">How StreamConnect Works</h1>
+            <p class="text-xl md:text-2xl mb-10 text-gray-300 max-w-4xl mx-auto">A comprehensive guide to creating, managing, and monetizing your virtual events in three simple steps</p>
+            <div class="flex flex-wrap justify-center gap-4 mt-8">
+                <a href="#timeline" class="glow-btn px-8 py-3 rounded-full font-bold">View Steps</a>
+                <a href="#tools" class="border border-cyan-accent px-8 py-3 rounded-full hover:bg-cyan-accent/20 transition">Explore Tools</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Overview -->
+    <section class="py-12">
+        <div class="container mx-auto px-6">
+            <div class="glass-card p-8 rounded-2xl max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold mb-6 text-center text-cyan-accent">StreamConnect Platform Overview</h2>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center p-4">
+                        <div class="text-4xl mb-4">🚀</div>
+                        <h3 class="text-xl font-bold mb-2">Easy Setup</h3>
+                        <p class="text-gray-400">Get started in minutes with our intuitive event creation wizard</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <div class="text-4xl mb-4">💎</div>
+                        <h3 class="text-xl font-bold mb-2">Professional Features</h3>
+                        <p class="text-gray-400">Access enterprise-grade tools at affordable prices</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <div class="text-4xl mb-4">📈</div>
+                        <h3 class="text-xl font-bold mb-2">Growth Analytics</h3>
+                        <p class="text-gray-400">Track performance and optimize your events with detailed insights</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed Timeline Steps -->
+    <section id="timeline" class="py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 text-cyan-accent">Your Event Journey in 3 Steps</h2>
+            <div class="max-w-5xl mx-auto">
+                
+                <!-- Step 1 - Detailed -->
+                <div class="timeline mb-24">
+                    <div class="flex items-start">
+                        <div class="step-circle rounded-full flex items-center justify-center mr-6 relative z-10">
+                            <span class="text-2xl font-bold text-deep-blue">1</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center mb-6">
+                                <h3 class="text-3xl font-bold text-cyan-accent">Event Creation & Setup</h3>
+                                <span class="ml-4 px-4 py-1 bg-cyan-accent/20 text-cyan-accent rounded-full text-sm">Setup Phase</span>
+                            </div>
+                            <div class="glass-card p-8 rounded-2xl mb-6">
+                                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                                    <div>
+                                        <h4 class="text-xl font-bold mb-3 text-purple-accent">Basic Configuration</h4>
+                                        <ul class="space-y-3 text-gray-300">
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">✓</span>
+                                                <span>Choose from 15+ event templates</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">✓</span>
+                                                <span>Set event date, time, and timezone</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">✓</span>
+                                                <span>Configure event privacy settings</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">✓</span>
+                                                <span>Add co-hosts and moderators</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xl font-bold mb-3 text-purple-accent">Advanced Features</h4>
+                                        <ul class="space-y-3 text-gray-300">
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">✓</span>
+                                                <span>Custom registration forms</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">✓</span>
+                                                <span>Automated email sequences</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">✓</span>
+                                                <span>Branding & customization</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">✓</span>
+                                                <span>Integration with calendar apps</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="bg-black/30 p-4 rounded-lg">
+                                    <p class="text-gray-400 italic">💡 <strong>Pro Tip:</strong> Use our AI-powered event setup assistant to generate optimal settings based on your event type and audience size.</p>
+                                </div>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Event Creation Dashboard" class="rounded-2xl w-full h-80 object-cover">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 - Detailed -->
+                <div class="timeline mb-24">
+                    <div class="flex items-start">
+                        <div class="step-circle rounded-full flex items-center justify-center mr-6 relative z-10">
+                            <span class="text-2xl font-bold text-deep-blue">2</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center mb-6">
+                                <h3 class="text-3xl font-bold text-purple-accent">Live Event Management</h3>
+                                <span class="ml-4 px-4 py-1 bg-purple-accent/20 text-purple-accent rounded-full text-sm">Live Phase</span>
+                            </div>
+                            <div class="glass-card p-8 rounded-2xl mb-6">
+                                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                                    <div>
+                                        <h4 class="text-xl font-bold mb-3 text-cyan-accent">Streaming Features</h4>
+                                        <ul class="space-y-3 text-gray-300">
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">🎥</span>
+                                                <span>Multi-camera switching</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">🎬</span>
+                                                <span>Screen sharing & presentations</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">💬</span>
+                                                <span>Real-time chat moderation</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">📝</span>
+                                                <span>Interactive Q&A sessions</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xl font-bold mb-3 text-cyan-accent">Audience Engagement</h4>
+                                        <ul class="space-y-3 text-gray-300">
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">📊</span>
+                                                <span>Live polls and surveys</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">🎯</span>
+                                                <span>Audience reactions & emojis</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">🤝</span>
+                                                <span>Breakout rooms for networking</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">🎁</span>
+                                                <span>Digital giveaways & contests</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="bg-black/30 p-4 rounded-lg">
+                                    <p class="text-gray-400 italic">💡 <strong>Pro Tip:</strong> Assign a dedicated moderator to manage chat and Q&A, allowing you to focus on delivering great content.</p>
+                                </div>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Live Event Streaming" class="rounded-2xl w-full h-80 object-cover">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 - Detailed -->
+                <div class="timeline">
+                    <div class="flex items-start">
+                        <div class="step-circle rounded-full flex items-center justify-center mr-6 relative z-10">
+                            <span class="text-2xl font-bold text-deep-blue">3</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center mb-6">
+                                <h3 class="text-3xl font-bold text-cyan-accent">Post-Event Analytics & Follow-up</h3>
+                                <span class="ml-4 px-4 py-1 bg-cyan-accent/20 text-cyan-accent rounded-full text-sm">Analysis Phase</span>
+                            </div>
+                            <div class="glass-card p-8 rounded-2xl mb-6">
+                                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                                    <div>
+                                        <h4 class="text-xl font-bold mb-3 text-purple-accent">Performance Metrics</h4>
+                                        <ul class="space-y-3 text-gray-300">
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">📈</span>
+                                                <span>Attendance & drop-off rates</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">👥</span>
+                                                <span>Audience demographics</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">⏱️</span>
+                                                <span>Engagement duration analysis</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">💰</span>
+                                                <span>Revenue & conversion tracking</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xl font-bold mb-3 text-purple-accent">Post-Event Actions</h4>
+                                        <ul class="space-y-3 text-gray-300">
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">📧</span>
+                                                <span>Automated follow-up emails</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">🎥</span>
+                                                <span>Event recording distribution</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">📋</span>
+                                                <span>Feedback collection & surveys</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <span class="text-cyan-accent mr-2">📊</span>
+                                                <span>Custom report generation</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="bg-black/30 p-4 rounded-lg">
+                                    <p class="text-gray-400 italic">💡 <strong>Pro Tip:</strong> Use our AI insights to automatically identify key moments and create highlight reels for social media promotion.</p>
+                                </div>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Analytics Dashboard" class="rounded-2xl w-full h-80 object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section id="tools" class="py-20 bg-gradient-to-b from-transparent to-purple-900/20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-4 text-cyan-accent">Complete Event Management Toolkit</h2>
+            <p class="text-center text-gray-300 mb-12 max-w-3xl mx-auto">Everything you need to create, promote, and analyze successful virtual events</p>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="w-16 h-16 mb-4 rounded-full bg-cyan-accent/20 flex items-center justify-center">
+                        <span class="text-2xl">🎥</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Streaming Studio</h3>
+                    <p class="text-gray-400 text-sm">Professional streaming with virtual backgrounds, overlays, and multi-camera support. Includes 4K streaming capability.</p>
+                    <div class="mt-4 text-xs text-cyan-accent">HD/4K • RTMP • Virtual Backgrounds</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="w-16 h-16 mb-4 rounded-full bg-purple-accent/20 flex items-center justify-center">
+                        <span class="text-2xl">📊</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Analytics Suite</h3>
+                    <p class="text-gray-400 text-sm">Real-time insights into viewer behavior, engagement rates, and revenue tracking with custom reporting.</p>
+                    <div class="mt-4 text-xs text-purple-accent">Real-time • Custom Reports • Export Data</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="w-16 h-16 mb-4 rounded-full bg-cyan-accent/20 flex items-center justify-center">
+                        <span class="text-2xl">🛠️</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Marketing Tools</h3>
+                    <p class="text-gray-400 text-sm">Email campaigns, social media integration, and promotional tools with automation workflows.</p>
+                    <div class="mt-4 text-xs text-cyan-accent">Email • Social Media • Automation</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="w-16 h-16 mb-4 rounded-full bg-purple-accent/20 flex items-center justify-center">
+                        <span class="text-2xl">💰</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Monetization</h3>
+                    <p class="text-gray-400 text-sm">Multiple revenue streams including tickets, subscriptions, donations, and sponsorships with secure payments.</p>
+                    <div class="mt-4 text-xs text-purple-accent">Tickets • Subscriptions • Donations</div>
+                </div>
+            </div>
+
+            <!-- Integration Section -->
+            <div class="glass-card p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold mb-6 text-center text-cyan-accent">Seamless Integrations</h3>
+                <div class="flex flex-wrap justify-center gap-8 items-center">
+                    <div class="text-center">
+                        <div class="w-12 h-12 mx-auto mb-2 rounded-lg bg-white/10 flex items-center justify-center">
+                            <span class="font-bold">ZOOM</span>
+                        </div>
+                        <p class="text-sm">Video Conferencing</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 mx-auto mb-2 rounded-lg bg-white/10 flex items-center justify-center">
+                            <span class="font-bold">STRIPE</span>
+                        </div>
+                        <p class="text-sm">Payments</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 mx-auto mb-2 rounded-lg bg-white/10 flex items-center justify-center">
+                            <span class="font-bold">MAIL</span>
+                        </div>
+                        <p class="text-sm">Email Marketing</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 mx-auto mb-2 rounded-lg bg-white/10 flex items-center justify-center">
+                            <span class="font-bold">CRM</span>
+                        </div>
+                        <p class="text-sm">Customer Management</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 mx-auto mb-2 rounded-lg bg-white/10 flex items-center justify-center">
+                            <span class="font-bold">CAL</span>
+                        </div>
+                        <p class="text-sm">Calendar Sync</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platform Comparison -->
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12 text-cyan-accent">Why Choose StreamConnect?</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full glass-card rounded-2xl overflow-hidden">
+                    <thead>
+                        <tr class="bg-cyan-accent/10">
+                            <th class="p-4 text-left">Feature</th>
+                            <th class="p-4 text-center">StreamConnect</th>
+                            <th class="p-4 text-center">Basic Platforms</th>
+                            <th class="p-4 text-center">Enterprise Solutions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-white/10">
+                            <td class="p-4 font-bold">Setup Time</td>
+                            <td class="p-4 text-center text-green-400">Under 10 minutes</td>
+                            <td class="p-4 text-center text-gray-400">30+ minutes</td>
+                            <td class="p-4 text-center text-gray-400">Days to weeks</td>
+                        </tr>
+                        <tr class="border-b border-white/10">
+                            <td class="p-4 font-bold">Maximum Attendees</td>
+                            <td class="p-4 text-center">Up to 10,000</td>
+                            <td class="p-4 text-center text-gray-400">Up to 100</td>
+                            <td class="p-4 text-center">10,000+</td>
+                        </tr>
+                        <tr class="border-b border-white/10">
+                            <td class="p-4 font-bold">Analytics Dashboard</td>
+                            <td class="p-4 text-center text-green-400">✓ Included</td>
+                            <td class="p-4 text-center text-gray-400">Basic only</td>
+                            <td class="p-4 text-center">✓ Included</td>
+                        </tr>
+                        <tr class="border-b border-white/10">
+                            <td class="p-4 font-bold">Monetization Tools</td>
+                            <td class="p-4 text-center text-green-400">✓ Multiple options</td>
+                            <td class="p-4 text-center text-gray-400">Limited</td>
+                            <td class="p-4 text-center">✓ Included</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-bold">Starting Price</td>
+                            <td class="p-4 text-center text-cyan-accent font-bold">$29/month</td>
+                            <td class="p-4 text-center text-gray-400">Free - $99/month</td>
+                            <td class="p-4 text-center text-gray-400">$500+/month</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12 text-cyan-accent">Frequently Asked Questions</h2>
+            <div class="max-w-4xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="glass-card p-6 rounded-2xl">
+                        <h4 class="text-xl font-bold mb-3 text-cyan-accent">What equipment do I need?</h4>
+                        <p class="text-gray-400">Basic requirements: computer/laptop, webcam, microphone, and stable internet. We recommend a dedicated microphone and good lighting for professional quality.</p>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl">
+                        <h4 class="text-xl font-bold mb-3 text-purple-accent">How do I monetize events?</h4>
+                        <p class="text-gray-400">Choose from ticket sales, subscriptions, pay-per-view, donations, or sponsorships. All payments are processed securely with automatic payouts.</p>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl">
+                        <h4 class="text-xl font-bold mb-3 text-cyan-accent">Is technical support available?</h4>
+                        <p class="text-gray-400">Yes! We offer 24/7 chat support, email support, and dedicated account managers for premium plans. Plus extensive documentation and video tutorials.</p>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl">
+                        <h4 class="text-xl font-bold mb-3 text-purple-accent">Can I record events?</h4>
+                        <p class="text-gray-400">All plans include event recording. Recordings are automatically saved in your dashboard and can be downloaded or shared directly with attendees.</p>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl">
+                        <h4 class="text-xl font-bold mb-3 text-cyan-accent">Are there mobile apps?</h4>
+                        <p class="text-gray-400">Yes! We have native iOS and Android apps for both organizers and attendees with full feature parity for on-the-go event management.</p>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl">
+                        <h4 class="text-xl font-bold mb-3 text-purple-accent">Can I test before committing?</h4>
+                        <p class="text-gray-400">Absolutely! We offer a 14-day free trial with full access to all features. No credit card required to start your trial.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 text-center">
+        <div class="container mx-auto px-6">
+            <div class="glass-card p-12 rounded-3xl max-w-4xl mx-auto relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-cyan-accent/10 rounded-full -translate-y-32 translate-x-32"></div>
+                <div class="absolute bottom-0 left-0 w-64 h-64 bg-purple-accent/10 rounded-full translate-y-32 -translate-x-32"></div>
+                
+                <div class="relative z-10">
+                    <h2 class="text-4xl font-bold mb-6 text-cyan-accent">Ready to Create Amazing Virtual Events?</h2>
+                    <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">Join 50,000+ organizers who trust StreamConnect for their virtual events</p>
+                    <div class="flex flex-wrap justify-center gap-6">
+                        <a href="become-organizer.html" class="glow-btn px-12 py-4 text-xl font-bold rounded-full inline-block">Start Free Trial</a>
+                        <a href="contact.html" class="border border-cyan-accent px-12 py-4 text-xl rounded-full inline-block hover:bg-cyan-accent/20 transition">Schedule Demo</a>
+                        <a href="pricing.html" class="border border-purple-accent px-12 py-4 text-xl rounded-full inline-block hover:bg-purple-accent/20 transition">View Pricing</a>
+                    </div>
+                    <p class="mt-8 text-gray-400">No credit card required • 14-day free trial • Cancel anytime</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-deep-blue border-t border-cyan-accent/20">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 text-cyan-accent">StreamConnect</h3>
+                    <p class="text-gray-400">Professional virtual events made simple</p>
+                    <div class="mt-4 flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-cyan-accent">📘</a>
+                        <a href="#" class="text-gray-400 hover:text-cyan-accent">🐦</a>
+                        <a href="#" class="text-gray-400 hover:text-cyan-accent">📷</a>
+                        <a href="#" class="text-gray-400 hover:text-cyan-accent">🎬</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Platform</h4>
+                    <ul class="space-y-2">
+                        <li><a href="how-it-works.html" class="text-gray-400 hover:text-cyan-accent">How It Works</a></li>
+                        <li><a href="features.html" class="text-gray-400 hover:text-cyan-accent">Features</a></li>
+                        <li><a href="pricing.html" class="text-gray-400 hover:text-cyan-accent">Pricing</a></li>
+                        <li><a href="categories.html" class="text-gray-400 hover:text-cyan-accent">Event Categories</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-accent">Documentation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-accent">Video Tutorials</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-accent">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-accent">Community Forum</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="about.html" class="text-gray-400 hover:text-cyan-accent">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-accent">Careers</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-cyan-accent">Contact</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-accent">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 pt-8 border-t border-gray-800 text-center">
+                <p class="text-gray-500">© 2024 Stream Connect Events. All rights reserved.</p>
+                <p class="text-gray-600 text-sm mt-2">Made with ❤️ for event organizers worldwide</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animate timeline steps
+            gsap.utils.toArray('.timeline').forEach((timeline, i) => {
+                gsap.from(timeline, {
+                    opacity: 0,
+                    x: i % 2 === 0 ? -50 : 50,
+                    duration: 1,
+                    delay: i * 0.3,
+                    scrollTrigger: {
+                        trigger: timeline,
+                        start: "top 80%"
+                    }
+                });
+            });
+
+            // Animate tool cards
+            gsap.utils.toArray('.glass-card').forEach((card, i) => {
+                gsap.from(card, {
+                    opacity: 0,
+                    y: 30,
+                    duration: 0.6,
+                    delay: i * 0.1,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 85%"
+                    }
+                });
+            });
+
+            // Animate table rows
+            gsap.utils.toArray('tbody tr').forEach((row, i) => {
+                gsap.from(row, {
+                    opacity: 0,
+                    x: -20,
+                    duration: 0.5,
+                    delay: i * 0.1,
+                    scrollTrigger: {
+                        trigger: row,
+                        start: "top 90%"
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Plans - Stream Connect Events</title>
+    <link rel="icon" href="project logo" type="images/icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: linear-gradient(to bottom, #0A0A2A, #1A1A50); color: #FFFFFF; }
+        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(0, 255, 255, 0.3); }
+        .glow-btn { background: linear-gradient(45deg, #00FFFF, #8B5CF6); box-shadow: 0 0 20px rgba(0, 255, 255, 0.6); }
+        .navbar-glass { background: rgba(10, 10, 42, 0.9); backdrop-filter: blur(10px); }
+        .pricing-card { transition: all 0.3s ease; }
+        .pricing-card:hover { transform: translateY(-10px); }
+        .popular-badge { background: linear-gradient(45deg, #FFD700, #FFA500); }
+        .toggle-switch { position: relative; display: inline-block; width: 60px; height: 30px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #2D2D6D; transition: .4s; border-radius: 34px; }
+        .toggle-slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 4px; bottom: 4px; background: #00FFFF; transition: .4s; border-radius: 50%; }
+        input:checked + .toggle-slider { background: #8B5CF6; }
+        input:checked + .toggle-slider:before { transform: translateX(30px); }
+        .star-rating { color: #FFD700; }
+        .feature-icon { background: linear-gradient(45deg, #00FFFF, #8B5CF6); }
+    </style>
+</head>
+<body class="antialiased text-white">
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 w-full z-40 navbar-glass border-b border-cyan-accent/20 transition-all duration-500">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-bold text-cyan-accent">Stream<span class="text-purple-600">Connect</span></a>
+            <div class="hidden lg:flex space-x-8">
+                <a href="index.html" class="hover:text-cyan-accent transition">Home</a>
+                <a href="features.html" class="hover:text-cyan-accent transition">Features</a>
+                <a href="how-it-works.html" class="hover:text-cyan-accent transition">How It Works</a>
+                <a href="categories.html" class="hover:text-cyan-accent transition">Categories</a>
+                <a href="pricing.html" class="text-cyan-accent font-bold border-b-2 border-cyan-accent">Pricing</a>
+                <a href="become-organizer.html" class="hover:text-cyan-accent transition">Become Organizer</a>
+                
+            </div>
+            <div class="lg:hidden">
+                <button id="mobileMenuBtn" class="text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="lg:hidden hidden bg-deep-blue border-t border-cyan-accent/20">
+            <div class="container mx-auto px-6 py-4 flex flex-col space-y-4">
+                <a href="index.html" class="py-2 hover:text-cyan-accent transition">Home</a>
+                <a href="features.html" class="py-2 hover:text-cyan-accent transition">Features</a>
+                <a href="how-it-works.html" class="py-2 hover:text-cyan-accent transition">How It Works</a>
+                <a href="categories.html" class="py-2 hover:text-cyan-accent transition">Categories</a>
+                <a href="pricing.html" class="py-2 text-cyan-accent font-bold">Pricing</a>
+                <a href="become-organizer.html" class="py-2 hover:text-cyan-accent transition">Become Organizer</a>
+                <a href="about.html" class="py-2 hover:text-cyan-accent transition">About Us</a>
+                <a href="contact.html" class="py-2 hover:text-cyan-accent transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 relative overflow-hidden">
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-6 text-cyan-accent">Flexible Pricing Plans</h1>
+            <p class="text-xl md:text-2xl mb-10 text-gray-300 max-w-4xl mx-auto">Choose the perfect plan for your event needs. All plans include core features with no hidden charges.</p>
+            
+            <!-- Billing Toggle -->
+            <div class="flex items-center justify-center space-x-4 mb-12">
+                <span class="text-gray-300">Monthly Billing</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="billingToggle">
+                    <span class="toggle-slider"></span>
+                </label>
+                <span class="text-gray-300">Annual Billing</span>
+                <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">Save 20%</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- About StreamConnect Pricing -->
+    <section class="py-10">
+        <div class="container mx-auto px-6">
+            <div class="glass-card p-8 rounded-2xl mb-12">
+                <h2 class="text-3xl font-bold mb-6 text-center text-cyan-accent">Why Choose StreamConnect?</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 text-purple-accent">Transparent Pricing</h3>
+                        <p class="text-gray-300 mb-4">At StreamConnect, we believe in straightforward, transparent pricing with no hidden fees. Our pay-per-event model means you only pay for what you use.</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-400 mr-3"></i>
+                                <span>No setup fees</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-400 mr-3"></i>
+                                <span>No monthly commitments</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-400 mr-3"></i>
+                                <span>Free organizer training</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 text-purple-accent">Enterprise-Grade Features</h3>
+                        <p class="text-gray-300 mb-4">Even our basic plan includes features that competitors charge extra for. We're committed to making professional streaming accessible to everyone.</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-400 mr-3"></i>
+                                <span>HD streaming on all plans</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-400 mr-3"></i>
+                                <span>Interactive Q&A & polls</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-green-400 mr-3"></i>
+                                <span>Event recording included</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Cards -->
+    <section class="py-10">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Basic Plan -->
+                <div class="pricing-card glass-card p-8 rounded-2xl relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="px-4 py-1 bg-gray-700 rounded-full text-sm">BASIC</span>
+                    </div>
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold mb-4 text-cyan-accent">Starter</h3>
+                        <div class="mb-6">
+                            <span class="text-5xl font-bold" id="starterPrice">₹100</span>
+                            <span class="text-gray-400" id="starterPeriod">/event</span>
+                        </div>
+                        <p class="text-gray-400 mb-6">Perfect for small meetings, webinars, and classes</p>
+                        <a href="register.html" class="block w-full py-3 border border-cyan-accent rounded-xl hover:bg-cyan-accent/20 transition text-center">Get Started</a>
+                    </div>
+                    <ul class="space-y-4 mb-6">
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3">✓</span>
+                            <span>Up to 50 attendees</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3">✓</span>
+                            <span>1-hour duration</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3">✓</span>
+                            <span>Basic analytics</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3">✓</span>
+                            <span>Live chat support</span>
+                        </li>
+                        <li class="flex items-center opacity-50">
+                            <span class="text-gray-500 mr-3">✗</span>
+                            <span>Advanced analytics</span>
+                        </li>
+                        <li class="flex items-center opacity-50">
+                            <span class="text-gray-500 mr-3">✗</span>
+                            <span>Custom branding</span>
+                        </li>
+                    </ul>
+                    <div class="text-center text-sm text-gray-400">
+                        <i class="fas fa-info-circle mr-2"></i>Free trial includes 1 event
+                    </div>
+                </div>
+
+                <!-- Business Plan (Popular) -->
+                <div class="pricing-card glass-card p-8 rounded-2xl relative border-2 border-cyan-accent scale-105">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="px-4 py-1 popular-badge rounded-full text-sm font-bold text-deep-blue">MOST POPULAR</span>
+                    </div>
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold mb-4 text-purple-accent">Business</h3>
+                        <div class="mb-6">
+                            <span class="text-5xl font-bold" id="businessPrice">₹500</span>
+                            <span class="text-gray-400" id="businessPeriod">/event</span>
+                        </div>
+                        <p class="text-gray-400 mb-6">Ideal for conferences, workshops, and training sessions</p>
+                        <a href="register.html" class="block w-full py-3 glow-btn rounded-xl text-center">Get Started</a>
+                    </div>
+                    <ul class="space-y-4 mb-6">
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3">✓</span>
+                            <span>Up to 500 attendees</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3">✓</span>
+                            <span>2 hours duration</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3">✓</span>
+                            <span>Advanced analytics</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3">✓</span>
+                            <span>Priority support</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3">✓</span>
+                            <span>Custom branding</span>
+                        </li>
+                        <li class="flex items-center opacity-50">
+                            <span class="text-gray-500 mr-3">✗</span>
+                            <span>Dedicated account manager</span>
+                        </li>
+                    </ul>
+                    <div class="text-center text-sm text-green-400">
+                        <i class="fas fa-crown mr-2"></i>Best value for professional organizers
+                    </div>
+                </div>
+
+                <!-- Premium Plan -->
+                <div class="pricing-card glass-card p-8 rounded-2xl relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="px-4 py-1 bg-purple-accent rounded-full text-sm">ENTERPRISE</span>
+                    </div>
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold mb-4 text-cyan-accent">Enterprise</h3>
+                        <div class="mb-6">
+                            <span class="text-5xl font-bold" id="enterprisePrice">₹1000</span>
+                            <span class="text-gray-400" id="enterprisePeriod">/event</span>
+                        </div>
+                        <p class="text-gray-400 mb-6">For large-scale virtual events, conferences, and expos</p>
+                        <a href="register.html" class="block w-full py-3 border border-purple-accent rounded-xl hover:bg-purple-accent/20 transition text-center">Get Started</a>
+                    </div>
+                    <ul class="space-y-4 mb-6">
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3">✓</span>
+                            <span>1000+ attendees</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3">✓</span>
+                            <span>5+ hours duration</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3">✓</span>
+                            <span>Enterprise analytics</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3">✓</span>
+                            <span>24/7 premium support</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3">✓</span>
+                            <span>Full white-label</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-green-400 mr-3">✓</span>
+                            <span>Dedicated account manager</span>
+                        </li>
+                    </ul>
+                    <div class="text-center text-sm text-purple-accent">
+                        <i class="fas fa-star mr-2"></i>Custom solutions available
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional Features Section -->
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12 text-cyan-accent">Included in All Plans</h2>
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="glass-card p-6 rounded-2xl text-center">
+                    <div class="feature-icon w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-video text-2xl text-deep-blue"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">HD Streaming</h3>
+                    <p class="text-gray-400">Crystal clear 1080p streaming quality for all your events</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center">
+                    <div class="feature-icon w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shield-alt text-2xl text-deep-blue"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Security & Privacy</h3>
+                    <p class="text-gray-400">End-to-end encryption and password-protected events</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center">
+                    <div class="feature-icon w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-bar text-2xl text-deep-blue"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Attendance Reports</h3>
+                    <p class="text-gray-400">Detailed attendance tracking and engagement analytics</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="py-20 bg-gradient-to-b from-transparent to-purple-gradient/20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12 text-cyan-accent">Detailed Feature Comparison</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full glass-card rounded-2xl overflow-hidden">
+                    <thead>
+                        <tr class="bg-gradient-to-r from-cyan-accent/20 to-purple-accent/20">
+                            <th class="p-6 text-left">Features</th>
+                            <th class="p-6 text-center">Starter</th>
+                            <th class="p-6 text-center">Business</th>
+                            <th class="p-6 text-center">Enterprise</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-gray-700">
+                            <td class="p-6">Max Attendees</td>
+                            <td class="p-6 text-center">50</td>
+                            <td class="p-6 text-center">500</td>
+                            <td class="p-6 text-center">1000+</td>
+                        </tr>
+                        <tr class="border-b border-gray-700">
+                            <td class="p-6">Streaming Duration</td>
+                            <td class="p-6 text-center">1 hour</td>
+                            <td class="p-6 text-center">2 hours</td>
+                            <td class="p-6 text-center">5+ hours</td>
+                        </tr>
+                        <tr class="border-b border-gray-700">
+                            <td class="p-6">Recording Storage</td>
+                            <td class="p-6 text-center">7 days</td>
+                            <td class="p-6 text-center">30 days</td>
+                            <td class="p-6 text-center">90 days</td>
+                        </tr>
+                        <tr class="border-b border-gray-700">
+                            <td class="p-6">Analytics Dashboard</td>
+                            <td class="p-6 text-center">Basic</td>
+                            <td class="p-6 text-center">Advanced</td>
+                            <td class="p-6 text-center">Enterprise</td>
+                        </tr>
+                        <tr class="border-b border-gray-700">
+                            <td class="p-6">Custom Branding</td>
+                            <td class="p-6 text-center">✗</td>
+                            <td class="p-6 text-center">✓</td>
+                            <td class="p-6 text-center">✓✓</td>
+                        </tr>
+                        <tr class="border-b border-gray-700">
+                            <td class="p-6">Priority Support</td>
+                            <td class="p-6 text-center">✗</td>
+                            <td class="p-6 text-center">✓</td>
+                            <td class="p-6 text-center">✓✓</td>
+                        </tr>
+                        <tr class="border-b border-gray-700">
+                            <td class="p-6">Breakout Rooms</td>
+                            <td class="p-6 text-center">✗</td>
+                            <td class="p-6 text-center">3 rooms</td>
+                            <td class="p-6 text-center">Unlimited</td>
+                        </tr>
+                        <tr>
+                            <td class="p-6">Price per Event</td>
+                            <td class="p-6 text-center text-2xl font-bold text-cyan-accent">₹100</td>
+                            <td class="p-6 text-center text-2xl font-bold text-purple-accent">₹500</td>
+                            <td class="p-6 text-center text-2xl font-bold text-cyan-accent">₹1000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ratings & Testimonials Section -->
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12 text-cyan-accent">What Our Customers Say</h2>
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Testimonial 1 -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-accent to-purple-accent flex items-center justify-center mr-4">
+                            <span class="font-bold">AP</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Amit Patel</h4>
+                            <p class="text-gray-400 text-sm">Event Manager, TechCon India</p>
+                        </div>
+                    </div>
+                    <div class="star-rating mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <span class="ml-2 text-gray-300">5.0</span>
+                    </div>
+                    <p class="text-gray-300 italic">"StreamConnect transformed our virtual conferences. The Business plan gives us everything we need at half the cost of competitors."</p>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-accent to-purple-accent flex items-center justify-center mr-4">
+                            <span class="font-bold">SR</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Priya Sharma</h4>
+                            <p class="text-gray-400 text-sm">Yoga Instructor, Online Classes</p>
+                        </div>
+                    </div>
+                    <div class="star-rating mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <span class="ml-2 text-gray-300">4.5</span>
+                    </div>
+                    <p class="text-gray-300 italic">"The Starter plan is perfect for my yoga classes. Easy to use, reliable, and affordable. My students love the HD quality."</p>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-accent to-purple-accent flex items-center justify-center mr-4">
+                            <span class="font-bold">RK</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Rahul Kumar</h4>
+                            <p class="text-gray-400 text-sm">CEO, EduTech Solutions</p>
+                        </div>
+                    </div>
+                    <div class="star-rating mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <span class="ml-2 text-gray-300">5.0</span>
+                    </div>
+                    <p class="text-gray-300 italic">"Enterprise plan with white-labeling helped us maintain brand consistency. The dedicated account manager is incredibly helpful."</p>
+                </div>
+            </div>
+
+            <!-- Overall Rating -->
+            <div class="glass-card p-8 rounded-2xl max-w-4xl mx-auto mt-12">
+                <div class="text-center">
+                    <h3 class="text-2xl font-bold mb-4 text-cyan-accent">Overall Customer Rating</h3>
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="star-rating text-3xl mr-4">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="text-left">
+                            <div class="text-4xl font-bold">4.7</div>
+                            <div class="text-gray-400">out of 5 stars</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300">Based on 1,247 reviews from verified customers</p>
+                    <div class="mt-6 grid grid-cols-5 gap-2">
+                        <div class="text-right">5 stars</div>
+                        <div class="col-span-3">
+                            <div class="bg-gray-700 rounded-full h-4">
+                                <div class="bg-gradient-to-r from-cyan-accent to-purple-accent h-4 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div class="text-gray-400">75%</div>
+                        
+                        <div class="text-right">4 stars</div>
+                        <div class="col-span-3">
+                            <div class="bg-gray-700 rounded-full h-4">
+                                <div class="bg-gradient-to-r from-cyan-accent to-purple-accent h-4 rounded-full" style="width: 18%"></div>
+                            </div>
+                        </div>
+                        <div class="text-gray-400">18%</div>
+                        
+                        <div class="text-right">3 stars</div>
+                        <div class="col-span-3">
+                            <div class="bg-gray-700 rounded-full h-4">
+                                <div class="bg-gradient-to-r from-cyan-accent to-purple-accent h-4 rounded-full" style="width: 5%"></div>
+                            </div>
+                        </div>
+                        <div class="text-gray-400">5%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12 text-cyan-accent">Frequently Asked Questions</h2>
+            <div class="max-w-3xl mx-auto space-y-6">
+                <div class="glass-card p-6 rounded-2xl">
+                    <h4 class="text-xl font-bold mb-3 text-cyan-accent">Can I switch plans later?</h4>
+                    <p class="text-gray-400">Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately for your next event.</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl">
+                    <h4 class="text-xl font-bold mb-3 text-purple-accent">Is there a free trial?</h4>
+                    <p class="text-gray-400">Yes! New organizers get their first event free with up to 50 attendees and 1-hour duration. No credit card required.</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl">
+                    <h4 class="text-xl font-bold mb-3 text-cyan-accent">What payment methods do you accept?</h4>
+                    <p class="text-gray-400">We accept all major credit cards, debit cards, PayPal, UPI, net banking, and bank transfers. All transactions are secure.</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl">
+                    <h4 class="text-xl font-bold mb-3 text-purple-accent">Do you offer refunds?</h4>
+                    <p class="text-gray-400">Yes, we offer a 30-day money-back guarantee if you're not satisfied with our service. Refunds are processed within 7 business days.</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl">
+                    <h4 class="text-xl font-bold mb-3 text-cyan-accent">Can I get an invoice for my payment?</h4>
+                    <p class="text-gray-400">Yes, we provide GST-compliant invoices for all payments. You can download invoices from your account dashboard.</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl">
+                    <h4 class="text-xl font-bold mb-3 text-purple-accent">Do you offer discounts for non-profits or educational institutions?</h4>
+                    <p class="text-gray-400">Yes, we offer special discounts for registered non-profits, educational institutions, and government organizations. Contact our sales team for details.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 text-center">
+        <div class="container mx-auto px-6">
+            <div class="glass-card p-12 rounded-3xl max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold mb-6 text-cyan-accent">Ready to Get Started?</h2>
+                <p class="text-xl text-gray-300 mb-8">Join thousands of successful event organizers who trust StreamConnect for their virtual events. No credit card required for the free trial.</p>
+                <div class="flex flex-col md:flex-row justify-center gap-4">
+                    <a href="register.html" class="glow-btn px-12 py-4 text-xl font-bold rounded-full">Start Free Trial</a>
+                    <a href="contact.html" class="border border-cyan-accent px-12 py-4 text-xl rounded-full hover:bg-cyan-accent/20">Contact Sales</a>
+                </div>
+                <p class="text-gray-400 mt-6">Need help choosing a plan? <a href="contact.html" class="text-cyan-accent hover:underline">Schedule a demo</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-deep-blue border-t border-cyan-accent/20">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 text-cyan-accent">StreamConnect</h3>
+                    <p class="text-gray-400 mb-4">Professional streaming solutions for events of all sizes</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-cyan-accent"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-cyan-accent"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-cyan-accent"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-cyan-accent"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Pricing</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#starter" class="text-gray-400 hover:text-cyan-accent">Starter Plan</a></li>
+                        <li><a href="#business" class="text-gray-400 hover:text-purple-accent">Business Plan</a></li>
+                        <li><a href="#enterprise" class="text-gray-400 hover:text-cyan-accent">Enterprise Plan</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-purple-accent">Free Trial</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-accent">Payment Methods</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-purple-accent">Refund Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-accent">Invoice Management</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-purple-accent">Help Center</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li class="text-gray-400">Sales: +91 8056484806</li>
+                        <li class="text-gray-400">support@streamconnect.com</li>
+                        <li class="text-gray-400">Available 24/7 for Enterprise customers</li>
+                        <li><a href="contact.html" class="text-cyan-accent hover:underline">Contact Form</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-500">
+                <p>© 2024 Stream Connect Events. All rights reserved. | <a href="#" class="hover:text-cyan-accent">Privacy Policy</a> | <a href="#" class="hover:text-purple-accent">Terms of Service</a> | <a href="#" class="hover:text-cyan-accent">GDPR Compliance</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                mobileMenuBtn.innerHTML = mobileMenu.classList.contains('hidden') ? 
+                    '<i class="fas fa-bars"></i>' : '<i class="fas fa-times"></i>';
+            });
+
+            // Billing toggle functionality
+            const billingToggle = document.getElementById('billingToggle');
+            const prices = {
+                monthly: {
+                    starter: '₹100',
+                    business: '₹500',
+                    enterprise: '₹1000'
+                },
+                annual: {
+                    starter: '₹80',
+                    business: '₹400',
+                    enterprise: '₹800'
+                }
+            };
+            
+            billingToggle.addEventListener('change', function() {
+                const isAnnual = this.checked;
+                const planType = isAnnual ? 'annual' : 'monthly';
+                
+                // Update prices with animation
+                const priceElements = [
+                    { element: document.getElementById('starterPrice'), price: prices[planType].starter },
+                    { element: document.getElementById('businessPrice'), price: prices[planType].business },
+                    { element: document.getElementById('enterprisePrice'), price: prices[planType].enterprise }
+                ];
+                
+                const periodElements = [
+                    { element: document.getElementById('starterPeriod'), text: isAnnual ? '/event/year' : '/event' },
+                    { element: document.getElementById('businessPeriod'), text: isAnnual ? '/event/year' : '/event' },
+                    { element: document.getElementById('enterprisePeriod'), text: isAnnual ? '/event/year' : '/event' }
+                ];
+                
+                priceElements.forEach(item => {
+                    gsap.to(item.element, {
+                        innerHTML: item.price,
+                        duration: 0.5,
+                        ease: "power2.out"
+                    });
+                });
+                
+                periodElements.forEach(item => {
+                    item.element.textContent = item.text;
+                });
+            });
+
+            // Animate pricing cards
+            gsap.utils.toArray('.pricing-card').forEach((card, i) => {
+                gsap.from(card, {
+                    opacity: 0,
+                    y: 50,
+                    duration: 0.8,
+                    delay: i * 0.2,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 85%"
+                    }
+                });
+            });
+
+            // Animate table rows
+            gsap.utils.toArray('table tr').forEach((row, i) => {
+                gsap.from(row, {
+                    opacity: 0,
+                    x: -20,
+                    duration: 0.5,
+                    delay: i * 0.1,
+                    scrollTrigger: {
+                        trigger: row,
+                        start: "top 90%"
+                    }
+                });
+            });
+
+            // Animate testimonial cards
+            gsap.utils.toArray('.glass-card').forEach((card, i) => {
+                gsap.from(card, {
+                    opacity: 0,
+                    y: 30,
+                    duration: 0.6,
+                    delay: i * 0.1,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 90%"
+                    }
+                });
+            });
+
+            // Navbar scroll effect
+            window.addEventListener('scroll', () => {
+                const navbar = document.getElementById('navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-deep-blue');
+                    navbar.classList.remove('navbar-glass');
+                } else {
+                    navbar.classList.remove('bg-deep-blue');
+                    navbar.classList.add('navbar-glass');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

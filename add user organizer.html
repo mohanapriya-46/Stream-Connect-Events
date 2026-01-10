@@ -1,0 +1,2854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Add New User/Organizer - Stream Connect Events</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8b5cf6;
+            --primary-light: #a78bfa;
+            --primary-dark: #7c3aed;
+            --secondary-color: #10b981;
+            --secondary-light: #6ee7b7;
+            --secondary-dark: #047857;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --info-color: #06b6d4;
+            --light-bg: #f0f9ff;
+            --dark-bg: #0f172a;
+            --sidebar-bg: #ffffff;
+            --card-bg: #ffffff;
+            --text-dark: #334155;
+            --text-light: #64748b;
+            --header-bg: #ffffff;
+            --sidebar-width: 280px;
+            --sidebar-collapsed: 80px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        body.dark-mode {
+            --light-bg: #0f172a;
+            --sidebar-bg: #1e293b;
+            --card-bg: #1e293b;
+            --header-bg: #1e293b;
+            --text-dark: #f1f5f9;
+            --text-light: #94a3b8;
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            transition: var(--transition);
+            min-height: 100vh;
+        }
+        
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: var(--sidebar-bg);
+            min-height: 100vh;
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            padding-top: 20px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            transform: translateX(-100%);
+        }
+        
+        .sidebar.active {
+            transform: translateX(0);
+        }
+        
+        @media (min-width: 992px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+            
+            .sidebar.collapsed {
+                width: var(--sidebar-collapsed);
+                transform: translateX(0);
+            }
+            
+            .sidebar.collapsed .sidebar-brand span,
+            .sidebar.collapsed .menu-text {
+                display: none !important;
+            }
+            
+            .sidebar.collapsed .sidebar-brand {
+                justify-content: center;
+                padding: 0 10px 20px;
+            }
+            
+            .sidebar.collapsed .sidebar-menu a {
+                justify-content: center;
+                padding: 15px 0;
+            }
+            
+            .sidebar.collapsed .sidebar-menu i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+            
+            .sidebar.collapsed .sidebar-menu a:hover .menu-tooltip {
+                display: block;
+            }
+        }
+        
+        .sidebar-brand {
+            padding: 0 25px 25px;
+            display: flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+            transition: var(--transition);
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        
+        .sidebar-brand:hover {
+            transform: translateY(-2px);
+        }
+        
+        .sidebar-brand i {
+            color: var(--primary-color);
+            margin-right: 15px;
+            font-size: 2rem;
+            transition: var(--transition);
+            min-width: 30px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        
+        .sidebar-menu a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+            transition: left 0.7s;
+        }
+        
+        .sidebar-menu a:hover::before {
+            left: 100%;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(139, 92, 246, 0.1);
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        
+        .sidebar-menu a.active i {
+            transform: scale(1.2);
+        }
+        
+        .menu-tooltip {
+            position: absolute;
+            left: 100%;
+            background-color: var(--text-dark);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            display: none;
+            z-index: 1001;
+            box-shadow: var(--shadow-md);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .menu-tooltip::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent var(--text-dark) transparent transparent;
+        }
+        
+        .sidebar.collapsed .sidebar-menu a:hover .menu-tooltip {
+            display: block;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 0;
+            padding: 20px;
+            transition: var(--transition);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        
+        @media (min-width: 992px) {
+            .main-content {
+                margin-left: var(--sidebar-width);
+                width: calc(100% - var(--sidebar-width));
+            }
+            
+            .main-content.collapsed {
+                margin-left: var(--sidebar-collapsed);
+                width: calc(100% - var(--sidebar-collapsed));
+            }
+        }
+        
+        /* Topbar Styles */
+        .topbar {
+            background-color: var(--header-bg);
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #e2e8f0;
+            animation: slideDown 0.5s ease;
+            gap: 15px;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-right: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        
+        .menu-toggle:hover {
+            background-color: rgba(139, 92, 246, 0.1);
+            color: var(--primary-color);
+            transform: rotate(90deg);
+        }
+        
+        .search-container {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .search-container input {
+            padding: 12px 20px 12px 50px;
+            border-radius: 50px;
+            border: 2px solid #e2e8f0;
+            width: 100%;
+            transition: var(--transition);
+            background-color: #f8fafc;
+            font-size: 0.95rem;
+            max-width: 100%;
+        }
+        
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+            background-color: white;
+            transform: translateY(-1px);
+        }
+        
+        .search-container i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+        
+        .search-container input:focus + i {
+            color: var(--primary-color);
+        }
+        
+        .search-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .search-btn:hover {
+            color: var(--primary-color);
+        }
+        
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .header-icon {
+            position: relative;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background-color: #f8fafc;
+            color: var(--text-dark);
+            flex-shrink: 0;
+        }
+        
+        .header-icon:hover {
+            background-color: rgba(139, 92, 246, 0.1);
+            color: var(--primary-color);
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger-color);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 50px;
+            transition: var(--transition);
+            min-width: fit-content;
+        }
+        
+        .admin-profile:hover {
+            background-color: rgba(139, 92, 246, 0.1);
+        }
+        
+        .admin-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 12px;
+            border: 3px solid var(--primary-color);
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            flex-shrink: 0;
+        }
+        
+        .admin-profile:hover .admin-avatar {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .admin-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .admin-info {
+            overflow: hidden;
+        }
+        
+        .admin-info h5 {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .admin-info p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Dropdown Styles */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            width: 280px;
+            z-index: 9999;
+            display: none;
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+            animation: fadeInUp 0.3s ease;
+            overflow: hidden;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .dropdown-menu.active {
+            display: block;
+        }
+        
+        .dropdown-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8fafc;
+        }
+        
+        .dropdown-header h5 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .dropdown-header a {
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .dropdown-header a:hover {
+            text-decoration: underline;
+        }
+        
+        .dropdown-body {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .dropdown-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 15px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+            border-bottom: 1px solid #f1f5f9;
+            width: 100%;
+        }
+        
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f8fafc;
+            padding-left: 20px;
+        }
+        
+        .dropdown-item i {
+            margin-right: 12px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            transition: var(--transition);
+            width: 20px;
+            text-align: center;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+        
+        .dropdown-item:hover i {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+        
+        .dropdown-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .dropdown-item-content h6 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            word-break: break-word;
+        }
+        
+        .dropdown-item-content p {
+            margin: 5px 0 0;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        
+        .dropdown-item-content small {
+            color: var(--text-light);
+            font-size: 0.75rem;
+            display: block;
+            margin-top: 3px;
+        }
+        
+        .dropdown-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            background-color: #f8fafc;
+        }
+        
+        .profile-dropdown {
+            width: 280px;
+        }
+        
+        /* Form Container */
+        .form-container {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+            animation: fadeInUp 0.5s ease;
+        }
+        
+        .form-header {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .form-header h2 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1.5rem;
+        }
+        
+        .form-header p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+        
+        /* Form Progress Steps */
+        .form-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .form-progress::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background-color: #e2e8f0;
+            z-index: 1;
+        }
+        
+        .progress-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .progress-step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            border: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+        
+        .progress-step.active .progress-step-circle {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        
+        .progress-step.completed .progress-step-circle {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+        
+        .progress-step-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+        
+        .progress-step.active .progress-step-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .progress-step.completed .progress-step-label {
+            color: var(--success-color);
+        }
+        
+        /* Form Steps */
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        /* User Type Selection */
+        .user-type-selection {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .user-type-card {
+            flex: 1;
+            min-width: 200px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-type-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .user-type-card.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(139, 92, 246, 0.05);
+        }
+        
+        .user-type-card.selected::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .user-type-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .user-type-user .user-type-icon {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        }
+        
+        .user-type-organizer .user-type-icon {
+            background: linear-gradient(135deg, var(--success-color), var(--secondary-light));
+        }
+        
+        .user-type-admin .user-type-icon {
+            background: linear-gradient(135deg, var(--warning-color), #fbbf24);
+        }
+        
+        .user-type-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+        
+        .user-type-card p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 0;
+        }
+        
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .form-section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .form-section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            margin-right: 15px;
+        }
+        
+        .form-section-basic .form-section-icon {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        }
+        
+        .form-section-account .form-section-icon {
+            background: linear-gradient(135deg, var(--info-color), #67e8f9);
+        }
+        
+        .form-section-organizer .form-section-icon {
+            background: linear-gradient(135deg, var(--success-color), var(--secondary-light));
+        }
+        
+        .form-section-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-dark);
+        }
+        
+        .form-section-header p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin: 5px 0 0;
+        }
+        
+        /* Form Labels and Inputs */
+        .form-label {
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .required-field::after {
+            content: ' *';
+            color: var(--danger-color);
+        }
+        
+        .form-control, .form-select {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .form-check-label {
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+        
+        /* Password Strength */
+        .password-strength {
+            margin-top: 8px;
+        }
+        
+        .strength-meter {
+            height: 5px;
+            background-color: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .strength-meter-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+        
+        .strength-text {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .form-actions .btn {
+            flex: 1;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+        }
+        
+        /* Review Summary */
+        .review-summary {
+            background-color: #f8fafc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .summary-label {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .summary-value {
+            color: var(--text-light);
+            text-align: right;
+        }
+        
+        /* Badges */
+        .badge-user {
+            background-color: rgba(139, 92, 246, 0.1);
+            color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .badge-organizer {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .badge-admin {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        /* Success Modal */
+        .success-modal .modal-content {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        
+        .success-modal .modal-body {
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .checkmark {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 3;
+            stroke: #fff;
+            stroke-miterlimit: 10;
+            margin: 20px auto;
+            box-shadow: inset 0 0 0 rgba(16, 185, 129, 0.5);
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+        
+        .checkmark-circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 3;
+            stroke-miterlimit: 10;
+            stroke: var(--success-color);
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+        
+        .checkmark-check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+        
+        @keyframes stroke {
+            100% { stroke-dashoffset: 0; }
+        }
+        
+        @keyframes scale {
+            0%, 100% { transform: none; }
+            50% { transform: scale3d(1.1, 1.1, 1); }
+        }
+        
+        @keyframes fill {
+            100% { box-shadow: inset 0 0 0 100px var(--success-color); }
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: auto;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+        }
+        
+        /* Page content area */
+        .page-content {
+            flex: 1;
+        }
+        
+        /* Mobile Sidebar Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+        }
+        
+        /* Responsive Design Improvements */
+        
+        /* Large Screens */
+        @media (min-width: 1200px) {
+            .user-type-card {
+                min-width: 220px;
+                max-width: 220px;
+            }
+        }
+        
+        /* Medium Screens */
+        @media (min-width: 768px) and (max-width: 1199px) {
+            .user-type-card {
+                min-width: calc(33.333% - 10px);
+            }
+            
+            .form-progress::before {
+                left: 8%;
+                right: 8%;
+            }
+        }
+        
+        /* Tablets */
+        @media (max-width: 992px) {
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .user-type-card {
+                min-width: calc(50% - 10px);
+            }
+            
+            .topbar-left {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .search-container {
+                margin-left: 0;
+            }
+        }
+        
+        /* Small Tablets */
+        @media (max-width: 768px) {
+            .user-type-card {
+                min-width: 100%;
+            }
+            
+            .form-progress::before {
+                display: none;
+            }
+            
+            .form-progress {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .progress-step {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .progress-step-circle {
+                margin: 0;
+            }
+            
+            .chart-wrapper {
+                height: 250px;
+            }
+            
+            .topbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .topbar-left {
+                width: 100%;
+                flex-direction: row;
+                justify-content: space-between;
+                margin-bottom: 15px;
+            }
+            
+            .topbar-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .admin-info h5 {
+                font-size: 0.9rem;
+            }
+            
+            .admin-info p {
+                display: none;
+            }
+            
+            .dropdown-menu {
+                position: fixed;
+                top: auto !important;
+                left: 50% !important;
+                transform: translateX(-50%);
+                width: 90%;
+                max-width: 320px;
+                right: auto !important;
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+            
+            .profile-dropdown {
+                bottom: 20px;
+                top: auto !important;
+            }
+            
+            .menu-toggle {
+                margin-right: 10px;
+            }
+            
+            .search-container {
+                flex: 1;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .form-actions .btn {
+                width: 100%;
+            }
+        }
+        
+        /* Mobile Phones */
+        @media (max-width: 576px) {
+            .user-type-card {
+                min-width: 100%;
+            }
+            
+            .form-progress {
+                gap: 10px;
+            }
+            
+            .chart-wrapper {
+                height: 220px;
+            }
+            
+            .topbar {
+                padding: 12px;
+                gap: 10px;
+            }
+            
+            .main-content {
+                padding: 12px;
+            }
+            
+            .form-container {
+                padding: 15px;
+            }
+            
+            .form-header h2 {
+                font-size: 1.2rem;
+            }
+            
+            .search-container input {
+                padding: 10px 15px 10px 45px;
+                font-size: 0.9rem;
+            }
+            
+            .header-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .admin-avatar {
+                width: 40px;
+                height: 40px;
+                margin-right: 8px;
+            }
+            
+            .admin-info h5 {
+                font-size: 0.85rem;
+            }
+            
+            .sidebar {
+                width: 280px;
+            }
+            
+            .form-section-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .form-section-icon {
+                margin-right: 0;
+            }
+            
+            .dropdown-menu {
+                position: fixed !important;
+                bottom: 0 !important;
+                top: auto !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                border-radius: 20px 20px 0 0 !important;
+                animation: slideUp 0.3s ease !important;
+                transform: translateY(100%) !important;
+                max-height: 80vh !important;
+            }
+            
+            .dropdown-menu.active {
+                transform: translateY(0) !important;
+            }
+        }
+        
+        /* Small Mobile Phones */
+        @media (max-width: 480px) {
+            .user-type-card {
+                padding: 15px;
+            }
+            
+            .topbar-right {
+                gap: 8px;
+            }
+            
+            .admin-profile {
+                padding: 5px 8px;
+            }
+            
+            .admin-avatar {
+                width: 35px;
+                height: 35px;
+                margin-right: 5px;
+            }
+            
+            .admin-info h5 {
+                font-size: 0.8rem;
+            }
+            
+            .header-icon {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .menu-toggle {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .form-container {
+                padding: 12px;
+            }
+        }
+        
+        /* Extra Small Mobile Phones */
+        @media (max-width: 360px) {
+            .main-content {
+                padding: 10px;
+            }
+            
+            .form-container {
+                padding: 10px;
+            }
+            
+            .topbar {
+                padding: 10px;
+            }
+            
+            .search-container input {
+                padding: 8px 12px 8px 40px;
+                font-size: 0.85rem;
+            }
+            
+            .user-type-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .user-type-card h4 {
+                font-size: 1rem;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Animation Classes */
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-bounce-in {
+            animation: bounceIn 0.6s ease;
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        /* Notification Animation */
+        @keyframes notificationSlide {
+            0% { transform: translateX(100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        
+        .notification-slide {
+            animation: notificationSlide 0.3s ease;
+        }
+        
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .user-type-card:hover {
+                transform: none;
+            }
+            
+            .header-icon:hover {
+                transform: none;
+            }
+            
+            .admin-profile:hover .admin-avatar {
+                transform: none;
+            }
+            
+            .sidebar-menu a:hover {
+                transform: none;
+            }
+            
+            /* Increase touch target sizes */
+            .btn {
+                min-height: 44px;
+            }
+            
+            .header-icon {
+                min-width: 44px;
+                min-height: 44px;
+            }
+            
+            .menu-toggle {
+                min-width: 44px;
+                min-height: 44px;
+            }
+            
+            .search-container input {
+                min-height: 44px;
+            }
+            
+            .form-control,
+            .form-select {
+                min-height: 48px;
+            }
+        }
+        
+        /* Landscape mode optimizations */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .sidebar {
+                overflow-y: auto;
+                max-height: 100vh;
+            }
+            
+            .main-content {
+                min-height: auto;
+            }
+            
+            .form-container {
+                max-height: 85vh;
+                overflow-y: auto;
+            }
+        }
+        
+        /* High DPI screens */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .form-container {
+                border-width: 0.5px;
+            }
+            
+            .sidebar {
+                border-right-width: 0.5px;
+            }
+            
+            .topbar {
+                border-width: 0.5px;
+            }
+        }
+        
+        /* Additional Mobile Optimizations */
+        @media (max-width: 400px) {
+            .sidebar {
+                width: 100%;
+            }
+            
+            .search-container {
+                min-width: 150px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .footer {
+                font-size: 0.75rem;
+                padding: 15px;
+            }
+        }
+        
+        /* Fix for mobile dropdown positioning */
+        .dropdown-menu.mobile-fixed {
+            position: fixed;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            max-height: 80vh;
+            overflow-y: auto;
+            width: 90%;
+            max-width: 320px;
+        }
+        
+        /* Better mobile form controls */
+        @media (max-width: 768px) {
+            input, select, textarea, button {
+                font-size: 16px !important;
+            }
+            
+            .form-control, .btn {
+                min-height: 44px;
+            }
+        }
+        
+        /* Mobile menu improvements */
+        @media (max-width: 992px) {
+            .sidebar-menu a {
+                padding: 12px 20px;
+                font-size: 0.95rem;
+            }
+            
+            .sidebar-menu i {
+                font-size: 1rem;
+            }
+        }
+        
+        /* Form validation styles */
+        .is-valid {
+            border-color: var(--success-color) !important;
+        }
+        
+        .is-invalid {
+            border-color: var(--danger-color) !important;
+        }
+        
+        .valid-feedback, .invalid-feedback {
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+        
+        /* Loading skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <h3 class="text-white mt-4">Loading Add User Form...</h3>
+    </div>
+    
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <a href="admin-dash.html" class="sidebar-brand">
+            <i class="fas fa-broadcast-tower"></i>
+            <span>Stream Connect</span>
+        </a>
+        
+        <ul class="sidebar-menu">
+            <li>
+                <a href="admin-dash.html">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span class="menu-text">Dashboard</span>
+                    <div class="menu-tooltip">Dashboard Overview</div>
+                </a>
+            </li>
+            <li>
+                <a href="users-organizers.html">
+                    <i class="fas fa-users"></i>
+                    <span class="menu-text">User Management</span>
+                    <div class="menu-tooltip">Manage Users & Organizers</div>
+                </a>
+            </li>
+            <li>
+                <a href="add-user.html" class="active">
+                    <i class="fas fa-user-plus"></i>
+                    <span class="menu-text">Add User/Organizer</span>
+                    <div class="menu-tooltip">Add New User/Organizer</div>
+                </a>
+            </li>
+            <li>
+                <a href="event-approval.html">
+                    <i class="fas fa-calendar-check"></i>
+                    <span class="menu-text">Event Approval</span>
+                    <div class="menu-tooltip">Approve Events</div>
+                </a>
+            </li>
+            <li>
+                <a href="event-monitoring.html">
+                    <i class="fas fa-tv"></i>
+                    <span class="menu-text">Event Monitoring</span>
+                    <div class="menu-tooltip">Monitor Live Events</div>
+                </a>
+            </li>
+            <li>
+                <a href="payments.html">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span class="menu-text">Payments</span>
+                    <div class="menu-tooltip">Payment Management</div>
+                </a>
+            </li>
+            <li>
+                <a href="reports.html">
+                    <i class="fas fa-chart-line"></i>
+                    <span class="menu-text">Reports</span>
+                    <div class="menu-tooltip">View Reports</div>
+                </a>
+            </li>
+            <li>
+                <a href="settings.html">
+                    <i class="fas fa-cogs"></i>
+                    <span class="menu-text">Settings</span>
+                    <div class="menu-tooltip">System Configuration</div>
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search...">
+                </div>
+            </div>
+            
+            <div class="topbar-right">
+                <div class="header-icon" id="darkModeToggle">
+                    <i class="fa-solid fa-moon" id="darkIcon"></i>
+                </div>
+                
+                <div class="header-icon" id="fullScreenToggle">
+                    <i class="fa-solid fa-maximize" id="screenIcon"></i>
+                </div>
+                
+                <!-- Notifications Dropdown -->
+                <div class="header-icon notification" id="notificationToggle" style="position: relative;">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                    
+                    <div class="dropdown-menu" id="notificationDropdown">
+                        <div class="dropdown-header">
+                            <h5>Notifications</h5>
+                            <a href="#" id="markAllRead">Mark all as read</a>
+                        </div>
+                        <div class="dropdown-body">
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-user-plus text-success"></i>
+                                <div class="dropdown-item-content">
+                                    <h6>New Registration</h6>
+                                    <p>A new user has registered</p>
+                                    <small>10 minutes ago</small>
+                                </div>
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-check-circle text-primary"></i>
+                                <div class="dropdown-item-content">
+                                    <h6>Account Verified</h6>
+                                    <p>Organizer account verified</p>
+                                    <small>1 hour ago</small>
+                                </div>
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-exclamation-triangle text-warning"></i>
+                                <div class="dropdown-item-content">
+                                    <h6>System Alert</h6>
+                                    <p>System update available</p>
+                                    <small>3 hours ago</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="dropdown-footer">
+                            <a href="#" class="view-all">View All Notifications</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Admin Profile Dropdown -->
+                <div class="admin-profile" id="adminProfile" style="position: relative;">
+                    <div class="admin-avatar">
+                        <img src="image/Mohana.jpeg" alt="Admin Photo" onerror="this.src='https://ui-avatars.com/api/?name=Admin&background=3b82f6&color=fff&bold=true'">
+                    </div>
+                    <div class="admin-info">
+                        <h5>Admin User</h5>
+                        <p>Super Admin</p>
+                    </div>
+                    
+                    <div class="dropdown-menu profile-dropdown" id="profileDropdown">
+                        <a href="#" class="dropdown-item" id="viewProfileBtn">
+                            <i class="fas fa-user-circle"></i>
+                            <div class="dropdown-item-content">
+                                <h6>My Profile</h6>
+                                <p>View and edit your profile</p>
+                            </div>
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <div class="dropdown-item-content">
+                                <h6>Settings</h6>
+                                <p>Manage account settings</p>
+                            </div>
+                        </a>
+                        <div class="dropdown-footer">
+                            <a href="#" id="logoutBtn" class="btn btn-outline-danger btn-sm w-100">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page Content Area -->
+        <div class="page-content">
+            <!-- Add User/Organizer Form -->
+            <div class="form-container animate-slide-up">
+                <!-- Form Header -->
+                <div class="form-header">
+                    <h2><i class="fas fa-user-plus me-2"></i> Add New User/Organizer</h2>
+                    <p>Fill in the details below to add a new user or organizer to the system.</p>
+                </div>
+                
+                <!-- Progress Steps -->
+                <div class="form-progress">
+                    <div class="progress-step active" id="step1">
+                        <div class="progress-step-circle">1</div>
+                        <div class="progress-step-label">Select Type</div>
+                    </div>
+                    <div class="progress-step" id="step2">
+                        <div class="progress-step-circle">2</div>
+                        <div class="progress-step-label">Basic Info</div>
+                    </div>
+                    <div class="progress-step" id="step3">
+                        <div class="progress-step-circle">3</div>
+                        <div class="progress-step-label">Account Details</div>
+                    </div>
+                    <div class="progress-step" id="step4">
+                        <div class="progress-step-circle">4</div>
+                        <div class="progress-step-label">Review & Submit</div>
+                    </div>
+                </div>
+                
+                <!-- Step 1: Select User Type -->
+                <div class="form-step active" id="formStep1">
+                    <div class="mb-4">
+                        <h4 class="mb-3">Select User Type</h4>
+                        <p class="text-muted">Choose the type of account you want to create.</p>
+                    </div>
+                    
+                    <div class="user-type-selection">
+                        <div class="user-type-card user-type-user" data-type="User" id="userTypeUser">
+                            <div class="user-type-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h4>Regular User</h4>
+                            <p>Standard user account for attending events</p>
+                        </div>
+                        
+                        <div class="user-type-card user-type-organizer" data-type="Organizer" id="userTypeOrganizer">
+                            <div class="user-type-icon">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <h4>Event Organizer</h4>
+                            <p>Account for creating and managing events</p>
+                        </div>
+                        
+                        <div class="user-type-card user-type-admin" data-type="Admin" id="userTypeAdmin">
+                            <div class="user-type-icon">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <h4>Administrator</h4>
+                            <p>Admin account with full system access</p>
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="selectedUserType" name="userType" value="">
+                    
+                    <div class="form-actions mt-4">
+                        <button class="btn btn-secondary" onclick="goToDashboard()">
+                            <i class="fas fa-times me-2"></i> Cancel
+                        </button>
+                        <button class="btn btn-primary" id="nextStep1">
+                            Next <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Basic Information -->
+                <div class="form-step" id="formStep2">
+                    <div class="form-section form-section-basic">
+                        <div class="form-section-header">
+                            <div class="form-section-icon">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                            <div>
+                                <h3>Basic Information</h3>
+                                <p>Enter the user's personal information</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-12 col-sm-6">
+                                <label for="firstName" class="form-label required-field">First Name</label>
+                                <input type="text" class="form-control" id="firstName" required>
+                            </div>
+                            
+                            <div class="col-12 col-sm-6">
+                                <label for="lastName" class="form-label required-field">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" required>
+                            </div>
+                            
+                            <div class="col-12 col-sm-6">
+                                <label for="email" class="form-label required-field">Email Address</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                            
+                            <div class="col-12 col-sm-6">
+                                <label for="phone" class="form-label required-field">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" required>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label for="address" class="form-label">Address</label>
+                                <textarea class="form-control" id="address" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Organizer Specific Fields -->
+                    <div class="form-section form-section-organizer" id="organizerFields" style="display: none;">
+                        <div class="form-section-header">
+                            <div class="form-section-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div>
+                                <h3>Organization Details</h3>
+                                <p>Additional information for organizer accounts</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="organizationName" class="form-label required-field">Organization Name</label>
+                                <input type="text" class="form-control" id="organizationName">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" id="prevStep2">
+                            <i class="fas fa-arrow-left me-2"></i> Back
+                        </button>
+                        <button class="btn btn-primary" id="nextStep2">
+                            Next <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Account Details -->
+                <div class="form-step" id="formStep3">
+                    <div class="form-section form-section-account">
+                        <div class="form-section-header">
+                            <div class="form-section-icon">
+                                <i class="fas fa-key"></i>
+                            </div>
+                            <div>
+                                <h3>Account Details</h3>
+                                <p>Set up login credentials and account preferences</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-12 col-sm-6">
+                                <label for="username" class="form-label required-field">Username</label>
+                                <input type="text" class="form-control" id="username" required>
+                            </div>
+                            
+                            <div class="col-12 col-sm-6">
+                                <label for="password" class="form-label required-field">Password</label>
+                                <input type="password" class="form-control" id="password" required>
+                                <div class="password-strength">
+                                    <div class="strength-meter">
+                                        <div class="strength-meter-fill" id="passwordStrengthBar"></div>
+                                    </div>
+                                    <div class="strength-text" id="passwordStrengthText">Password strength: None</div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-sm-6">
+                                <label for="confirmPassword" class="form-label required-field">Confirm Password</label>
+                                <input type="password" class="form-control" id="confirmPassword" required>
+                            </div>
+                            
+                            <div class="col-12 col-sm-6">
+                                <label for="accountStatus" class="form-label required-field">Account Status</label>
+                                <select class="form-select" id="accountStatus" required>
+                                    <option value="Active" selected>Active</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Suspended">Suspended</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" id="prevStep3">
+                            <i class="fas fa-arrow-left me-2"></i> Back
+                        </button>
+                        <button class="btn btn-primary" id="nextStep3">
+                            Next <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Step 4: Review & Submit -->
+                <div class="form-step" id="formStep4">
+                    <div class="mb-4">
+                        <h4 class="mb-3">Review & Submit</h4>
+                        <p class="text-muted">Review all information before creating the account.</p>
+                    </div>
+                    
+                    <div class="review-summary" id="reviewSummary">
+                        <!-- Summary will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Note:</strong> After submission, the user will receive an email with login instructions.
+                    </div>
+                    
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="confirmDetails" required>
+                        <label class="form-check-label" for="confirmDetails">
+                            I confirm that all information provided is accurate.
+                        </label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" id="prevStep4">
+                            <i class="fas fa-arrow-left me-2"></i> Back
+                        </button>
+                        <button class="btn btn-success" id="submitForm">
+                            <i class="fas fa-check me-2"></i> Create Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Stream Connect Events Admin Dashboard</strong> &copy; AngamTech Teams All rights reserved</p>
+            <p class="text-muted">Designed for administrators to manage users and organizers</p>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade success-modal" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="text-center">
+                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                            <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                        </svg>
+                        <h3 class="mb-3">Account Created Successfully!</h3>
+                        <p class="text-muted mb-4" id="successMessage"></p>
+                        <div class="d-flex gap-3 justify-content-center">
+                            <button type="button" class="btn btn-outline-primary" onclick="goToDashboard()">
+                                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="addAnotherUser()">
+                                <i class="fas fa-user-plus me-2"></i> Add Another
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // ============================================
+        // INITIALIZATION & LOADING
+        // ============================================
+        
+        // Hide loading screen
+        setTimeout(() => {
+            document.getElementById('loadingOverlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                initializeForm();
+            }, 500);
+        }, 1500);
+        
+        let currentStep = 1;
+        let selectedUserType = '';
+        let formData = {
+            userType: '',
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            address: '',
+            organizationName: '',
+            username: '',
+            password: '',
+            accountStatus: 'Active'
+        };
+        
+        function initializeForm() {
+            setupEventListeners();
+            setupUserTypeSelection();
+            setupPasswordStrength();
+            adjustLayoutForScreenSize();
+            showNotification('Add User Form loaded successfully!', 'success');
+        }
+        
+        // ============================================
+        // RESPONSIVE LAYOUT ADJUSTMENTS
+        // ============================================
+        
+        function adjustLayoutForScreenSize() {
+            const isMobile = window.innerWidth < 992;
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            
+            if (isMobile) {
+                sidebar.classList.remove('active');
+                sidebar.classList.remove('collapsed');
+                mainContent.classList.remove('collapsed');
+                sidebarOverlay.classList.remove('active');
+                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                document.body.style.overflow = '';
+            } else {
+                sidebar.classList.add('active');
+                sidebar.classList.remove('collapsed');
+                mainContent.classList.remove('collapsed');
+                sidebarOverlay.classList.remove('active');
+                menuToggle.innerHTML = '<i class="fas fa-times"></i>';
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // ============================================
+        // EVENT LISTENERS SETUP
+        // ============================================
+        
+        function setupEventListeners() {
+            // Toggle sidebar
+            document.getElementById('menuToggle').addEventListener('click', function() {
+                const sidebar = document.getElementById('sidebar');
+                const mainContent = document.getElementById('mainContent');
+                const sidebarOverlay = document.getElementById('sidebarOverlay');
+                const isMobile = window.innerWidth < 992;
+                
+                if (isMobile) {
+                    sidebar.classList.toggle('active');
+                    sidebarOverlay.classList.toggle('active');
+                    
+                    if (sidebar.classList.contains('active')) {
+                        this.innerHTML = '<i class="fas fa-times"></i>';
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        this.innerHTML = '<i class="fas fa-bars"></i>';
+                        document.body.style.overflow = '';
+                    }
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                    mainContent.classList.toggle('collapsed');
+                    
+                    if (sidebar.classList.contains('collapsed')) {
+                        this.innerHTML = '<i class="fas fa-bars"></i>';
+                    } else {
+                        this.innerHTML = '<i class="fas fa-times"></i>';
+                    }
+                }
+            });
+            
+            // Close sidebar when clicking on overlay (mobile)
+            document.getElementById('sidebarOverlay').addEventListener('click', function() {
+                const sidebar = document.getElementById('sidebar');
+                const menuToggle = document.getElementById('menuToggle');
+                sidebar.classList.remove('active');
+                this.classList.remove('active');
+                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                document.body.style.overflow = '';
+            });
+            
+            // Close sidebar when clicking on menu links (mobile)
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 992) {
+                        const sidebar = document.getElementById('sidebar');
+                        const sidebarOverlay = document.getElementById('sidebarOverlay');
+                        const menuToggle = document.getElementById('menuToggle');
+                        
+                        sidebar.classList.remove('active');
+                        sidebarOverlay.classList.remove('active');
+                        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                        document.body.style.overflow = '';
+                    }
+                });
+            });
+            
+            // Toggle dark mode
+            document.getElementById('darkModeToggle').addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                
+                if (document.body.classList.contains('dark-mode')) {
+                    this.innerHTML = '<i class="fas fa-sun"></i>';
+                    showNotification('Dark mode enabled', 'info');
+                } else {
+                    this.innerHTML = '<i class="fas fa-moon"></i>';
+                    showNotification('Light mode enabled', 'info');
+                }
+            });
+            
+            // Toggle full screen
+            document.getElementById('fullScreenToggle').addEventListener('click', function() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log(`Error attempting to enable full-screen mode: ${err.message}`);
+                    });
+                    this.innerHTML = '<i class="fas fa-compress"></i>';
+                    showNotification('Full screen mode enabled', 'info');
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                        this.innerHTML = '<i class="fas fa-expand"></i>';
+                        showNotification('Full screen mode disabled', 'info');
+                    }
+                }
+            });
+            
+            // Toggle notifications dropdown
+            document.getElementById('notificationToggle').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const dropdown = document.getElementById('notificationDropdown');
+                const profileDropdown = document.getElementById('profileDropdown');
+                
+                document.querySelectorAll('.dropdown-menu.active').forEach(d => {
+                    if (d !== dropdown) d.classList.remove('active');
+                });
+                
+                if (window.innerWidth <= 768) {
+                    dropdown.classList.add('mobile-fixed');
+                }
+                
+                dropdown.classList.toggle('active');
+            });
+            
+            // Toggle profile dropdown
+            document.getElementById('adminProfile').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const dropdown = document.getElementById('profileDropdown');
+                
+                document.querySelectorAll('.dropdown-menu.active').forEach(d => {
+                    if (d !== dropdown) d.classList.remove('active');
+                });
+                
+                if (window.innerWidth <= 768) {
+                    dropdown.classList.add('mobile-fixed');
+                }
+                
+                dropdown.classList.toggle('active');
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                const notificationDropdown = document.getElementById('notificationDropdown');
+                const profileDropdown = document.getElementById('profileDropdown');
+                
+                if (!e.target.closest('#notificationToggle') && !e.target.closest('#notificationDropdown')) {
+                    notificationDropdown.classList.remove('active');
+                    notificationDropdown.classList.remove('mobile-fixed');
+                }
+                
+                if (!e.target.closest('#adminProfile') && !e.target.closest('#profileDropdown')) {
+                    profileDropdown.classList.remove('active');
+                    profileDropdown.classList.remove('mobile-fixed');
+                }
+            });
+            
+            // Mark all notifications as read
+            document.getElementById('markAllRead').addEventListener('click', function(e) {
+                e.preventDefault();
+                const badge = document.querySelector('.notification-badge');
+                badge.style.display = 'none';
+                showNotification('All notifications marked as read', 'success');
+            });
+            
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to logout?')) {
+                    showNotification('Logging out...', 'warning');
+                    setTimeout(() => {
+                        showNotification('Logged out successfully!', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 1500);
+                    }, 1000);
+                }
+            });
+            
+            // Setup form navigation
+            setupFormNavigation();
+            
+            // Window resize listener
+            window.addEventListener('resize', handleResize);
+            
+            // Handle touch devices
+            if ('ontouchstart' in window) {
+                document.documentElement.classList.add('touch-device');
+                
+                document.querySelectorAll('.btn, .header-icon, .menu-toggle').forEach(el => {
+                    el.style.minHeight = '44px';
+                    el.style.minWidth = '44px';
+                });
+            }
+        }
+        
+        function handleResize() {
+            adjustLayoutForScreenSize();
+            
+            // Update dropdown positioning for mobile
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            const profileDropdown = document.getElementById('profileDropdown');
+            
+            if (window.innerWidth <= 768) {
+                notificationDropdown.classList.add('mobile-fixed');
+                profileDropdown.classList.add('mobile-fixed');
+            } else {
+                notificationDropdown.classList.remove('mobile-fixed');
+                profileDropdown.classList.remove('mobile-fixed');
+            }
+        }
+        
+        // ============================================
+        // USER TYPE SELECTION
+        // ============================================
+        
+        function setupUserTypeSelection() {
+            const userTypeCards = document.querySelectorAll('.user-type-card');
+            
+            userTypeCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    selectUserType(this);
+                });
+            });
+            
+            // Auto-select User type by default
+            selectUserType(document.getElementById('userTypeUser'));
+        }
+        
+        function selectUserType(card) {
+            document.querySelectorAll('.user-type-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            
+            selectedUserType = card.getAttribute('data-type');
+            document.getElementById('selectedUserType').value = selectedUserType;
+            
+            const organizerFields = document.getElementById('organizerFields');
+            organizerFields.style.display = selectedUserType === 'Organizer' ? 'block' : 'none';
+            
+            formData.userType = selectedUserType;
+        }
+        
+        // ============================================
+        // PASSWORD STRENGTH CHECKER
+        // ============================================
+        
+        function setupPasswordStrength() {
+            const passwordInput = document.getElementById('password');
+            const strengthBar = document.getElementById('passwordStrengthBar');
+            const strengthText = document.getElementById('passwordStrengthText');
+            
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                const strength = checkPasswordStrength(password);
+                
+                strengthBar.style.width = strength.percentage + '%';
+                strengthBar.style.backgroundColor = strength.color;
+                strengthText.textContent = 'Password strength: ' + strength.text;
+                strengthText.style.color = strength.color;
+                
+                formData.password = password;
+                
+                validatePasswordMatch();
+            });
+            
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+        }
+        
+        function validatePasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            
+            if (confirmPassword === '') {
+                confirmPasswordInput.classList.remove('is-invalid');
+                confirmPasswordInput.classList.remove('is-valid');
+            } else if (password !== confirmPassword) {
+                confirmPasswordInput.classList.add('is-invalid');
+                confirmPasswordInput.classList.remove('is-valid');
+            } else {
+                confirmPasswordInput.classList.remove('is-invalid');
+                confirmPasswordInput.classList.add('is-valid');
+            }
+        }
+        
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            
+            if (password.length >= 8) strength += 25;
+            if (password.length >= 12) strength += 10;
+            if (/[a-z]/.test(password)) strength += 15;
+            if (/[A-Z]/.test(password)) strength += 15;
+            if (/[0-9]/.test(password)) strength += 15;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 20;
+            
+            let level, color, text;
+            
+            if (strength < 30) {
+                level = 'Weak';
+                color = '#ef4444';
+                text = 'Weak';
+            } else if (strength < 60) {
+                level = 'Fair';
+                color = '#f59e0b';
+                text = 'Fair';
+            } else if (strength < 80) {
+                level = 'Good';
+                color = '#3b82f6';
+                text = 'Good';
+            } else {
+                level = 'Strong';
+                color = '#10b981';
+                text = 'Strong';
+            }
+            
+            return {
+                percentage: Math.min(strength, 100),
+                level: level,
+                color: color,
+                text: text
+            };
+        }
+        
+        // ============================================
+        // FORM NAVIGATION
+        // ============================================
+        
+        function setupFormNavigation() {
+            // Step 1 navigation
+            document.getElementById('nextStep1').addEventListener('click', function() {
+                if (validateStep1()) {
+                    goToStep(2);
+                }
+            });
+            
+            // Step 2 navigation
+            document.getElementById('prevStep2').addEventListener('click', function() {
+                goToStep(1);
+            });
+            
+            document.getElementById('nextStep2').addEventListener('click', function() {
+                if (validateStep2()) {
+                    goToStep(3);
+                }
+            });
+            
+            // Step 3 navigation
+            document.getElementById('prevStep3').addEventListener('click', function() {
+                goToStep(2);
+            });
+            
+            document.getElementById('nextStep3').addEventListener('click', function() {
+                if (validateStep3()) {
+                    updateReviewSummary();
+                    goToStep(4);
+                }
+            });
+            
+            // Step 4 navigation
+            document.getElementById('prevStep4').addEventListener('click', function() {
+                goToStep(3);
+            });
+            
+            document.getElementById('submitForm').addEventListener('click', function() {
+                if (validateStep4()) {
+                    submitForm();
+                }
+            });
+        }
+        
+        function goToStep(step) {
+            document.getElementById(`formStep${currentStep}`).classList.remove('active');
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            
+            document.getElementById(`formStep${step}`).classList.add('active');
+            document.getElementById(`step${step}`).classList.add('active');
+            
+            for (let i = 1; i < step; i++) {
+                document.getElementById(`step${i}`).classList.add('completed');
+            }
+            
+            for (let i = step + 1; i <= 4; i++) {
+                document.getElementById(`step${i}`).classList.remove('completed');
+            }
+            
+            currentStep = step;
+            
+            if (window.innerWidth < 768) {
+                document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        // ============================================
+        // FORM VALIDATION
+        // ============================================
+        
+        function validateStep1() {
+            if (!selectedUserType) {
+                showNotification('Please select a user type', 'warning');
+                return false;
+            }
+            return true;
+        }
+        
+        function validateStep2() {
+            let isValid = true;
+            const requiredFields = ['firstName', 'lastName', 'email', 'phone'];
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            
+            const emailField = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailField.value && !emailRegex.test(emailField.value)) {
+                emailField.classList.add('is-invalid');
+                isValid = false;
+            }
+            
+            if (selectedUserType === 'Organizer') {
+                const orgName = document.getElementById('organizationName');
+                if (!orgName.value.trim()) {
+                    orgName.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    orgName.classList.remove('is-invalid');
+                }
+            }
+            
+            if (!isValid) {
+                showNotification('Please fill in all required fields correctly', 'warning');
+                return false;
+            }
+            
+            saveStep2Data();
+            return true;
+        }
+        
+        function validateStep3() {
+            let isValid = true;
+            const requiredFields = ['username', 'password', 'confirmPassword'];
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPassword').classList.add('is-invalid');
+                isValid = false;
+            }
+            
+            const strength = checkPasswordStrength(password);
+            if (strength.level === 'Weak') {
+                showNotification('Please use a stronger password', 'warning');
+                document.getElementById('password').classList.add('is-invalid');
+                isValid = false;
+            }
+            
+            const username = document.getElementById('username').value;
+            if (username.length < 4 || username.length > 20) {
+                document.getElementById('username').classList.add('is-invalid');
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                showNotification('Please check your account details', 'warning');
+                return false;
+            }
+            
+            saveStep3Data();
+            return true;
+        }
+        
+        function validateStep4() {
+            const confirmCheckbox = document.getElementById('confirmDetails');
+            
+            if (!confirmCheckbox.checked) {
+                confirmCheckbox.classList.add('is-invalid');
+                showNotification('Please confirm the details before submitting', 'warning');
+                return false;
+            }
+            
+            confirmCheckbox.classList.remove('is-invalid');
+            return true;
+        }
+        
+        // ============================================
+        // FORM DATA HANDLING
+        // ============================================
+        
+        function saveStep2Data() {
+            formData.firstName = document.getElementById('firstName').value;
+            formData.lastName = document.getElementById('lastName').value;
+            formData.email = document.getElementById('email').value;
+            formData.phone = document.getElementById('phone').value;
+            formData.address = document.getElementById('address').value;
+            
+            if (selectedUserType === 'Organizer') {
+                formData.organizationName = document.getElementById('organizationName').value;
+            }
+        }
+        
+        function saveStep3Data() {
+            formData.username = document.getElementById('username').value;
+            formData.password = document.getElementById('password').value;
+            formData.accountStatus = document.getElementById('accountStatus').value;
+            
+            if (!formData.username && formData.firstName && formData.lastName) {
+                formData.username = (formData.firstName.toLowerCase() + '.' + formData.lastName.toLowerCase()).replace(/\s+/g, '.');
+                document.getElementById('username').value = formData.username;
+            }
+        }
+        
+        function updateReviewSummary() {
+            const summaryContainer = document.getElementById('reviewSummary');
+            let html = '';
+            
+            html += `
+                <div class="summary-item">
+                    <div class="summary-label">User Type</div>
+                    <div class="summary-value">
+                        <span class="badge ${formData.userType === 'User' ? 'badge-user' : formData.userType === 'Organizer' ? 'badge-organizer' : 'badge-admin'}">
+                            ${formData.userType}
+                        </span>
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Full Name</div>
+                    <div class="summary-value">${formData.firstName} ${formData.lastName}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Email</div>
+                    <div class="summary-value">${formData.email}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Phone</div>
+                    <div class="summary-value">${formData.phone}</div>
+                </div>
+            `;
+            
+            if (formData.userType === 'Organizer' && formData.organizationName) {
+                html += `
+                    <div class="summary-item">
+                        <div class="summary-label">Organization</div>
+                        <div class="summary-value">${formData.organizationName}</div>
+                    </div>
+                `;
+            }
+            
+            html += `
+                <div class="summary-item">
+                    <div class="summary-label">Username</div>
+                    <div class="summary-value">${formData.username}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Account Status</div>
+                    <div class="summary-value">
+                        <span class="badge ${formData.accountStatus === 'Active' ? 'bg-success' : formData.accountStatus === 'Pending' ? 'bg-warning' : 'bg-danger'}">
+                            ${formData.accountStatus}
+                        </span>
+                    </div>
+                </div>
+            `;
+            
+            summaryContainer.innerHTML = html;
+        }
+        
+        // ============================================
+        // FORM SUBMISSION
+        // ============================================
+        
+        function submitForm() {
+            showNotification('Creating account...', 'info');
+            
+            const submitBtn = document.getElementById('submitForm');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Creating...';
+            
+            setTimeout(() => {
+                const userId = generateUserId(formData.userType);
+                
+                const users = JSON.parse(localStorage.getItem('streamConnectUsers') || '[]');
+                const newUser = {
+                    id: userId,
+                    ...formData,
+                    registrationDate: new Date().toISOString(),
+                    lastLogin: null,
+                    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.firstName + ' ' + formData.lastName)}&background=${formData.userType === 'User' ? '3b82f6' : formData.userType === 'Organizer' ? '10b981' : 'f59e0b'}&color=fff`
+                };
+                
+                users.push(newUser);
+                localStorage.setItem('streamConnectUsers', JSON.stringify(users));
+                
+                const successMessage = `${formData.firstName} ${formData.lastName} has been successfully added as a ${formData.userType}.`;
+                document.getElementById('successMessage').textContent = successMessage;
+                
+                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+                
+                showNotification('Account created successfully!', 'success');
+                
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-check me-2"></i> Create Account';
+            }, 1500);
+        }
+        
+        function generateUserId(userType) {
+            const prefix = userType === 'User' ? 'U' : userType === 'Organizer' ? 'O' : 'A';
+            const users = JSON.parse(localStorage.getItem('streamConnectUsers') || '[]');
+            const existingIds = users.filter(u => u.id.startsWith(prefix)).map(u => parseInt(u.id.substring(1)));
+            const maxId = existingIds.length > 0 ? Math.max(...existingIds) : 0;
+            return prefix + String(maxId + 1).padStart(4, '0');
+        }
+        
+        // ============================================
+        // NAVIGATION FUNCTIONS
+        // ============================================
+        
+        function goToDashboard() {
+            showNotification('Redirecting to dashboard...', 'info');
+            setTimeout(() => {
+                window.location.href = 'admin-dash.html';
+            }, 500);
+        }
+        
+        function addAnotherUser() {
+            const successModal = bootstrap.Modal.getInstance(document.getElementById('successModal'));
+            if (successModal) successModal.hide();
+            
+            resetForm();
+            goToStep(1);
+            showNotification('Form reset. You can now add another user.', 'info');
+        }
+        
+        function resetForm() {
+            formData = {
+                userType: '',
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                address: '',
+                organizationName: '',
+                username: '',
+                password: '',
+                accountStatus: 'Active'
+            };
+            
+            document.querySelectorAll('.form-control, .form-select').forEach(field => {
+                field.value = '';
+                field.classList.remove('is-invalid');
+                field.classList.remove('is-valid');
+            });
+            
+            document.getElementById('confirmDetails').checked = false;
+            document.getElementById('gender').value = '';
+            document.getElementById('country').value = 'India';
+            document.getElementById('accountStatus').value = 'Active';
+            
+            document.querySelectorAll('.user-type-card').forEach(card => card.classList.remove('selected'));
+            selectUserType(document.getElementById('userTypeUser'));
+            
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`step${i}`).classList.remove('completed');
+            }
+            
+            document.getElementById('organizerFields').style.display = 'none';
+            document.getElementById('passwordStrengthBar').style.width = '0%';
+            document.getElementById('passwordStrengthText').textContent = 'Password strength: None';
+            document.getElementById('passwordStrengthText').style.color = '';
+            
+            currentStep = 1;
+        }
+        
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} notification-slide position-fixed`;
+            notification.style.cssText = `
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                min-width: 250px;
+                max-width: 90%;
+                box-shadow: var(--shadow-lg);
+                border: none;
+                animation: notificationSlide 0.3s ease;
+            `;
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'danger' ? 'times-circle' : 'info-circle'} me-2"></i>
+                    <div class="flex-grow-1">${message}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }
+            }, 5000);
+            
+            notification.querySelector('.btn-close').addEventListener('click', function() {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            });
+        }
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', function() {
+            adjustLayoutForScreenSize();
+        });
+    </script>
+</body>
+</html>

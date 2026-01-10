@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Connect | Secure Access</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-cyan': '#00F0FF',
+                        'brand-purple': '#8B5CF6',
+                        'dark-slate': '#020617'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; background-color: #020617; overflow-x: hidden; font-family: 'Inter', sans-serif; }
+        
+        .bg-layer {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 1s ease-in-out, transform 1.5s ease-out;
+            opacity: 0;
+        }
+        .bg-active { opacity: 0.5; transform: scale(1.05); }
+        
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: radial-gradient(circle at center, transparent 0%, #020617 100%);
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .role-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        .role-card.active-role {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--hover-color);
+            box-shadow: 0 0 20px var(--hover-glow);
+            transform: translateX(10px);
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #00F0FF;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+        }
+        
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-6 text-white">
+
+    <div id="bg-default" class="bg-layer bg-active" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2072');"></div>
+    <div id="bg-admin" class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=2070');"></div>
+    <div id="bg-organizer" class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=2070');"></div>
+    <div id="bg-attendee" class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&q=80&w=2070');"></div>
+    
+    <div class="bg-overlay"></div>
+
+    <div class="glass-card w-full max-w-6xl rounded-[3rem] p-8 md:p-14 relative z-10" id="mainWrapper">
+        
+        <div class="flex justify-between items-center mb-12">
+            <button onclick="window.location.href='index.html'" class="flex items-center gap-2 text-slate-400 hover:text-brand-cyan transition-colors group">
+                <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+                <span class="text-xs font-bold uppercase tracking-widest">Back to Home</span>
+            </button>
+            <h1 class="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-brand-cyan to-brand-purple">
+                STREAM CONNECT
+            </h1>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            
+            <div class="space-y-6">
+                <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">Identity Hub</p>
+                <div class="space-y-4">
+                    <div onclick="setRole('admin')" id="card-admin" class="role-card p-6 rounded-2xl flex items-center gap-5 cursor-pointer" style="--hover-color: #00F0FF; --hover-glow: rgba(0, 240, 255, 0.2);">
+                        <div class="p-3 bg-brand-cyan/10 rounded-xl"><i data-lucide="shield-check" class="w-6 h-6 text-brand-cyan"></i></div>
+                        <div>
+                            <h3 class="font-bold">Administrator</h3>
+                            <p class="text-[10px] text-slate-400 italic">System Overlord</p>
+                        </div>
+                    </div>
+
+                    <div onclick="setRole('organizer')" id="card-organizer" class="role-card p-6 rounded-2xl flex items-center gap-5 cursor-pointer" style="--hover-color: #8B5CF6; --hover-glow: rgba(139, 92, 246, 0.2);">
+                        <div class="p-3 bg-brand-purple/10 rounded-xl"><i data-lucide="calendar" class="w-6 h-6 text-brand-purple"></i></div>
+                        <div>
+                            <h3 class="font-bold">Organizer</h3>
+                            <p class="text-[10px] text-slate-400 italic">Event Architect</p>
+                        </div>
+                    </div>
+
+                    <div onclick="setRole('attendee')" id="card-attendee" class="role-card p-6 rounded-2xl flex items-center gap-5 cursor-pointer" style="--hover-color: #EC4899; --hover-glow: rgba(236, 72, 153, 0.2);">
+                        <div class="p-3 bg-pink-500/10 rounded-xl"><i data-lucide="ticket" class="w-6 h-6 text-pink-500"></i></div>
+                        <div>
+                            <h3 class="font-bold">Attendee</h3>
+                            <p class="text-[10px] text-slate-400 italic">Experience Seeker</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:border-l border-white/10 lg:pl-16">
+                <div id="loginFormContainer">
+                    <h2 id="loginTitle" class="text-4xl font-bold mb-2">Access Portal</h2>
+                    <p id="loginSubtitle" class="text-slate-400 mb-10 text-sm">Verify your credentials to continue</p>
+
+                    <form id="loginForm" class="space-y-6">
+                        <div>
+                            <label id="inputLabel" class="block text-[10px] font-bold text-brand-cyan uppercase tracking-widest mb-2 italic">Identifier</label>
+                            <input type="text" placeholder="Enter your ID" required class="input-field w-full rounded-xl px-5 py-4 text-white outline-none">
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-[10px] font-bold text-brand-cyan uppercase tracking-widest italic">Secret Key</label>
+                                <a href="#" class="text-[10px] text-slate-500 hover:text-brand-cyan transition-colors">Recover Password?</a>
+                            </div>
+                            <input type="password" placeholder="••••••••" required class="input-field w-full rounded-xl px-5 py-4 text-white outline-none">
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="w-full py-4 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-purple text-dark-slate font-black uppercase tracking-widest shadow-xl hover:brightness-110 active:scale-95 transition-all">
+                            Authorize Entry
+                        </button>
+
+                        <div class="relative py-4">
+                            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/10"></div></div>
+                            <div class="relative flex justify-center text-[10px] uppercase tracking-tighter"><span class="bg-[#0b1224] px-4 text-slate-500">Fast Track</span></div>
+                        </div>
+
+                        <button type="button" class="w-full py-3 rounded-xl border border-white/10 hover:bg-white/5 flex items-center justify-center gap-3 transition-all">
+                            <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" class="w-4 h-4" alt="Google">
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Sign in with Google</span>
+                        </button>
+                    </form>
+
+                    <div id="registerLink" class="mt-8 text-center border-t border-white/5 pt-6">
+                        <p class="text-slate-400 text-xs">
+                            New to the stream? 
+                            <a href="register.html" class="text-brand-cyan font-bold hover:underline ml-1">Create an Account</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        let currentRole = 'attendee';
+
+        function setRole(role, updateUrl = true) {
+            currentRole = role;
+
+            if(updateUrl) {
+                const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?role=' + role;
+                window.history.pushState({path:newUrl}, '', newUrl);
+            }
+
+            // Update Backgrounds
+            document.querySelectorAll('.bg-layer').forEach(bg => bg.classList.remove('bg-active'));
+            document.getElementById(`bg-${role}`).classList.add('bg-active');
+
+            // Update Active Card
+            document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active-role'));
+            document.getElementById(`card-${role}`).classList.add('active-role');
+
+            // Dynamic Content
+            const title = document.getElementById('loginTitle');
+            const sub = document.getElementById('loginSubtitle');
+            const label = document.getElementById('inputLabel');
+            const regBox = document.getElementById('registerLink');
+
+            gsap.fromTo("#loginFormContainer", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4 });
+
+            if(role === 'admin') {
+                title.innerText = "Admin Console";
+                sub.innerText = "System-level authentication required";
+                label.innerText = "Admin Serial ID";
+                regBox.style.display = 'none';
+            } else if(role === 'organizer') {
+                title.innerText = "Organizer Hub";
+                sub.innerText = "Manage your events and ticket flow";
+                label.innerText = "Professional Email";
+                regBox.style.display = 'none';
+            } else {
+                title.innerText = "Welcome Back";
+                sub.innerText = "Join the experience and see what's new";
+                label.innerText = "Username or Email";
+                regBox.style.display = 'block';
+            }
+        }
+
+        window.onload = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const roleParam = urlParams.get('role') || 'attendee';
+            setRole(roleParam, false);
+        };
+
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerHTML;
+            
+            // Show loading state
+            btn.innerHTML = `<div class="flex items-center justify-center gap-2">
+                <i data-lucide="loader-2" class="w-5 h-5 loading-spinner"></i>
+                <span>Authenticating...</span>
+            </div>`;
+            btn.disabled = true;
+            lucide.createIcons();
+            
+            // Simulate authentication delay
+            setTimeout(() => {
+                // Redirect based on role
+                let redirectUrl;
+                switch(currentRole) {
+                    case 'admin':
+                        redirectUrl = 'admin dash.html';
+                        break;
+                    case 'organizer':
+                        redirectUrl = 'dashboard.html';
+                        break;
+                    case 'attendee':
+                        redirectUrl = 'user-dash.html';
+                        break;
+                    default:
+                        redirectUrl = 'user-dash.html';
+                }
+                
+                // Add success animation before redirect
+                gsap.to("#loginFormContainer", {
+                    opacity: 0,
+                    y: -20,
+                    duration: 0.5,
+                    onComplete: () => {
+                        window.location.href = redirectUrl;
+                    }
+                });
+            }, 1500);
+        });
+
+        // Initialize with default role
+        setRole('attendee', false);
+    </script>
+</body>
+</html>

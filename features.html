@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Features - Stream Connect Events</title>
+    <link rel="icon" href="images/icon.png" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        body { 
+            background: linear-gradient(to bottom, #0A0A2A, #1A1A50); 
+            color: #FFFFFF;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-5px);
+        }
+        .glow-btn { 
+            background: linear-gradient(45deg, #00FFFF, #8B5CF6); 
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+            transition: all 0.3s ease;
+        }
+        .glow-btn:hover {
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.8);
+            transform: scale(1.05);
+        }
+        .navbar-glass { 
+            background: rgba(10, 10, 42, 0.95); 
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 255, 255, 0.1);
+        }
+        .text-cyan-accent {
+            color: #00FFFF;
+        }
+        .text-purple-accent {
+            color: #8B5CF6;
+        }
+        .bg-purple-gradient {
+            background: linear-gradient(45deg, #8B5CF6, #00FFFF);
+        }
+        .bg-deep-blue {
+            background-color: #0A0A2A;
+        }
+        .feature-grid { 
+            display: grid; 
+            gap: 2rem; 
+        }
+        @media (min-width: 768px) { 
+            .feature-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+            } 
+        }
+        @media (min-width: 1024px) { 
+            .feature-grid { 
+                grid-template-columns: repeat(3, 1fr); 
+            } 
+        }
+    </style>
+</head>
+<body class="antialiased text-white">
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 w-full z-40 navbar-glass border-b border-cyan-accent/20 transition-all duration-500">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-cyan-accent hover:text-purple-accent transition-colors">Stream<span class="text-purple-accent">Connect</span></a>
+            <div class="hidden lg:flex space-x-8">
+                <a href="index.html" class="hover:text-cyan-accent transition-colors">Home</a>
+                <a href="features.html" class="text-cyan-accent font-bold border-b-2 border-cyan-accent">Features</a>
+                <a href="how-it-works.html" class="hover:text-cyan-accent transition-colors">How It Works</a>
+                <a href="categories.html" class="hover:text-cyan-accent transition-colors">Categories</a>
+                <a href="pricing.html" class="hover:text-cyan-accent transition-colors">Pricing</a>
+                <a href="become-organizer.html" class="hover:text-cyan-accent transition-colors">Become Organizer</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-cyan-accent/10 to-transparent opacity-20"></div>
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-6 text-cyan-accent">Advanced Features</h1>
+            <p class="text-xl md:text-2xl mb-10 text-gray-300 max-w-4xl mx-auto">Discover powerful tools designed to elevate your streaming experience. Everything you need for successful virtual events.</p>
+            <div class="mt-10">
+                <a href="pricing.html" class="glow-btn px-8 py-3 text-lg font-bold rounded-full inline-block mr-4">View Pricing</a>
+                <a href="become-organizer.html" class="border border-cyan-accent px-8 py-3 rounded-full hover:bg-cyan-accent/20 transition-colors">Become Organizer</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 text-cyan-accent">Powerful Streaming Features</h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">Our platform provides everything you need to create, manage, and monetize professional virtual events</p>
+            </div>
+            
+            <div class="feature-grid">
+                <!-- Feature 1 -->
+                <div class="glass-card p-8 rounded-2xl">
+                    <div class="w-16 h-16 bg-gradient-to-br from-cyan-accent to-purple-accent rounded-full flex items-center justify-center mb-6">
+                        <span class="text-3xl">🚀</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-cyan-accent">Ultra-Low Latency Streaming</h3>
+                    <p class="text-gray-300 mb-4">Broadcast with sub-second delay using advanced WebRTC technology. Perfect for live interactions and real-time engagement with your audience.</p>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center">
+                            <span class="text-cyan-accent mr-2">✓</span>
+                            Sub-500ms latency for real-time interaction
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-cyan-accent mr-2">✓</span>
+                            Adaptive bitrate streaming for all connections
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-cyan-accent mr-2">✓</span>
+                            Multi-CDN support for global reach
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="glass-card p-8 rounded-2xl">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-accent to-cyan-accent rounded-full flex items-center justify-center mb-6">
+                        <span class="text-3xl">💬</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-purple-accent">Interactive Engagement Tools</h3>
+                    <p class="text-gray-300 mb-4">Keep your audience engaged with real-time interactive features that boost participation and retention rates.</p>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center">
+                            <span class="text-purple-accent mr-2">✓</span>
+                            Live polls and surveys during streams
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-purple-accent mr-2">✓</span>
+                            Moderated Q&A sessions with upvoting
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-purple-accent mr-2">✓</span>
+                            Emoji reactions and live chat moderation
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="glass-card p-8 rounded-2xl">
+                    <div class="w-16 h-16 bg-gradient-to-br from-cyan-accent to-purple-accent rounded-full flex items-center justify-center mb-6">
+                        <span class="text-3xl">📊</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-cyan-accent">Advanced Analytics Dashboard</h3>
+                    <p class="text-gray-300 mb-4">Gain deep insights into viewer behavior, engagement metrics, and revenue analytics to optimize your events.</p>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center">
+                            <span class="text-cyan-accent mr-2">✓</span>
+                            Real-time viewer tracking and heatmaps
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-cyan-accent mr-2">✓</span>
+                            Engagement metrics and drop-off analysis
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-cyan-accent mr-2">✓</span>
+                            ROI calculations and revenue reporting
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="glass-card p-8 rounded-2xl">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-accent to-cyan-accent rounded-full flex items-center justify-center mb-6">
+                        <span class="text-3xl">🎨</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-purple-accent">Custom Branding Studio</h3>
+                    <p class="text-gray-300 mb-4">White-label your streaming platform with custom branding for a professional, cohesive brand experience.</p>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center">
+                            <span class="text-purple-accent mr-2">✓</span>
+                            Custom domain and SSL support
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-purple-accent mr-2">✓</span>
+                            Branded mobile apps and landing pages
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-purple-accent mr-2">✓</span>
+                            Custom email templates and notifications
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="glass-card p-8 rounded-2xl">
+                    <div class="w-16 h-16 bg-gradient-to-br from-cyan-accent to-purple-accent rounded-full flex items-center justify-center mb-6">
+                        <span class="text-3xl">🔒</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-cyan-accent">Enterprise-Grade Security</h3>
+                    <p class="text-gray-300 mb-4">Protect your content and attendee data with industry-leading security measures and compliance standards.</p>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center">
+                            <span class="text-cyan-accent mr-2">✓</span>
+                            AES-256 encryption for all streams
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-cyan-accent mr-2">✓</span>
+                            Dynamic watermarking and content protection
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-cyan-accent mr-2">✓</span>
+                            IP whitelisting and geo-blocking controls
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="glass-card p-8 rounded-2xl">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-accent to-cyan-accent rounded-full flex items-center justify-center mb-6">
+                        <span class="text-3xl">📱</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-purple-accent">Multi-Platform Support</h3>
+                    <p class="text-gray-300 mb-4">Reach your audience wherever they are with our comprehensive multi-device streaming solution.</p>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center">
+                            <span class="text-purple-accent mr-2">✓</span>
+                            Native iOS & Android applications
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-purple-accent mr-2">✓</span>
+                            Smart TV and gaming console compatibility
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-purple-accent mr-2">✓</span>
+                            Desktop applications for Windows and macOS
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional Features -->
+    <section class="py-20 bg-gradient-to-b from-transparent to-purple-accent/5">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 text-cyan-accent">Additional Capabilities</h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">More features that make StreamConnect the complete solution for virtual events</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-cyan-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">💰</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Monetization Tools</h3>
+                    <p class="text-gray-300">Multiple revenue streams including tickets, subscriptions, and pay-per-view</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-purple-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">🎥</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Multi-Camera Support</h3>
+                    <p class="text-gray-300">Switch between multiple camera angles during live broadcasts</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-cyan-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">🌐</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Global CDN Network</h3>
+                    <p class="text-gray-300">Stream to any location with our worldwide content delivery network</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-purple-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-3xl">🔄</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Automated Recording</h3>
+                    <p class="text-gray-300">Automatic recording and storage of all your live events</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12 text-cyan-accent">Feature Comparison by Plan</h2>
+            <div class="overflow-x-auto rounded-2xl">
+                <table class="w-full glass-card">
+                    <thead>
+                        <tr class="bg-gradient-to-r from-cyan-accent/30 to-purple-accent/30">
+                            <th class="p-6 text-left text-xl">Feature</th>
+                            <th class="p-6 text-center text-xl text-cyan-accent">Basic</th>
+                            <th class="p-6 text-center text-xl text-purple-accent">Business</th>
+                            <th class="p-6 text-center text-xl text-cyan-accent">Premium</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-gray-700 hover:bg-white/5">
+                            <td class="p-6 font-medium">Maximum Attendees</td>
+                            <td class="p-6 text-center">Up to 50</td>
+                            <td class="p-6 text-center">Up to 500</td>
+                            <td class="p-6 text-center text-cyan-accent font-bold">1000+</td>
+                        </tr>
+                        <tr class="border-b border-gray-700 hover:bg-white/5">
+                            <td class="p-6 font-medium">Streaming Duration</td>
+                            <td class="p-6 text-center">1 hour per session</td>
+                            <td class="p-6 text-center">2 hours per session</td>
+                            <td class="p-6 text-center text-cyan-accent font-bold">Unlimited</td>
+                        </tr>
+                        <tr class="border-b border-gray-700 hover:bg-white/5">
+                            <td class="p-6 font-medium">Analytics Dashboard</td>
+                            <td class="p-6 text-center">Basic metrics</td>
+                            <td class="p-6 text-center">Advanced analytics</td>
+                            <td class="p-6 text-center text-cyan-accent font-bold">Full analytics suite</td>
+                        </tr>
+                        <tr class="border-b border-gray-700 hover:bg-white/5">
+                            <td class="p-6 font-medium">Custom Branding</td>
+                            <td class="p-6 text-center">Limited</td>
+                            <td class="p-6 text-center">Full branding</td>
+                            <td class="p-6 text-center text-cyan-accent font-bold">White-label solution</td>
+                        </tr>
+                        <tr class="hover:bg-white/5">
+                            <td class="p-6 font-medium">Priority Support</td>
+                            <td class="p-6 text-center">Email only</td>
+                            <td class="p-6 text-center">24/7 chat support</td>
+                            <td class="p-6 text-center text-cyan-accent font-bold">Dedicated account manager</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center mt-8">
+                <a href="pricing.html" class="inline-block border border-cyan-accent px-8 py-3 rounded-full hover:bg-cyan-accent/20 transition-colors">View Detailed Pricing</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 text-center">
+        <div class="container mx-auto px-6">
+            <div class="glass-card p-12 rounded-3xl max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold mb-6 text-cyan-accent">Ready to Elevate Your Streaming Experience?</h2>
+                <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">Join thousands of organizers who trust StreamConnect for their virtual events. Start with our 14-day free trial - no credit card required.</p>
+                <div class="space-x-4">
+                    <a href="become-organizer.html" class="glow-btn px-10 py-4 text-lg font-bold rounded-full inline-block">Start Free Trial</a>
+                    <a href="how-it-works.html" class="border border-cyan-accent px-10 py-4 rounded-full hover:bg-cyan-accent/20 transition-colors">See How It Works</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simple Footer -->
+    <footer class="py-12 bg-deep-blue border-t border-cyan-accent/20">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <a href="index.html" class="text-2xl font-bold text-cyan-accent">StreamConnect</a>
+                    <p class="text-gray-400 mt-2">The ultimate platform for virtual events</p>
+                </div>
+                
+                <div class="flex flex-wrap justify-center gap-6 mb-6 md:mb-0">
+                    <a href="index.html" class="text-gray-400 hover:text-cyan-accent transition-colors">Home</a>
+                    <a href="features.html" class="text-cyan-accent font-bold">Features</a>
+                    <a href="pricing.html" class="text-gray-400 hover:text-cyan-accent transition-colors">Pricing</a>
+                    <a href="how-it-works.html" class="text-gray-400 hover:text-cyan-accent transition-colors">How It Works</a>
+                    <a href="categories.html" class="text-gray-400 hover:text-cyan-accent transition-colors">Categories</a>
+                    <a href="become-organizer.html" class="text-gray-400 hover:text-cyan-accent transition-colors">Become Organizer</a>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <p class="text-gray-500">Need help? <a href="#" class="text-cyan-accent hover:underline">Contact Support</a></p>
+                    <p class="text-gray-500 mt-1">Email: support@streamconnect.com</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-500">
+                <p>&copy; 2024 StreamConnect Events. All rights reserved. | 
+                   <a href="#" class="hover:text-cyan-accent transition-colors">Privacy Policy</a> | 
+                   <a href="#" class="hover:text-cyan-accent transition-colors">Terms of Service</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animate features cards on scroll
+            gsap.utils.toArray('.glass-card').forEach((card, i) => {
+                gsap.from(card, {
+                    opacity: 0,
+                    y: 50,
+                    duration: 0.8,
+                    delay: i * 0.1,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 85%",
+                        toggleActions: "play none none none"
+                    }
+                });
+            });
+
+            // Table row animation
+            gsap.from('table tr', {
+                opacity: 0,
+                x: -20,
+                stagger: 0.1,
+                duration: 0.6,
+                scrollTrigger: {
+                    trigger: 'table',
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                }
+            });
+
+            // Additional features animation
+            gsap.from('.grid-cols-1 > div', {
+                opacity: 0,
+                y: 30,
+                stagger: 0.2,
+                duration: 0.8,
+                scrollTrigger: {
+                    trigger: '.grid-cols-1',
+                    start: "top 85%",
+                    toggleActions: "play none none none"
+                }
+            });
+
+            // Navbar scroll effect
+            window.addEventListener('scroll', () => {
+                const navbar = document.getElementById('navbar');
+                if (window.scrollY > 100) {
+                    navbar.classList.add('shadow-lg');
+                } else {
+                    navbar.classList.remove('shadow-lg');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

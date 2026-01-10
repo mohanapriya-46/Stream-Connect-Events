@@ -1,0 +1,3895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stream Connect - Process Payment</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --primary-light: #93c5fd;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #10b981;
+            --secondary-light: #6ee7b7;
+            --secondary-dark: #047857;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --info-color: #06b6d4;
+            --light-bg: #f0f9ff;
+            --dark-bg: #0f172a;
+            --sidebar-bg: #ffffff;
+            --card-bg: #ffffff;
+            --text-dark: #334155;
+            --text-light: #64748b;
+            --header-bg: #ffffff;
+            --sidebar-width: 280px;
+            --sidebar-collapsed: 80px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Dark mode variables */
+        body.dark-mode {
+            --light-bg: #0f172a;
+            --sidebar-bg: #1e293b;
+            --card-bg: #1e293b;
+            --header-bg: #1e293b;
+            --text-dark: #f1f5f9;
+            --text-light: #94a3b8;
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            transition: var(--transition);
+            min-height: 100vh;
+        }
+        
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Sidebar Styles - Mobile Optimized */
+        .sidebar {
+            background-color: var(--sidebar-bg);
+            min-height: 100vh;
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            padding-top: 20px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .sidebar.active {
+            transform: translateX(0);
+        }
+        
+        @media (min-width: 992px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+            
+            .sidebar.collapsed {
+                width: var(--sidebar-collapsed);
+                transform: translateX(0);
+            }
+            
+            .sidebar.collapsed .sidebar-brand span,
+            .sidebar.collapsed .menu-text {
+                display: none !important;
+            }
+            
+            .sidebar.collapsed .sidebar-brand {
+                justify-content: center;
+                padding: 0 10px 20px;
+            }
+            
+            .sidebar.collapsed .sidebar-menu a {
+                justify-content: center;
+                padding: 15px 0;
+            }
+            
+            .sidebar.collapsed .sidebar-menu i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+            
+            .sidebar.collapsed .sidebar-menu a:hover .menu-tooltip {
+                display: block;
+            }
+        }
+        
+        .sidebar-brand {
+            padding: 0 25px 25px;
+            display: flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+            transition: var(--transition);
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        
+        .sidebar-brand:hover {
+            transform: translateY(-2px);
+        }
+        
+        .sidebar-brand i {
+            color: var(--primary-color);
+            margin-right: 15px;
+            font-size: 2rem;
+            transition: var(--transition);
+            min-width: 30px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        
+        .sidebar-menu a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            transition: left 0.7s;
+        }
+        
+        .sidebar-menu a:hover::before {
+            left: 100%;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        
+        .sidebar-menu a.active i {
+            transform: scale(1.2);
+        }
+        
+        .menu-tooltip {
+            position: absolute;
+            left: 100%;
+            background-color: var(--text-dark);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            display: none;
+            z-index: 1001;
+            box-shadow: var(--shadow-md);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .menu-tooltip::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent var(--text-dark) transparent transparent;
+        }
+        
+        .sidebar.collapsed .sidebar-menu a:hover .menu-tooltip {
+            display: block;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 0;
+            padding: 20px;
+            transition: var(--transition);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        
+        @media (min-width: 992px) {
+            .main-content {
+                margin-left: var(--sidebar-width);
+                width: calc(100% - var(--sidebar-width));
+            }
+            
+            .main-content.collapsed {
+                margin-left: var(--sidebar-collapsed);
+                width: calc(100% - var(--sidebar-collapsed));
+            }
+        }
+        
+        /* Topbar Styles - Mobile Optimized */
+        .topbar {
+            background-color: var(--header-bg);
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #e2e8f0;
+            animation: slideDown 0.5s ease;
+            gap: 15px;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-right: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        
+        .menu-toggle:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--primary-color);
+            transform: rotate(90deg);
+        }
+        
+        .search-container {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .search-container input {
+            padding: 12px 20px 12px 50px;
+            border-radius: 50px;
+            border: 2px solid #e2e8f0;
+            width: 100%;
+            transition: var(--transition);
+            background-color: #f8fafc;
+            font-size: 0.95rem;
+            max-width: 100%;
+        }
+        
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            background-color: white;
+            transform: translateY(-1px);
+        }
+        
+        .search-container i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+        
+        .search-container input:focus + i {
+            color: var(--primary-color);
+        }
+        
+        .search-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .search-btn:hover {
+            color: var(--primary-color);
+        }
+        
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .header-icon {
+            position: relative;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background-color: #f8fafc;
+            color: var(--text-dark);
+            flex-shrink: 0;
+        }
+        
+        .header-icon:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--primary-color);
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger-color);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 50px;
+            transition: var(--transition);
+            min-width: fit-content;
+        }
+        
+        .admin-profile:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+        
+        .admin-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 12px;
+            border: 3px solid var(--primary-color);
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            flex-shrink: 0;
+        }
+        
+        .admin-profile:hover .admin-avatar {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .admin-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .admin-info {
+            overflow: hidden;
+        }
+        
+        .admin-info h5 {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .admin-info p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Dropdown Styles - Enhanced for Mobile */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            width: 280px;
+            z-index: 9999;
+            display: none;
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+            animation: fadeInUp 0.3s ease;
+            overflow: hidden;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .dropdown-menu.active {
+            display: block;
+        }
+        
+        .dropdown-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8fafc;
+        }
+        
+        .dropdown-header h5 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .dropdown-header a {
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .dropdown-header a:hover {
+            text-decoration: underline;
+        }
+        
+        .dropdown-body {
+            max-height: 400px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .dropdown-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 15px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+            border-bottom: 1px solid #f1f5f9;
+            width: 100%;
+        }
+        
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f8fafc;
+            padding-left: 20px;
+        }
+        
+        .dropdown-item i {
+            margin-right: 12px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            transition: var(--transition);
+            width: 20px;
+            text-align: center;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+        
+        .dropdown-item:hover i {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+        
+        .dropdown-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .dropdown-item-content h6 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            word-break: break-word;
+        }
+        
+        .dropdown-item-content p {
+            margin: 5px 0 0;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        
+        .dropdown-item-content small {
+            color: var(--text-light);
+            font-size: 0.75rem;
+            display: block;
+            margin-top: 3px;
+        }
+        
+        .dropdown-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            background-color: #f8fafc;
+        }
+        
+        .profile-dropdown {
+            width: 280px;
+        }
+        
+        /* Mobile Dropdown Fixes */
+        @media (max-width: 768px) {
+            .dropdown-menu {
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                width: 90% !important;
+                max-width: 320px !important;
+                max-height: 70vh !important;
+                overflow-y: auto !important;
+                margin-top: 0 !important;
+                z-index: 10002 !important;
+            }
+            
+            .dropdown-menu::before {
+                display: none !important;
+            }
+        }
+        
+        /* Process Payment Specific Styles - Mobile Optimized */
+        .process-payment-container {
+            flex: 1;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .process-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            animation: slideDown 0.5s ease;
+        }
+        
+        .process-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+        
+        .process-header::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: -50px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+        
+        .process-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        @media (min-width: 768px) {
+            .process-steps {
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 10px;
+            }
+            
+            .process-steps::before {
+                content: '';
+                position: absolute;
+                top: 25px;
+                left: 10%;
+                right: 10%;
+                height: 3px;
+                background: var(--primary-light);
+                z-index: 1;
+            }
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        @media (min-width: 768px) {
+            .step {
+                flex-direction: column;
+                text-align: center;
+                padding: 0;
+                background: transparent;
+                box-shadow: none;
+                gap: 10px;
+            }
+        }
+        
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light-bg);
+            border: 3px solid var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--text-light);
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        
+        .step.active .step-circle {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: scale(1.1);
+        }
+        
+        .step.completed .step-circle {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+        
+        .step-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            flex: 1;
+        }
+        
+        .step.active .step-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        @media (min-width: 768px) {
+            .step-circle {
+                margin: 0 auto;
+            }
+        }
+        
+        /* Payment Summary Card - Mobile Optimized */
+        .payment-summary-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease;
+            width: 100%;
+        }
+        
+        .payment-summary-card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .payment-summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .summary-header h4 {
+            margin: 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .summary-header h4 i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
+        .summary-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #e2e8f0;
+            font-size: 0.9rem;
+        }
+        
+        .summary-item.total {
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        
+        /* Form Sections - Mobile Optimized */
+        .form-section {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid #e2e8f0;
+            transition: var(--transition);
+            animation: fadeInUp 0.5s ease;
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-section:hover {
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .form-section h3 {
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+        
+        .form-section h3 i {
+            margin-right: 10px;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+        
+        .form-label .required {
+            color: var(--danger-color);
+            margin-left: 4px;
+        }
+        
+        .form-control, .form-select {
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            transition: var(--transition);
+            width: 100%;
+            font-size: 1rem;
+            max-width: 100%;
+            background-color: #f8fafc;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            outline: none;
+            background-color: white;
+        }
+        
+        .form-control.is-invalid, .form-select.is-invalid {
+            border-color: var(--danger-color);
+        }
+        
+        .invalid-feedback {
+            color: var(--danger-color);
+            font-size: 0.8rem;
+            margin-top: 4px;
+            display: none;
+        }
+        
+        .form-control.is-invalid + .invalid-feedback {
+            display: block;
+        }
+        
+        .input-group {
+            position: relative;
+            width: 100%;
+        }
+        
+        .input-group-text {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            z-index: 5;
+        }
+        
+        .form-text {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+        
+        /* Payment Methods - Mobile Optimized */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+            width: 100%;
+        }
+        
+        @media (min-width: 576px) {
+            .payment-methods {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .payment-methods {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+        
+        .payment-method-option {
+            width: 100%;
+        }
+        
+        .payment-method-input {
+            display: none;
+        }
+        
+        .payment-method-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 8px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            height: 100%;
+            width: 100%;
+            background-color: #f8fafc;
+        }
+        
+        .payment-method-input:checked + .payment-method-label {
+            border-color: var(--primary-color);
+            background-color: rgba(59, 130, 246, 0.05);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .payment-method-icon {
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+            color: var(--text-light);
+        }
+        
+        .payment-method-input:checked + .payment-method-label .payment-method-icon {
+            color: var(--primary-color);
+        }
+        
+        /* Card Details - Mobile Optimized */
+        .card-details-container {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            width: 100%;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .card-details-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .card-details-container h5 {
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-details-container h5 i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
+        .card-preview {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .card-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            clip-path: circle(40% at 100% 0%);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-chip {
+            width: 35px;
+            height: 25px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-radius: 4px;
+            position: relative;
+        }
+        
+        .card-chip::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 25px;
+            height: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+        
+        .card-type {
+            font-size: 1.3rem;
+        }
+        
+        .card-number {
+            font-size: 1rem;
+            letter-spacing: 1px;
+            margin: 12px 0;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+        
+        /* Buttons - Mobile Optimized */
+        .form-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+            width: 100%;
+        }
+        
+        @media (min-width: 576px) {
+            .form-actions {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+            font-size: 1rem;
+            width: 100%;
+            min-height: 48px;
+        }
+        
+        @media (min-width: 576px) {
+            .btn {
+                width: auto;
+            }
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: #64748b;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #475569;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: var(--secondary-dark);
+        }
+        
+        .btn-outline-primary {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            min-height: 40px;
+        }
+        
+        /* Review Card Styles */
+        .review-card {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+            width: 100%;
+        }
+        
+        /* Success Animation */
+        .success-animation {
+            display: none;
+            text-align: center;
+            padding: 30px 15px;
+            width: 100%;
+        }
+        
+        .success-animation.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .checkmark-circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: var(--success-color);
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+        
+        .checkmark {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 2;
+            stroke: #fff;
+            stroke-miterlimit: 10;
+            margin: 0 auto 15px;
+            box-shadow: inset 0px 0px 0px var(--success-color);
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+        
+        .checkmark-check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+        
+        @keyframes stroke {
+            100% { stroke-dashoffset: 0; }
+        }
+        
+        @keyframes scale {
+            0%, 100% { transform: none; }
+            50% { transform: scale3d(1.1, 1.1, 1); }
+        }
+        
+        @keyframes fill {
+            100% { box-shadow: inset 0px 0px 0px 70px var(--success-color); }
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: auto;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+        }
+        
+        /* Page content area */
+        .page-content {
+            flex: 1;
+        }
+        
+        /* Mobile Sidebar Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Animation Classes */
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Notification Animation */
+        @keyframes notificationSlide {
+            0% { transform: translateX(100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        
+        .notification-slide {
+            animation: notificationSlide 0.3s ease;
+        }
+        
+        /* Mobile Optimization - Extra Responsive */
+        @media (max-width: 1400px) {
+            .sidebar {
+                width: 250px;
+            }
+            
+            .sidebar.collapsed {
+                width: 70px;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .payment-methods {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar.active {
+                transform: translateX(0);
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            }
+            
+            .topbar {
+                padding: 12px 15px;
+            }
+            
+            .search-container input {
+                padding: 10px 15px 10px 45px;
+            }
+            
+            .header-icon {
+                width: 42px;
+                height: 42px;
+            }
+            
+            .admin-avatar {
+                width: 42px;
+                height: 42px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 15px;
+            }
+            
+            .topbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            
+            .topbar-left {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .topbar-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-container {
+                min-width: auto;
+            }
+            
+            .admin-info h5 {
+                font-size: 0.9rem;
+            }
+            
+            .admin-info p {
+                font-size: 0.75rem;
+            }
+            
+            .payment-methods {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-section {
+                padding: 15px;
+            }
+            
+            .process-header {
+                padding: 15px;
+            }
+            
+            .process-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .step {
+                padding: 10px;
+            }
+            
+            .step-circle {
+                width: 36px;
+                height: 36px;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+                min-height: 44px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 12px;
+            }
+            
+            .topbar {
+                padding: 10px 12px;
+                border-radius: 10px;
+            }
+            
+            .menu-toggle {
+                width: 40px;
+                height: 40px;
+                font-size: 1.3rem;
+                margin-right: 10px;
+            }
+            
+            .search-container input {
+                padding: 8px 12px 8px 40px;
+                font-size: 0.9rem;
+            }
+            
+            .header-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 0.9rem;
+            }
+            
+            .admin-profile {
+                padding: 6px 8px;
+            }
+            
+            .admin-avatar {
+                width: 40px;
+                height: 40px;
+                margin-right: 8px;
+            }
+            
+            .admin-info h5 {
+                font-size: 0.85rem;
+            }
+            
+            .payment-methods {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .payment-method-label {
+                padding: 10px 5px;
+                font-size: 0.85rem;
+            }
+            
+            .payment-method-icon {
+                font-size: 1.3rem;
+            }
+            
+            .form-section {
+                padding: 12px;
+            }
+            
+            .form-section h3 {
+                font-size: 1.1rem;
+            }
+            
+            .form-control, .form-select {
+                padding: 10px 12px;
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+            
+            .step {
+                padding: 8px;
+            }
+            
+            .step-circle {
+                width: 34px;
+                height: 34px;
+                font-size: 0.9rem;
+            }
+            
+            .step-label {
+                font-size: 0.85rem;
+            }
+            
+            .card-preview {
+                min-height: 140px;
+                padding: 12px;
+            }
+            
+            .card-number {
+                font-size: 0.95rem;
+            }
+            
+            .form-actions {
+                gap: 8px;
+            }
+            
+            .btn {
+                padding: 10px 12px;
+                font-size: 0.95rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 10px;
+            }
+            
+            .topbar {
+                padding: 8px 10px;
+                gap: 8px;
+            }
+            
+            .menu-toggle {
+                width: 38px;
+                height: 38px;
+                margin-right: 8px;
+            }
+            
+            .search-container input {
+                padding: 7px 10px 7px 38px;
+                font-size: 0.85rem;
+            }
+            
+            .header-icon {
+                width: 38px;
+                height: 38px;
+            }
+            
+            .admin-avatar {
+                width: 38px;
+                height: 38px;
+            }
+            
+            .admin-info h5 {
+                font-size: 0.8rem;
+            }
+            
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+            
+            .process-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .payment-summary-card {
+                padding: 15px;
+            }
+            
+            .summary-item {
+                font-size: 0.85rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .form-group.half,
+            .form-group.third,
+            .form-group.two-third {
+                flex: 0 0 100%;
+                max-width: 100%;
+                padding: 0;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .sidebar {
+                width: 100%;
+                max-width: 280px;
+            }
+            
+            .main-content {
+                padding: 8px;
+            }
+            
+            .topbar {
+                padding: 8px;
+            }
+            
+            .menu-toggle {
+                width: 36px;
+                height: 36px;
+                font-size: 1.2rem;
+            }
+            
+            .search-container input {
+                padding: 6px 8px 6px 36px;
+            }
+            
+            .header-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 0.85rem;
+            }
+            
+            .admin-avatar {
+                width: 36px;
+                height: 36px;
+            }
+            
+            .admin-info h5 {
+                font-size: 0.75rem;
+            }
+            
+            .process-header {
+                padding: 12px;
+            }
+            
+            .process-header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .step {
+                padding: 6px;
+            }
+            
+            .step-circle {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .card-preview {
+                min-height: 130px;
+                padding: 10px;
+            }
+            
+            .btn {
+                padding: 8px 10px;
+                min-height: 42px;
+            }
+        }
+        
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .btn:hover,
+            .header-icon:hover,
+            .admin-profile:hover,
+            .sidebar-menu a:hover,
+            .payment-method-label:hover,
+            .payment-summary-card:hover,
+            .form-section:hover,
+            .step:hover {
+                transform: none !important;
+            }
+            
+            .menu-toggle:hover {
+                transform: rotate(90deg) !important;
+            }
+            
+            /* Increase touch targets */
+            .btn {
+                min-height: 44px;
+            }
+            
+            .header-icon, .menu-toggle {
+                min-width: 44px;
+                min-height: 44px;
+            }
+            
+            .form-control, .form-select, .search-container input {
+                min-height: 44px;
+            }
+            
+            .payment-method-label {
+                min-height: 70px;
+            }
+            
+            .sidebar-menu a {
+                min-height: 54px;
+            }
+        }
+        
+        /* Landscape optimizations */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .sidebar {
+                overflow-y: auto;
+                max-height: 100vh;
+            }
+            
+            .dropdown-menu {
+                max-height: 60vh;
+            }
+            
+            .process-payment-container {
+                min-height: auto;
+            }
+            
+            .form-section {
+                padding: 12px;
+                margin-bottom: 15px;
+            }
+            
+            .card-preview {
+                min-height: 120px;
+            }
+        }
+        
+        /* High DPI screens */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .sidebar,
+            .topbar,
+            .form-section,
+            .payment-summary-card {
+                border-width: 0.5px;
+            }
+        }
+        
+        /* Print styles */
+        @media print {
+            .sidebar,
+            .topbar,
+            .menu-toggle,
+            .header-icon,
+            .form-actions .btn-secondary,
+            .footer {
+                display: none !important;
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+                padding: 0 !important;
+            }
+            
+            .process-payment-container {
+                width: 100%;
+            }
+            
+            .form-section {
+                box-shadow: none;
+                border: 1px solid #000;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <h3 class="text-white mt-4">Loading Payment Processing...</h3>
+    </div>
+    
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <a href="admin dash.html" class="sidebar-brand">
+            <i class="fas fa-broadcast-tower"></i>
+            <span>Stream Connect</span>
+        </a>
+        
+        <ul class="sidebar-menu">
+            <li>
+                <a href="admin dash.html">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span class="menu-text">Dashboard</span>
+                    <div class="menu-tooltip">Dashboard Overview</div>
+                </a>
+            </li>
+            <li>
+                <a href="users-organizers.html">
+                    <i class="fas fa-users"></i>
+                    <span class="menu-text">Role Management</span>
+                    <div class="menu-tooltip">Manage Users & Organizers</div>
+                </a>
+            </li>
+            <li>
+                <a href="event-approval.html">
+                    <i class="fas fa-calendar-check"></i>
+                    <span class="menu-text">Event Approval</span>
+                    <div class="menu-tooltip">Approve Events</div>
+                </a>
+            </li>
+            <li>
+                <a href="event-monitoring.html">
+                    <i class="fas fa-tv"></i>
+                    <span class="menu-text">Event Monitoring</span>
+                    <div class="menu-tooltip">Monitor Live Events</div>
+                </a>
+            </li>
+            <li>
+                <a href="payments.html">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span class="menu-text">Payments</span>
+                    <div class="menu-tooltip">Payment Management</div>
+                </a>
+            </li>
+            <li>
+                <a href="payment-process.html" class="active">
+                    <i class="fas fa-credit-card"></i>
+                    <span class="menu-text">Process Payment</span>
+                    <div class="menu-tooltip">Process New Payment</div>
+                </a>
+            </li>
+            <li>
+                <a href="reports.html">
+                    <i class="fas fa-chart-line"></i>
+                    <span class="menu-text">Reports</span>
+                    <div class="menu-tooltip">View Reports</div>
+                </a>
+            </li>
+            <li>
+                <a href="settings.html">
+                    <i class="fas fa-cogs"></i>
+                    <span class="menu-text">Settings</span>
+                    <div class="menu-tooltip">System Configuration</div>
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Topbar - EXACT SAME AS ADMIN DASHBOARD -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search users, events, payments..." autocomplete="off">
+                    <button class="search-btn" id="searchButton">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="topbar-right">
+                <div class="header-icon" id="darkModeToggle" title="Toggle Dark Mode">
+                    <i class="fa-solid fa-moon" id="darkIcon"></i>
+                </div>
+                
+                <div class="header-icon" id="fullScreenToggle" title="Toggle Fullscreen">
+                    <i class="fa-solid fa-maximize" id="screenIcon"></i>
+                </div>
+                
+                <!-- Notifications Dropdown - FULLY WORKING -->
+                <div class="header-icon notification" id="notificationToggle" style="position: relative;">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationCount">3</span>
+                    
+                    <div class="dropdown-menu" id="notificationDropdown">
+                        <div class="dropdown-header">
+                            <h5>Notifications</h5>
+                            <a href="#" id="markAllRead">Mark all as read</a>
+                        </div>
+                        <div class="dropdown-body">
+                            <a href="#" class="dropdown-item notification-item" data-id="1">
+                                <i class="fas fa-user-plus text-success"></i>
+                                <div class="dropdown-item-content">
+                                    <h6>New User Registration</h6>
+                                    <p>Priya S has registered as a new user</p>
+                                    <small>2 minutes ago</small>
+                                </div>
+                            </a>
+                            <a href="#" class="dropdown-item notification-item" data-id="2">
+                                <i class="fas fa-money-bill-wave text-primary"></i>
+                                <div class="dropdown-item-content">
+                                    <h6>Payment Received</h6>
+                                    <p>₹1,499 payment received from Aravind K</p>
+                                    <small>1 hour ago</small>
+                                </div>
+                            </a>
+                            <a href="#" class="dropdown-item notification-item" data-id="3">
+                                <i class="fas fa-calendar-check text-info"></i>
+                                <div class="dropdown-item-content">
+                                    <h6>Event Needs Approval</h6>
+                                    <p>Blockchain Conference is pending approval</p>
+                                    <small>3 hours ago</small>
+                                </div>
+                            </a>
+                            <a href="#" class="dropdown-item notification-item" data-id="4">
+                                <i class="fas fa-exclamation-triangle text-warning"></i>
+                                <div class="dropdown-item-content">
+                                    <h6>System Alert</h6>
+                                    <p>High traffic detected on server 3</p>
+                                    <small>5 hours ago</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="dropdown-footer">
+                            <a href="#" id="viewAllNotifications" class="view-all">View All Notifications</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Admin Profile Dropdown - FULLY WORKING -->
+                <div class="admin-profile" id="adminProfile" style="position: relative;">
+                    <div class="admin-avatar">
+                        <img src="image/Mohana.jpeg" alt="Admin Photo" onerror="this.src='https://ui-avatars.com/api/?name=Mohanapriya&background=3b82f6&color=fff&bold=true'">
+                    </div>
+                    <div class="admin-info">
+                        <h5>Mohanapriya</h5>
+                        <p>Super Admin</p>
+                    </div>
+                    
+                    <div class="dropdown-menu profile-dropdown" id="profileDropdown">
+                        <a href="#" class="dropdown-item" id="viewProfileBtn">
+                            <i class="fas fa-user-circle"></i>
+                            <div class="dropdown-item-content">
+                                <h6>My Profile</h6>
+                                <p>View and edit your profile</p>
+                            </div>
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <div class="dropdown-item-content">
+                                <h6>Settings</h6>
+                                <p>Manage account settings</p>
+                            </div>
+                        </a>
+                        <a href="users-organizers.html" class="dropdown-item">
+                            <i class="fas fa-user-friends"></i>
+                            <div class="dropdown-item-content">
+                                <h6>User Details</h6>
+                                <p>View all user information</p>
+                            </div>
+                        </a>
+                        <div class="dropdown-footer">
+                            <a href="#" id="logoutBtn" class="btn btn-outline-danger btn-sm w-100">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Process Payment Container -->
+        <div class="process-payment-container">
+            <!-- Process Header -->
+            <div class="process-header animate-slide-up">
+                <h1 class="display-6 fw-bold mb-3">Process New Payment</h1>
+                <p class="mb-0">Complete the form below to process a new payment for events, subscriptions, or services.</p>
+            </div>
+            
+            <!-- Process Steps -->
+            <div class="process-steps mb-4">
+                <div class="step active" id="step1">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">User & Event Details</div>
+                </div>
+                <div class="step" id="step2">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Payment Details</div>
+                </div>
+                <div class="step" id="step3">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Review & Confirm</div>
+                </div>
+            </div>
+            
+            <!-- Payment Summary Card -->
+            <div class="payment-summary-card animate-fade-in">
+                <div class="summary-header">
+                    <h4><i class="fas fa-receipt me-2"></i> Payment Summary</h4>
+                    <span class="summary-badge">Draft</span>
+                </div>
+                
+                <div class="summary-item">
+                    <span>Base Amount:</span>
+                    <span id="summaryBaseAmount">₹0.00</span>
+                </div>
+                <div class="summary-item">
+                    <span>Service Fee (3%):</span>
+                    <span id="summaryServiceFee">₹0.00</span>
+                </div>
+                <div class="summary-item">
+                    <span>GST (18%):</span>
+                    <span id="summaryGST">₹0.00</span>
+                </div>
+                <div class="summary-item">
+                    <span>Discount:</span>
+                    <span id="summaryDiscount">-₹0.00</span>
+                </div>
+                <div class="summary-item total">
+                    <span>Total Amount:</span>
+                    <span id="summaryTotal">₹0.00</span>
+                </div>
+                
+                <div class="mt-4">
+                    <h6><i class="fas fa-info-circle me-2"></i> Transaction Details</h6>
+                    <div class="d-flex justify-content-between mt-2">
+                        <small>Transaction ID:</small>
+                        <small id="summaryTransactionId" class="text-muted">Not generated</small>
+                    </div>
+                    <div class="d-flex justify-content-between mt-1">
+                        <small>Payment Method:</small>
+                        <small id="summaryPaymentMethod" class="text-muted">Not selected</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 1: User & Event Details -->
+            <div class="form-section" id="step1Form">
+                <h3><i class="fas fa-user-circle me-2"></i> User & Event Information</h3>
+                
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label class="form-label">
+                            Select User <span class="required">*</span>
+                            <button type="button" class="btn btn-sm btn-outline-primary ms-2" id="searchUserBtn">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </label>
+                        <select class="form-select" id="userSelect" required>
+                            <option value="">Select User</option>
+                            <option value="U001">Aravind K (aravind@tech.ai)</option>
+                            <option value="U002">Priya S (priya@gmail.com)</option>
+                            <option value="U003">Rahul V (rahul@gmail.com)</option>
+                            <option value="U004">Sanjay P (sanjay@gmail.com)</option>
+                            <option value="U005">Vikram S (vikram@gmail.com)</option>
+                            <option value="U006">Mamta (mamta@musiclive.com)</option>
+                            <option value="U007">Anjali Patel (anjali@example.com)</option>
+                            <option value="U008">Rohan Sharma (rohan@example.com)</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a user</div>
+                    </div>
+                    
+                    <div class="form-group half">
+                        <label class="form-label">User Email</label>
+                        <input type="email" class="form-control" id="userEmail" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label class="form-label">User Phone</label>
+                        <input type="tel" class="form-control" id="userPhone" placeholder="Enter phone number" inputmode="tel">
+                    </div>
+                    
+                    <div class="form-group half">
+                        <label class="form-label">User Type</label>
+                        <select class="form-select" id="userType">
+                            <option value="attendee">Attendee</option>
+                            <option value="organizer">Organizer</option>
+                            <option value="speaker">Speaker</option>
+                            <option value="sponsor">Sponsor</option>
+                            <option value="vendor">Vendor</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Select Event <span class="required">*</span>
+                            <button type="button" class="btn btn-sm btn-outline-primary ms-2" id="searchEventBtn">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </label>
+                        <select class="form-select" id="eventSelect" required>
+                            <option value="">Select Event</option>
+                            <option value="E001">Annual Tech Conference - ₹1,499</option>
+                            <option value="E002">Summer Music Festival - ₹899</option>
+                            <option value="E003">Digital Marketing Workshop - ₹2,999</option>
+                            <option value="E004">Art & Culture Exhibition - ₹599</option>
+                            <option value="E005">Charity Marathon - ₹299</option>
+                            <option value="E006">Startup Pitch Competition - ₹1,999</option>
+                            <option value="E007">AI & ML Summit - ₹3,499</option>
+                            <option value="E008">Health & Wellness Expo - ₹499</option>
+                        </select>
+                        <div class="invalid-feedback">Please select an event</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label class="form-label">Event Date</label>
+                        <input type="date" class="form-control" id="eventDate">
+                    </div>
+                    
+                    <div class="form-group half">
+                        <label class="form-label">Event Time</label>
+                        <input type="time" class="form-control" id="eventTime">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Special Instructions</label>
+                        <textarea class="form-control" id="instructions" rows="3" placeholder="Any special instructions or notes for this payment..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-secondary" id="cancelBtn" type="button">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button class="btn btn-primary" id="nextStep1Btn" type="button">
+                        Next: Payment Details <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 2: Payment Details -->
+            <div class="form-section" id="step2Form" style="display: none;">
+                <h3><i class="fas fa-credit-card me-2"></i> Payment Details</h3>
+                
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label class="form-label">
+                            Base Amount (₹) <span class="required">*</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="baseAmount" value="1499" min="0" step="0.01" required inputmode="decimal">
+                            <div class="input-group-text">₹</div>
+                        </div>
+                        <div class="invalid-feedback">Please enter a valid amount</div>
+                        <div class="form-text">Enter the base amount before taxes and fees</div>
+                    </div>
+                    
+                    <div class="form-group half">
+                        <label class="form-label">Discount (₹)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="discountAmount" value="0" min="0" step="0.01" inputmode="decimal">
+                            <div class="input-group-text">₹</div>
+                        </div>
+                        <div class="form-text">Enter discount amount if applicable</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group third">
+                        <label class="form-label">Service Fee (%)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="serviceFeePercent" value="3" min="0" max="100" step="0.1" inputmode="decimal">
+                            <div class="input-group-text">%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group third">
+                        <label class="form-label">GST (%)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="gstPercent" value="18" min="0" max="100" step="0.1" inputmode="decimal">
+                            <div class="input-group-text">%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group third">
+                        <label class="form-label">Currency</label>
+                        <select class="form-select" id="currency">
+                            <option value="INR">Indian Rupee (INR)</option>
+                            <option value="USD">US Dollar (USD)</option>
+                            <option value="EUR">Euro (EUR)</option>
+                            <option value="GBP">British Pound (GBP)</option>
+                            <option value="AED">UAE Dirham (AED)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Payment Method <span class="required">*</span>
+                        </label>
+                        <div class="payment-methods">
+                            <div class="payment-method-option">
+                                <input type="radio" name="paymentMethod" id="methodCreditCard" value="creditcard" class="payment-method-input" checked>
+                                <label for="methodCreditCard" class="payment-method-label">
+                                    <i class="fas fa-credit-card payment-method-icon"></i>
+                                    <span>Credit Card</span>
+                                </label>
+                            </div>
+                            
+                            <div class="payment-method-option">
+                                <input type="radio" name="paymentMethod" id="methodDebitCard" value="debitcard" class="payment-method-input">
+                                <label for="methodDebitCard" class="payment-method-label">
+                                    <i class="fas fa-credit-card payment-method-icon"></i>
+                                    <span>Debit Card</span>
+                                </label>
+                            </div>
+                            
+                            <div class="payment-method-option">
+                                <input type="radio" name="paymentMethod" id="methodUPI" value="upi" class="payment-method-input">
+                                <label for="methodUPI" class="payment-method-label">
+                                    <i class="fas fa-mobile-alt payment-method-icon"></i>
+                                    <span>UPI</span>
+                                </label>
+                            </div>
+                            
+                            <div class="payment-method-option">
+                                <input type="radio" name="paymentMethod" id="methodNetBanking" value="netbanking" class="payment-method-input">
+                                <label for="methodNetBanking" class="payment-method-label">
+                                    <i class="fas fa-university payment-method-icon"></i>
+                                    <span>Net Banking</span>
+                                </label>
+                            </div>
+                            
+                            <div class="payment-method-option">
+                                <input type="radio" name="paymentMethod" id="methodWallet" value="wallet" class="payment-method-input">
+                                <label for="methodWallet" class="payment-method-label">
+                                    <i class="fas fa-wallet payment-method-icon"></i>
+                                    <span>Wallet</span>
+                                </label>
+                            </div>
+                            
+                            <div class="payment-method-option">
+                                <input type="radio" name="paymentMethod" id="methodCash" value="cash" class="payment-method-input">
+                                <label for="methodCash" class="payment-method-label">
+                                    <i class="fas fa-money-bill-wave payment-method-icon"></i>
+                                    <span>Cash</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Credit Card Details -->
+                <div class="card-details-container active" id="creditCardDetails">
+                    <h5><i class="fas fa-credit-card me-2"></i> Card Details</h5>
+                    
+                    <!-- Card Preview -->
+                    <div class="card-preview">
+                        <div class="card-header">
+                            <div class="card-chip"></div>
+                            <div class="card-type">
+                                <i class="fab fa-cc-visa"></i>
+                            </div>
+                        </div>
+                        <div class="card-number" id="cardPreviewNumber">**** **** **** ****</div>
+                        <div class="card-footer">
+                            <div>
+                                <small>CARD HOLDER</small>
+                                <div id="cardPreviewHolder">FULL NAME</div>
+                            </div>
+                            <div>
+                                <small>EXPIRES</small>
+                                <div id="cardPreviewExpiry">MM/YY</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card Form -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Card Number <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" inputmode="numeric">
+                            <div class="invalid-feedback">Please enter a valid card number</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label class="form-label">Card Holder Name <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="cardHolder" placeholder="John Doe">
+                            <div class="invalid-feedback">Please enter card holder name</div>
+                        </div>
+                        
+                        <div class="form-group half">
+                            <label class="form-label">Card Type</label>
+                            <select class="form-select" id="cardType">
+                                <option value="visa">Visa</option>
+                                <option value="mastercard">MasterCard</option>
+                                <option value="amex">American Express</option>
+                                <option value="rupay">RuPay</option>
+                                <option value="discover">Discover</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group third">
+                            <label class="form-label">Expiry Month <span class="required">*</span></label>
+                            <select class="form-select" id="expiryMonth">
+                                <option value="">MM</option>
+                                <option value="01">01</option>
+                                <option value="02">02</option>
+                                <option value="03">03</option>
+                                <option value="04">04</option>
+                                <option value="05">05</option>
+                                <option value="06">06</option>
+                                <option value="07">07</option>
+                                <option value="08">08</option>
+                                <option value="09">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group third">
+                            <label class="form-label">Expiry Year <span class="required">*</span></label>
+                            <select class="form-select" id="expiryYear">
+                                <option value="">YY</option>
+                                <option value="23">23</option>
+                                <option value="24">24</option>
+                                <option value="25">25</option>
+                                <option value="26">26</option>
+                                <option value="27">27</option>
+                                <option value="28">28</option>
+                                <option value="29">29</option>
+                                <option value="30">30</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group third">
+                            <label class="form-label">CVV <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="cvv" placeholder="123" maxlength="4" inputmode="numeric">
+                            <div class="invalid-feedback">Please enter CVV</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- UPI Details -->
+                <div class="card-details-container" id="upiDetails">
+                    <h5><i class="fas fa-mobile-alt me-2"></i> UPI Details</h5>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">UPI ID <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="upiId" placeholder="username@upi" inputmode="email">
+                            <div class="invalid-feedback">Please enter a valid UPI ID</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Net Banking Details -->
+                <div class="card-details-container" id="netBankingDetails">
+                    <h5><i class="fas fa-university me-2"></i> Net Banking Details</h5>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Select Bank <span class="required">*</span></label>
+                            <select class="form-select" id="bankSelect">
+                                <option value="">Select Bank</option>
+                                <option value="sbi">State Bank of India</option>
+                                <option value="hdfc">HDFC Bank</option>
+                                <option value="icici">ICICI Bank</option>
+                                <option value="axis">Axis Bank</option>
+                                <option value="kotak">Kotak Mahindra Bank</option>
+                                <option value="pnb">Punjab National Bank</option>
+                                <option value="yes">Yes Bank</option>
+                                <option value="indusind">IndusInd Bank</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Wallet Details -->
+                <div class="card-details-container" id="walletDetails">
+                    <h5><i class="fas fa-wallet me-2"></i> Wallet Details</h5>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Select Wallet <span class="required">*</span></label>
+                            <select class="form-select" id="walletSelect">
+                                <option value="">Select Wallet</option>
+                                <option value="paytm">Paytm</option>
+                                <option value="phonepay">PhonePe</option>
+                                <option value="googlepay">Google Pay</option>
+                                <option value="amazonpay">Amazon Pay</option>
+                                <option value="mobikwik">MobiKwik</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Payment Status</label>
+                        <select class="form-select" id="paymentStatus">
+                            <option value="completed">Completed</option>
+                            <option value="pending">Pending</option>
+                            <option value="failed">Failed</option>
+                            <option value="refunded">Refunded</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Payment Gateway</label>
+                        <select class="form-select" id="paymentGateway">
+                            <option value="razorpay">Razorpay</option>
+                            <option value="stripe">Stripe</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="paytm">Paytm</option>
+                            <option value="cashfree">Cashfree</option>
+                            <option value="instamojo">Instamojo</option>
+                            <option value="manual">Manual</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn btn-secondary" id="backStep2Btn" type="button">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary" id="nextStep2Btn" type="button">
+                        Next: Review & Confirm <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Review & Confirm -->
+            <div class="form-section" id="step3Form" style="display: none;">
+                <h3><i class="fas fa-clipboard-check me-2"></i> Review & Confirm Payment</h3>
+                
+                <!-- Success Animation -->
+                <div class="success-animation" id="successAnimation">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                    <h3 class="text-success">Payment Processed Successfully!</h3>
+                    <p class="text-muted">Transaction ID: <strong id="successTransactionId">TXN-2023-001</strong></p>
+                    <div class="form-actions">
+                        <button class="btn btn-outline-primary" id="viewReceiptBtn" type="button">
+                            <i class="fas fa-receipt"></i> View Receipt
+                        </button>
+                        <button class="btn btn-primary" id="newPaymentBtn" type="button">
+                            <i class="fas fa-plus"></i> New Payment
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Review Content -->
+                <div id="reviewContent">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <h5><i class="fas fa-user me-2"></i> User Details</h5>
+                            <div class="review-card">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3">
+                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0" id="reviewUserName">Aravind K</h6>
+                                        <small class="text-muted" id="reviewUserEmail">aravind@tech.ai</small>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <small class="text-muted">Phone:</small>
+                                        <p class="mb-1" id="reviewUserPhone">9876543210</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">User Type:</small>
+                                        <p class="mb-1" id="reviewUserType">Attendee</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <h5><i class="fas fa-calendar-alt me-2"></i> Event Details</h5>
+                            <div class="review-card">
+                                <h6 class="mb-2" id="reviewEventName">Annual Tech Conference</h6>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <small class="text-muted">Date:</small>
+                                        <p class="mb-1" id="reviewEventDate">Oct 15, 2023</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">Time:</small>
+                                        <p class="mb-1" id="reviewEventTime">10:30 AM</p>
+                                    </div>
+                                </div>
+                                <small class="text-muted">Instructions:</small>
+                                <p class="mb-0 text-muted small" id="reviewInstructions">No special instructions</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h5><i class="fas fa-money-bill-wave me-2"></i> Payment Summary</h5>
+                    <div class="review-card">
+                        <div class="table-responsive">
+                            <table class="table table-borderless mb-0">
+                                <tbody>
+                                    <tr>
+                                        <td>Base Amount:</td>
+                                        <td class="text-end" id="reviewBaseAmount">₹1,499.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Service Fee (3%):</td>
+                                        <td class="text-end" id="reviewServiceFee">₹44.97</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GST (18%):</td>
+                                        <td class="text-end" id="reviewGST">₹269.95</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Discount:</td>
+                                        <td class="text-end text-danger" id="reviewDiscount">-₹0.00</td>
+                                    </tr>
+                                    <tr class="border-top">
+                                        <td><strong>Total Amount:</strong></td>
+                                        <td class="text-end"><strong id="reviewTotal">₹1,813.92</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <small class="text-muted">Payment Method:</small>
+                                <p class="mb-0" id="reviewPaymentMethod">Credit Card</p>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted">Payment Gateway:</small>
+                                <p class="mb-0" id="reviewPaymentGateway">Razorpay</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Final Notes (Optional)</label>
+                            <textarea class="form-control" id="finalNotes" rows="3" placeholder="Add any final notes or comments..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Please review all details before processing the payment. Once processed, the payment cannot be undone.
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" id="backStep3Btn" type="button">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button class="btn btn-success" id="processPaymentBtn" type="button">
+                            <i class="fas fa-check"></i> Process Payment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Stream Connect Admin Dashboard</strong> &copy; AngamTech Teams All rights reserved</p>
+            <p class="text-muted">Designed for administrators to manage and monitor the event streaming platform</p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // ============================================
+        // INITIALIZATION & LOADING
+        // ============================================
+        
+        // Global variables
+        let currentStep = 1;
+        let transactionId = '';
+        let paymentData = {};
+        let unreadNotifications = 3;
+        let activeDropdown = null;
+        
+        // Hide loading screen after initial load
+        setTimeout(() => {
+            document.getElementById('loadingOverlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                initializePaymentProcess();
+            }, 500);
+        }, 1500);
+        
+        function initializePaymentProcess() {
+            setupEventListeners();
+            updatePaymentSummary();
+            generateTransactionId();
+            adjustLayoutForScreenSize();
+            
+            // Show helpful hint for mobile users
+            if (window.innerWidth < 768) {
+                setTimeout(() => {
+                    showNotification('Tip: Fill in all required fields to proceed', 'info', 5000);
+                }, 2000);
+            }
+        }
+        
+        // ============================================
+        // RESPONSIVE LAYOUT ADJUSTMENTS
+        // ============================================
+        
+        function adjustLayoutForScreenSize() {
+            const width = window.innerWidth;
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            
+            if (width < 992) {
+                // Mobile/Tablet: Sidebar is hidden by default
+                sidebar.classList.remove('active');
+                sidebar.classList.remove('collapsed');
+                mainContent.classList.remove('collapsed');
+                sidebarOverlay.classList.remove('active');
+                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                document.body.style.overflow = '';
+            } else {
+                // Desktop: Sidebar is visible by default
+                sidebar.classList.add('active');
+                sidebar.classList.remove('collapsed');
+                mainContent.classList.remove('collapsed');
+                sidebarOverlay.classList.remove('active');
+                menuToggle.innerHTML = '<i class="fas fa-times"></i>';
+                document.body.style.overflow = '';
+            }
+            
+            // Update dropdown positioning
+            updateDropdownPositions();
+        }
+        
+        function updateDropdownPositions() {
+            if (window.innerWidth <= 768) {
+                document.querySelectorAll('.dropdown-menu').forEach(dropdown => {
+                    dropdown.style.position = 'fixed';
+                    dropdown.style.top = '50%';
+                    dropdown.style.left = '50%';
+                    dropdown.style.transform = 'translate(-50%, -50%)';
+                    dropdown.style.width = '90%';
+                    dropdown.style.maxWidth = '320px';
+                    dropdown.style.maxHeight = '70vh';
+                    dropdown.style.overflowY = 'auto';
+                    dropdown.style.marginTop = '0';
+                    dropdown.style.zIndex = '10002';
+                });
+            } else {
+                document.querySelectorAll('.dropdown-menu').forEach(dropdown => {
+                    dropdown.style.position = '';
+                    dropdown.style.top = '';
+                    dropdown.style.left = '';
+                    dropdown.style.transform = '';
+                    dropdown.style.width = '';
+                    dropdown.style.maxWidth = '';
+                    dropdown.style.maxHeight = '';
+                    dropdown.style.overflowY = '';
+                    dropdown.style.marginTop = '';
+                    dropdown.style.zIndex = '';
+                });
+            }
+        }
+        
+        // ============================================
+        // HEADER FUNCTIONALITY - FULLY WORKING
+        // ============================================
+        
+        function setupHeaderEventListeners() {
+            // Toggle sidebar
+            document.getElementById('menuToggle').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const sidebar = document.getElementById('sidebar');
+                const mainContent = document.getElementById('mainContent');
+                const sidebarOverlay = document.getElementById('sidebarOverlay');
+                const isMobileView = window.innerWidth < 992;
+                
+                if (isMobileView) {
+                    // Mobile: Toggle active class
+                    sidebar.classList.toggle('active');
+                    sidebarOverlay.classList.toggle('active');
+                    
+                    // Change icon based on state
+                    if (sidebar.classList.contains('active')) {
+                        this.innerHTML = '<i class="fas fa-times"></i>';
+                        document.body.style.overflow = 'hidden';
+                        closeAllDropdowns();
+                    } else {
+                        this.innerHTML = '<i class="fas fa-bars"></i>';
+                        document.body.style.overflow = '';
+                    }
+                } else {
+                    // Desktop: Toggle collapsed class
+                    sidebar.classList.toggle('collapsed');
+                    mainContent.classList.toggle('collapsed');
+                    
+                    // Adjust layout
+                    if (sidebar.classList.contains('collapsed')) {
+                        this.innerHTML = '<i class="fas fa-bars"></i>';
+                    } else {
+                        this.innerHTML = '<i class="fas fa-times"></i>';
+                    }
+                }
+            });
+            
+            // Close sidebar when clicking on overlay (mobile)
+            document.getElementById('sidebarOverlay').addEventListener('click', function() {
+                const sidebar = document.getElementById('sidebar');
+                const menuToggle = document.getElementById('menuToggle');
+                sidebar.classList.remove('active');
+                this.classList.remove('active');
+                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                document.body.style.overflow = '';
+            });
+            
+            // Close sidebar when clicking on menu links (mobile)
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 992) {
+                        const sidebar = document.getElementById('sidebar');
+                        const sidebarOverlay = document.getElementById('sidebarOverlay');
+                        const menuToggle = document.getElementById('menuToggle');
+                        
+                        sidebar.classList.remove('active');
+                        sidebarOverlay.classList.remove('active');
+                        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                        document.body.style.overflow = '';
+                        closeAllDropdowns();
+                    }
+                });
+            });
+            
+            // Toggle dark mode
+            document.getElementById('darkModeToggle').addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.body.classList.toggle('dark-mode');
+                
+                // Change icon based on state
+                if (document.body.classList.contains('dark-mode')) {
+                    this.innerHTML = '<i class="fas fa-sun"></i>';
+                    this.title = "Toggle Light Mode";
+                    localStorage.setItem('darkMode', 'enabled');
+                    showNotification('Dark mode enabled', 'info');
+                } else {
+                    this.innerHTML = '<i class="fas fa-moon"></i>';
+                    this.title = "Toggle Dark Mode";
+                    localStorage.setItem('darkMode', 'disabled');
+                    showNotification('Light mode enabled', 'info');
+                }
+            });
+            
+            // Check for saved dark mode preference
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('darkModeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            
+            // Toggle full screen
+            document.getElementById('fullScreenToggle').addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log(`Error attempting to enable full-screen mode: ${err.message}`);
+                    });
+                    this.innerHTML = '<i class="fas fa-compress"></i>';
+                    showNotification('Full screen mode enabled', 'info');
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                        this.innerHTML = '<i class="fas fa-expand"></i>';
+                        showNotification('Full screen mode disabled', 'info');
+                    }
+                }
+            });
+            
+            // Search functionality
+            document.getElementById('searchButton').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput.value.trim()) {
+                    performSearch(searchInput.value);
+                }
+            });
+            
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.stopPropagation();
+                    if (this.value.trim()) {
+                        performSearch(this.value);
+                    }
+                }
+            });
+            
+            // Notifications dropdown - FULLY WORKING
+            document.getElementById('notificationToggle').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const dropdown = document.getElementById('notificationDropdown');
+                
+                if (activeDropdown === dropdown) {
+                    closeAllDropdowns();
+                } else {
+                    closeAllDropdowns();
+                    dropdown.classList.add('active');
+                    activeDropdown = dropdown;
+                    
+                    // Update dropdown position for mobile
+                    updateDropdownPositions();
+                }
+            });
+            
+            // Profile dropdown - FULLY WORKING
+            document.getElementById('adminProfile').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const dropdown = document.getElementById('profileDropdown');
+                
+                if (activeDropdown === dropdown) {
+                    closeAllDropdowns();
+                } else {
+                    closeAllDropdowns();
+                    dropdown.classList.add('active');
+                    activeDropdown = dropdown;
+                    
+                    // Update dropdown position for mobile
+                    updateDropdownPositions();
+                }
+            });
+            
+            // Mark all notifications as read - FULLY WORKING
+            document.getElementById('markAllRead').addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                markAllNotificationsAsRead();
+            });
+            
+            // View all notifications
+            document.getElementById('viewAllNotifications').addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                showNotification('Opening all notifications...', 'info');
+                closeAllDropdowns();
+            });
+            
+            // Individual notification clicks
+            document.querySelectorAll('.notification-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const notificationId = this.getAttribute('data-id');
+                    markNotificationAsRead(notificationId);
+                    showNotification('Notification marked as read', 'success');
+                    closeAllDropdowns();
+                });
+            });
+            
+            // View profile button
+            document.getElementById('viewProfileBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                showProfileModal();
+                closeAllDropdowns();
+            });
+            
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (confirm('Are you sure you want to logout?')) {
+                    showNotification('Logging out...', 'warning');
+                    setTimeout(() => {
+                        showNotification('Logged out successfully!', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 1500);
+                    }, 1000);
+                }
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown-menu') && !e.target.closest('#notificationToggle') && !e.target.closest('#adminProfile')) {
+                    closeAllDropdowns();
+                }
+            });
+            
+            // Close dropdowns on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeAllDropdowns();
+                }
+            });
+        }
+        
+        function closeAllDropdowns() {
+            document.querySelectorAll('.dropdown-menu.active').forEach(dropdown => {
+                dropdown.classList.remove('active');
+            });
+            activeDropdown = null;
+        }
+        
+        function markAllNotificationsAsRead() {
+            unreadNotifications = 0;
+            document.getElementById('notificationCount').style.display = 'none';
+            document.querySelectorAll('.notification-item').forEach(item => {
+                item.style.opacity = '0.7';
+            });
+            showNotification('All notifications marked as read', 'success');
+        }
+        
+        function markNotificationAsRead(notificationId) {
+            if (unreadNotifications > 0) {
+                unreadNotifications--;
+                document.getElementById('notificationCount').textContent = unreadNotifications;
+                
+                if (unreadNotifications === 0) {
+                    document.getElementById('notificationCount').style.display = 'none';
+                }
+                
+                // Mark the specific notification as read
+                const notificationItem = document.querySelector(`.notification-item[data-id="${notificationId}"]`);
+                if (notificationItem) {
+                    notificationItem.style.opacity = '0.7';
+                }
+            }
+        }
+        
+        function performSearch(query) {
+            showNotification(`Searching for "${query}"...`, 'info');
+            closeAllDropdowns();
+        }
+        
+        // ============================================
+        // PAYMENT PROCESSING EVENT LISTENERS
+        // ============================================
+        
+        function setupPaymentEventListeners() {
+            // Search user button
+            document.getElementById('searchUserBtn').addEventListener('click', function() {
+                showNotification('Opening user search...', 'info');
+            });
+            
+            // Search event button
+            document.getElementById('searchEventBtn').addEventListener('click', function() {
+                showNotification('Opening event search...', 'info');
+            });
+            
+            // User selection
+            document.getElementById('userSelect').addEventListener('change', updateUserDetails);
+            
+            // Event selection
+            document.getElementById('eventSelect').addEventListener('change', updateEventDetails);
+            
+            // Amount calculations
+            document.getElementById('baseAmount').addEventListener('input', updatePaymentSummary);
+            document.getElementById('discountAmount').addEventListener('input', updatePaymentSummary);
+            document.getElementById('serviceFeePercent').addEventListener('input', updatePaymentSummary);
+            document.getElementById('gstPercent').addEventListener('input', updatePaymentSummary);
+            
+            // Payment method selection
+            document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+                radio.addEventListener('change', updatePaymentMethod);
+            });
+            
+            // Card details preview
+            document.getElementById('cardNumber').addEventListener('input', updateCardPreview);
+            document.getElementById('cardHolder').addEventListener('input', updateCardPreview);
+            document.getElementById('expiryMonth').addEventListener('change', updateCardPreview);
+            document.getElementById('expiryYear').addEventListener('change', updateCardPreview);
+            document.getElementById('cardType').addEventListener('change', updateCardPreview);
+            
+            // Step navigation buttons
+            document.getElementById('nextStep1Btn').addEventListener('click', goToStep2);
+            document.getElementById('backStep2Btn').addEventListener('click', goToStep1);
+            document.getElementById('nextStep2Btn').addEventListener('click', goToStep3);
+            document.getElementById('backStep3Btn').addEventListener('click', goToStep2);
+            
+            // Cancel button
+            document.getElementById('cancelBtn').addEventListener('click', cancelPayment);
+            
+            // Process payment button
+            document.getElementById('processPaymentBtn').addEventListener('click', processPayment);
+            
+            // Success screen buttons
+            document.getElementById('viewReceiptBtn').addEventListener('click', viewReceipt);
+            document.getElementById('newPaymentBtn').addEventListener('click', startNewPayment);
+            
+            // Form validation
+            setupFormValidation();
+        }
+        
+        function setupEventListeners() {
+            setupHeaderEventListeners();
+            setupPaymentEventListeners();
+            
+            // Window resize listener
+            window.addEventListener('resize', handleResize);
+            
+            // Prevent zoom on double tap (iOS)
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(event) {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+            
+            // Prevent pull-to-refresh on mobile
+            document.addEventListener('touchmove', function(e) {
+                if (e.scale !== 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+        
+        function handleResize() {
+            adjustLayoutForScreenSize();
+            updateDropdownPositions();
+        }
+        
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        
+        function updateUserDetails() {
+            const userSelect = document.getElementById('userSelect');
+            const selectedOption = userSelect.options[userSelect.selectedIndex];
+            const userEmail = selectedOption.text.match(/\((.*)\)/);
+            
+            if (userEmail) {
+                document.getElementById('userEmail').value = userEmail[1];
+            }
+            
+            updatePaymentSummary();
+        }
+        
+        function updateEventDetails() {
+            const eventSelect = document.getElementById('eventSelect');
+            const selectedOption = eventSelect.options[eventSelect.selectedIndex];
+            const priceMatch = selectedOption.text.match(/₹([\d,]+)/);
+            
+            if (priceMatch) {
+                const price = parseInt(priceMatch[1].replace(/,/g, ''));
+                document.getElementById('baseAmount').value = price;
+            }
+            
+            updatePaymentSummary();
+        }
+        
+        function updatePaymentMethod() {
+            const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            
+            // Hide all payment detail containers
+            document.querySelectorAll('.card-details-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            
+            // Show selected payment method details
+            switch(selectedMethod) {
+                case 'creditcard':
+                case 'debitcard':
+                    document.getElementById('creditCardDetails').classList.add('active');
+                    break;
+                case 'upi':
+                    document.getElementById('upiDetails').classList.add('active');
+                    break;
+                case 'netbanking':
+                    document.getElementById('netBankingDetails').classList.add('active');
+                    break;
+                case 'wallet':
+                    document.getElementById('walletDetails').classList.add('active');
+                    break;
+            }
+            
+            // Update summary
+            const methodLabels = {
+                'creditcard': 'Credit Card',
+                'debitcard': 'Debit Card',
+                'upi': 'UPI',
+                'netbanking': 'Net Banking',
+                'wallet': 'Wallet',
+                'cash': 'Cash'
+            };
+            
+            document.getElementById('summaryPaymentMethod').textContent = methodLabels[selectedMethod];
+        }
+        
+        function updateCardPreview() {
+            const cardNumber = document.getElementById('cardNumber').value;
+            const cardHolder = document.getElementById('cardHolder').value;
+            const expiryMonth = document.getElementById('expiryMonth').value;
+            const expiryYear = document.getElementById('expiryYear').value;
+            const cardType = document.getElementById('cardType').value;
+            
+            // Update card number preview
+            let previewNumber = cardNumber.replace(/\D/g, '');
+            previewNumber = previewNumber.replace(/(.{4})/g, '$1 ').trim();
+            if (!previewNumber) previewNumber = '**** **** **** ****';
+            
+            document.getElementById('cardPreviewNumber').textContent = previewNumber;
+            
+            // Update card holder preview
+            document.getElementById('cardPreviewHolder').textContent = cardHolder || 'FULL NAME';
+            
+            // Update expiry preview
+            if (expiryMonth && expiryYear) {
+                document.getElementById('cardPreviewExpiry').textContent = `${expiryMonth}/${expiryYear}`;
+            } else {
+                document.getElementById('cardPreviewExpiry').textContent = 'MM/YY';
+            }
+            
+            // Update card type icon
+            const cardTypeIcons = {
+                'visa': 'fab fa-cc-visa',
+                'mastercard': 'fab fa-cc-mastercard',
+                'amex': 'fab fa-cc-amex',
+                'rupay': 'fab fa-cc-visa',
+                'discover': 'fab fa-cc-discover'
+            };
+            
+            const cardTypeElement = document.querySelector('.card-type i');
+            if (cardTypeIcons[cardType]) {
+                cardTypeElement.className = cardTypeIcons[cardType];
+            }
+        }
+        
+        // ============================================
+        // FORM VALIDATION
+        // ============================================
+        
+        function setupFormValidation() {
+            // Step 1 validation
+            const userSelect = document.getElementById('userSelect');
+            const eventSelect = document.getElementById('eventSelect');
+            
+            userSelect.addEventListener('blur', () => {
+                if (!userSelect.value) {
+                    userSelect.classList.add('is-invalid');
+                } else {
+                    userSelect.classList.remove('is-invalid');
+                }
+            });
+            
+            eventSelect.addEventListener('blur', () => {
+                if (!eventSelect.value) {
+                    eventSelect.classList.add('is-invalid');
+                } else {
+                    eventSelect.classList.remove('is-invalid');
+                }
+            });
+        }
+        
+        // ============================================
+        // PAYMENT CALCULATION FUNCTIONS
+        // ============================================
+        
+        function updatePaymentSummary() {
+            const baseAmount = parseFloat(document.getElementById('baseAmount').value) || 0;
+            const discountAmount = parseFloat(document.getElementById('discountAmount').value) || 0;
+            const serviceFeePercent = parseFloat(document.getElementById('serviceFeePercent').value) || 0;
+            const gstPercent = parseFloat(document.getElementById('gstPercent').value) || 0;
+            
+            // Calculate amounts
+            const serviceFee = (baseAmount * serviceFeePercent) / 100;
+            const gst = ((baseAmount + serviceFee) * gstPercent) / 100;
+            const total = baseAmount + serviceFee + gst - discountAmount;
+            
+            // Format amounts with Indian numbering system
+            const formatter = new Intl.NumberFormat('en-IN', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            
+            // Update summary display
+            document.getElementById('summaryBaseAmount').textContent = '₹' + formatter.format(baseAmount);
+            document.getElementById('summaryServiceFee').textContent = '₹' + formatter.format(serviceFee);
+            document.getElementById('summaryGST').textContent = '₹' + formatter.format(gst);
+            document.getElementById('summaryDiscount').textContent = '-₹' + formatter.format(discountAmount);
+            document.getElementById('summaryTotal').textContent = '₹' + formatter.format(total);
+            
+            // Update review section if on step 3
+            if (currentStep === 3) {
+                document.getElementById('reviewBaseAmount').textContent = '₹' + formatter.format(baseAmount);
+                document.getElementById('reviewServiceFee').textContent = '₹' + formatter.format(serviceFee);
+                document.getElementById('reviewGST').textContent = '₹' + formatter.format(gst);
+                document.getElementById('reviewDiscount').textContent = '-₹' + formatter.format(discountAmount);
+                document.getElementById('reviewTotal').textContent = '₹' + formatter.format(total);
+            }
+        }
+        
+        function generateTransactionId() {
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            
+            transactionId = `TXN-${year}${month}${day}-${random}`;
+            document.getElementById('summaryTransactionId').textContent = transactionId;
+            document.getElementById('successTransactionId').textContent = transactionId;
+        }
+        
+        // ============================================
+        // STEP NAVIGATION FUNCTIONS
+        // ============================================
+        
+        function goToStep2() {
+            // Validate step 1
+            const userSelect = document.getElementById('userSelect');
+            const eventSelect = document.getElementById('eventSelect');
+            
+            let isValid = true;
+            
+            if (!userSelect.value) {
+                userSelect.classList.add('is-invalid');
+                isValid = false;
+            }
+            
+            if (!eventSelect.value) {
+                eventSelect.classList.add('is-invalid');
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                showNotification('Please fill all required fields', 'warning');
+                
+                // Scroll to first error on mobile
+                if (window.innerWidth < 768) {
+                    const firstError = document.querySelector('.is-invalid');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+                return;
+            }
+            
+            // Update step visualization
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step1').classList.add('completed');
+            document.getElementById('step2').classList.add('active');
+            
+            // Show/hide forms
+            document.getElementById('step1Form').style.display = 'none';
+            document.getElementById('step2Form').style.display = 'block';
+            
+            // Scroll to top for mobile
+            if (window.innerWidth < 768) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            currentStep = 2;
+            updatePaymentSummary();
+            showNotification('Step 2: Enter payment details', 'info');
+        }
+        
+        function goToStep1() {
+            // Update step visualization
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step1').classList.add('active');
+            document.getElementById('step1').classList.remove('completed');
+            
+            // Show/hide forms
+            document.getElementById('step2Form').style.display = 'none';
+            document.getElementById('step1Form').style.display = 'block';
+            
+            // Scroll to top for mobile
+            if (window.innerWidth < 768) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            currentStep = 1;
+            showNotification('Step 1: User & event details', 'info');
+        }
+        
+        function goToStep3() {
+            // Update step visualization
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step2').classList.add('completed');
+            document.getElementById('step3').classList.add('active');
+            
+            // Show/hide forms
+            document.getElementById('step2Form').style.display = 'none';
+            document.getElementById('step3Form').style.display = 'block';
+            
+            // Update review content
+            updateReviewContent();
+            
+            // Scroll to top for mobile
+            if (window.innerWidth < 768) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            currentStep = 3;
+            showNotification('Step 3: Review & confirm payment', 'info');
+        }
+        
+        function goToStep2() {
+            // Update step visualization
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+            document.getElementById('step2').classList.remove('completed');
+            
+            // Show/hide forms
+            document.getElementById('step3Form').style.display = 'none';
+            document.getElementById('step2Form').style.display = 'block';
+            
+            // Scroll to top for mobile
+            if (window.innerWidth < 768) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            currentStep = 2;
+            showNotification('Step 2: Payment details', 'info');
+        }
+        
+        function updateReviewContent() {
+            // User details
+            const userSelect = document.getElementById('userSelect');
+            const selectedUser = userSelect.options[userSelect.selectedIndex];
+            const userName = selectedUser.text.split(' (')[0];
+            const userEmail = document.getElementById('userEmail').value;
+            const userPhone = document.getElementById('userPhone').value || 'Not provided';
+            const userType = document.getElementById('userType').options[document.getElementById('userType').selectedIndex].text;
+            
+            document.getElementById('reviewUserName').textContent = userName;
+            document.getElementById('reviewUserEmail').textContent = userEmail;
+            document.getElementById('reviewUserPhone').textContent = userPhone;
+            document.getElementById('reviewUserType').textContent = userType;
+            
+            // Event details
+            const eventSelect = document.getElementById('eventSelect');
+            const selectedEvent = eventSelect.options[eventSelect.selectedIndex];
+            const eventName = selectedEvent.text.split(' - ')[0];
+            const eventDate = document.getElementById('eventDate').value;
+            const eventTime = document.getElementById('eventTime').value;
+            const instructions = document.getElementById('instructions').value || 'No special instructions';
+            
+            document.getElementById('reviewEventName').textContent = eventName;
+            document.getElementById('reviewEventDate').textContent = eventDate || 'Not specified';
+            document.getElementById('reviewEventTime').textContent = eventTime || 'Not specified';
+            document.getElementById('reviewInstructions').textContent = instructions;
+            
+            // Payment method
+            const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            const methodLabels = {
+                'creditcard': 'Credit Card',
+                'debitcard': 'Debit Card',
+                'upi': 'UPI',
+                'netbanking': 'Net Banking',
+                'wallet': 'Wallet',
+                'cash': 'Cash'
+            };
+            
+            document.getElementById('reviewPaymentMethod').textContent = methodLabels[selectedMethod];
+            
+            // Payment gateway
+            const paymentGateway = document.getElementById('paymentGateway').options[document.getElementById('paymentGateway').selectedIndex].text;
+            document.getElementById('reviewPaymentGateway').textContent = paymentGateway;
+            
+            // Update payment summary in review
+            updatePaymentSummary();
+        }
+        
+        // ============================================
+        // PAYMENT PROCESSING FUNCTIONS
+        // ============================================
+        
+        function cancelPayment() {
+            if (confirm('Are you sure you want to cancel this payment? All entered data will be lost.')) {
+                window.location.href = 'payments.html';
+            }
+        }
+        
+        function processPayment() {
+            // Validate payment details
+            const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            
+            // Card validation
+            if (selectedMethod === 'creditcard' || selectedMethod === 'debitcard') {
+                const cardNumber = document.getElementById('cardNumber').value;
+                const cardHolder = document.getElementById('cardHolder').value;
+                const expiryMonth = document.getElementById('expiryMonth').value;
+                const expiryYear = document.getElementById('expiryYear').value;
+                const cvv = document.getElementById('cvv').value;
+                
+                if (!cardNumber || cardNumber.replace(/\D/g, '').length < 16) {
+                    showNotification('Please enter a valid card number', 'warning');
+                    
+                    // Focus on card number field on mobile
+                    if (window.innerWidth < 768) {
+                        document.getElementById('cardNumber').focus();
+                    }
+                    return;
+                }
+                
+                if (!cardHolder) {
+                    showNotification('Please enter card holder name', 'warning');
+                    
+                    // Focus on card holder field on mobile
+                    if (window.innerWidth < 768) {
+                        document.getElementById('cardHolder').focus();
+                    }
+                    return;
+                }
+                
+                if (!expiryMonth || !expiryYear) {
+                    showNotification('Please select card expiry date', 'warning');
+                    return;
+                }
+                
+                if (!cvv || cvv.length < 3) {
+                    showNotification('Please enter CVV', 'warning');
+                    
+                    // Focus on CVV field on mobile
+                    if (window.innerWidth < 768) {
+                        document.getElementById('cvv').focus();
+                    }
+                    return;
+                }
+            }
+            
+            // UPI validation
+            if (selectedMethod === 'upi') {
+                const upiId = document.getElementById('upiId').value;
+                if (!upiId || !upiId.includes('@')) {
+                    showNotification('Please enter a valid UPI ID', 'warning');
+                    
+                    // Focus on UPI field on mobile
+                    if (window.innerWidth < 768) {
+                        document.getElementById('upiId').focus();
+                    }
+                    return;
+                }
+            }
+            
+            // Net Banking validation
+            if (selectedMethod === 'netbanking') {
+                const bankSelect = document.getElementById('bankSelect').value;
+                if (!bankSelect) {
+                    showNotification('Please select a bank', 'warning');
+                    return;
+                }
+            }
+            
+            // Wallet validation
+            if (selectedMethod === 'wallet') {
+                const walletSelect = document.getElementById('walletSelect').value;
+                if (!walletSelect) {
+                    showNotification('Please select a wallet', 'warning');
+                    return;
+                }
+            }
+            
+            // Show processing animation
+            const processBtn = document.getElementById('processPaymentBtn');
+            const originalText = processBtn.innerHTML;
+            processBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            processBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Hide review content and show success animation
+                document.getElementById('reviewContent').style.display = 'none';
+                document.getElementById('successAnimation').classList.add('active');
+                
+                // Update step visualization
+                document.getElementById('step3').classList.remove('active');
+                document.getElementById('step3').classList.add('completed');
+                
+                // Show success notification
+                showNotification('Payment processed successfully!', 'success');
+                
+                // Reset button
+                processBtn.innerHTML = originalText;
+                processBtn.disabled = false;
+                
+                // Save payment data
+                savePaymentData();
+                
+                // Scroll to top on mobile
+                if (window.innerWidth < 768) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+                
+            }, 2000);
+        }
+        
+        function savePaymentData() {
+            // Collect all form data
+            paymentData = {
+                transactionId: transactionId,
+                userId: document.getElementById('userSelect').value,
+                userName: document.getElementById('userSelect').options[document.getElementById('userSelect').selectedIndex].text.split(' (')[0],
+                userEmail: document.getElementById('userEmail').value,
+                userPhone: document.getElementById('userPhone').value,
+                userType: document.getElementById('userType').value,
+                eventId: document.getElementById('eventSelect').value,
+                eventName: document.getElementById('eventSelect').options[document.getElementById('eventSelect').selectedIndex].text.split(' - ')[0],
+                eventDate: document.getElementById('eventDate').value,
+                eventTime: document.getElementById('eventTime').value,
+                baseAmount: parseFloat(document.getElementById('baseAmount').value),
+                discountAmount: parseFloat(document.getElementById('discountAmount').value) || 0,
+                serviceFeePercent: parseFloat(document.getElementById('serviceFeePercent').value),
+                gstPercent: parseFloat(document.getElementById('gstPercent').value),
+                currency: document.getElementById('currency').value,
+                paymentMethod: document.querySelector('input[name="paymentMethod"]:checked').value,
+                paymentStatus: document.getElementById('paymentStatus').value,
+                paymentGateway: document.getElementById('paymentGateway').value,
+                instructions: document.getElementById('instructions').value,
+                finalNotes: document.getElementById('finalNotes').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Calculate totals
+            const serviceFee = (paymentData.baseAmount * paymentData.serviceFeePercent) / 100;
+            const gst = ((paymentData.baseAmount + serviceFee) * paymentData.gstPercent) / 100;
+            paymentData.totalAmount = paymentData.baseAmount + serviceFee + gst - paymentData.discountAmount;
+            paymentData.serviceFee = serviceFee;
+            paymentData.gst = gst;
+            
+            console.log('Payment data saved:', paymentData);
+            
+            // In a real application, you would send this data to your server
+            // Example: fetch('/api/payments/process', { method: 'POST', body: JSON.stringify(paymentData) })
+        }
+        
+        function viewReceipt() {
+            showNotification('Generating receipt...', 'info');
+            // In a real app, this would generate and display a receipt
+            setTimeout(() => {
+                showNotification('Receipt generated successfully', 'success');
+            }, 1000);
+        }
+        
+        function startNewPayment() {
+            // Reset form
+            document.querySelectorAll('input, select, textarea').forEach(element => {
+                if (element.id && !element.id.includes('summary') && !element.id.includes('review')) {
+                    if (element.type === 'text' || element.type === 'email' || element.type === 'tel' || element.type === 'number') {
+                        element.value = '';
+                    } else if (element.type === 'select-one') {
+                        element.selectedIndex = 0;
+                    } else if (element.type === 'textarea') {
+                        element.value = '';
+                    }
+                }
+            });
+            
+            // Reset default values
+            document.getElementById('baseAmount').value = '1499';
+            document.getElementById('discountAmount').value = '0';
+            document.getElementById('serviceFeePercent').value = '3';
+            document.getElementById('gstPercent').value = '18';
+            document.getElementById('methodCreditCard').checked = true;
+            
+            // Reset steps
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active', 'completed');
+            });
+            
+            document.getElementById('step1').classList.add('active');
+            
+            // Show/hide forms
+            document.getElementById('successAnimation').classList.remove('active');
+            document.getElementById('reviewContent').style.display = 'block';
+            document.getElementById('step3Form').style.display = 'none';
+            document.getElementById('step1Form').style.display = 'block';
+            
+            // Update payment method to default
+            updatePaymentMethod();
+            updateCardPreview();
+            
+            // Generate new transaction ID
+            generateTransactionId();
+            
+            // Reset payment summary
+            updatePaymentSummary();
+            
+            // Reset payment data
+            paymentData = {};
+            
+            // Scroll to top on mobile
+            if (window.innerWidth < 768) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            currentStep = 1;
+            showNotification('New payment form ready', 'info');
+        }
+        
+        // ============================================
+        // NOTIFICATION FUNCTION
+        // ============================================
+        
+        function showNotification(message, type = 'info', duration = 5000) {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} notification-slide position-fixed`;
+            notification.style.cssText = `
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                min-width: 250px;
+                max-width: 90%;
+                box-shadow: var(--shadow-lg);
+                border: none;
+                animation: notificationSlide 0.3s ease;
+            `;
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'danger' ? 'times-circle' : 'info-circle'} me-2"></i>
+                    <div class="flex-grow-1">${message}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after duration
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }
+            }, duration);
+            
+            // Close button functionality
+            notification.querySelector('.btn-close').addEventListener('click', function() {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            });
+        }
+        
+        // ============================================
+        // PROFILE MODAL FUNCTION
+        // ============================================
+        
+        function showProfileModal() {
+            showModal('Admin Profile', `
+                <div class="text-center mb-4">
+                    <div class="admin-avatar mx-auto mb-3" style="width: 100px; height: 100px;">
+                        <img src="https://ui-avatars.com/api/?name=Mohanapriya&background=3b82f6&color=fff&size=128" alt="Admin Avatar">
+                    </div>
+                    <h4>Mohanapriya</h4>
+                    <p class="text-muted">Super Admin</p>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" value="Mohanapriya" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" value="admin@streamconnect.com" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" value="+91 9876543211" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Role</label>
+                            <input type="text" class="form-control" value="Super Admin" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Last Login</label>
+                            <input type="text" class="form-control" value="2025-01-24 10:30 AM" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Account Created</label>
+                            <input type="text" class="form-control" value="2024-01-15" readonly>
+                        </div>
+                    </div>
+                </div>
+            `, 'Close');
+        }
+        
+        function showModal(title, content, closeText = 'Close', confirmCallback = null, confirmText = 'Confirm') {
+            const modal = document.createElement('div');
+            modal.className = 'modal fade show d-block';
+            modal.style.cssText = `
+                background-color: rgba(0,0,0,0.5);
+                z-index: 99999;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            `;
+            modal.innerHTML = `
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: ${window.innerWidth <= 768 ? '90%' : '600px'};">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">${title}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            ${content}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${closeText}</button>
+                            ${confirmCallback ? `<button type="button" class="btn btn-primary" id="modalConfirmBtn">${confirmText}</button>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            document.body.style.overflow = 'hidden';
+            
+            // Add event listeners to close buttons
+            modal.querySelectorAll('[data-bs-dismiss="modal"]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    modal.classList.remove('show');
+                    setTimeout(() => {
+                        if (modal.parentNode) {
+                            modal.parentNode.removeChild(modal);
+                        }
+                        document.body.style.overflow = '';
+                    }, 300);
+                });
+            });
+            
+            // Add event listener to confirm button
+            if (confirmCallback) {
+                modal.querySelector('#modalConfirmBtn').addEventListener('click', function() {
+                    confirmCallback();
+                    modal.classList.remove('show');
+                    setTimeout(() => {
+                        if (modal.parentNode) {
+                            modal.parentNode.removeChild(modal);
+                        }
+                        document.body.style.overflow = '';
+                    }, 300);
+                });
+            }
+            
+            // Close modal when clicking outside
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                    setTimeout(() => {
+                        if (modal.parentNode) {
+                            modal.parentNode.removeChild(modal);
+                        }
+                        document.body.style.overflow = '';
+                    }, 300);
+                }
+            });
+            
+            // Close modal on escape key
+            document.addEventListener('keydown', function closeModalOnEscape(e) {
+                if (e.key === 'Escape') {
+                    modal.classList.remove('show');
+                    setTimeout(() => {
+                        if (modal.parentNode) {
+                            modal.parentNode.removeChild(modal);
+                        }
+                        document.body.style.overflow = '';
+                    }, 300);
+                    document.removeEventListener('keydown', closeModalOnEscape);
+                }
+            });
+        }
+        
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', function() {
+            adjustLayoutForScreenSize();
+            
+            // Set inputmode for better mobile keyboard
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.setAttribute('inputmode', 'decimal');
+            });
+            
+            // Prevent form submission on enter
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'BUTTON') {
+                    e.preventDefault();
+                }
+            });
+        });
+        
+        // Handle touch devices better
+        if ('ontouchstart' in window) {
+            document.documentElement.classList.add('touch-device');
+            
+            // Increase tap target sizes for mobile
+            document.querySelectorAll('.btn, .header-icon, .menu-toggle, .payment-method-label, .sidebar-menu a').forEach(el => {
+                el.style.minHeight = '44px';
+                if (!el.classList.contains('payment-method-label') && !el.classList.contains('sidebar-menu a')) {
+                    el.style.minWidth = '44px';
+                }
+            });
+            
+            // Better touch feedback
+            document.querySelectorAll('.btn, .header-icon, .menu-toggle, .admin-profile, .payment-method-label').forEach(el => {
+                el.addEventListener('touchstart', function() {
+                    this.classList.add('active');
+                });
+                
+                el.addEventListener('touchend', function() {
+                    this.classList.remove('active');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

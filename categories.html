@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Categories - Stream Connect Events</title>
+    <link rel="icon" href="project logo" type="images/icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        body { 
+            background: linear-gradient(to bottom, #0A0A2A, #1A1A50); 
+            color: #FFFFFF; 
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(0, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .glow-btn { 
+            background: linear-gradient(45deg, #00FFFF, #8B5CF6); 
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+        .glow-btn:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+            transform: translateY(-2px);
+        }
+        .navbar-glass { 
+            background: rgba(10, 10, 42, 0.95); 
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .category-card { 
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+            height: 100%;
+        }
+        .category-card:hover { 
+            transform: translateY(-15px); 
+            box-shadow: 0 25px 50px rgba(0, 255, 255, 0.15);
+        }
+        .filter-btn { 
+            transition: all 0.3s ease;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+        }
+        .filter-btn.active { 
+            background: linear-gradient(45deg, #00FFFF, #8B5CF6); 
+            color: #0A0A2A;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        .category-icon {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(45deg, #00FFFF, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hover-lift {
+            transition: transform 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+        }
+        .feature-badge {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="antialiased text-white">
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 navbar-glass border-b border-cyan-500/10 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-bold gradient-text hover-lift">StreamConnect</a>
+            <div class="hidden lg:flex space-x-8">
+                <a href="index.html" class="hover:text-cyan-400 transition-colors duration-300">Home</a>
+                <a href="features.html" class="hover:text-cyan-400 transition-colors duration-300">Features</a>
+                <a href="how-it-works.html" class="hover:text-cyan-400 transition-colors duration-300">How It Works</a>
+                <a href="categories.html" class="text-cyan-400 font-semibold border-b-2 border-cyan-400 pb-1">Categories</a>
+                <a href="pricing.html" class="hover:text-cyan-400 transition-colors duration-300">Pricing</a>
+                <a href="become-organizer.html" class="hover:text-cyan-400 transition-colors duration-300">Become Organizer</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-transparent to-transparent opacity-40"></div>
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 gradient-text leading-tight">
+                Event Categories
+            </h1>
+            <p class="text-xl md:text-2xl mb-10 text-gray-300 max-w-4xl mx-auto leading-relaxed">
+                Discover the perfect event format for your audience. From interactive workshops to global conferences, 
+                we provide specialized tools for every type of virtual gathering.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 mt-8">
+                <span class="feature-badge">🎯 Tailored Solutions</span>
+                <span class="feature-badge">⚡ Quick Setup</span>
+                <span class="feature-badge">🌍 Global Reach</span>
+                <span class="feature-badge">📊 Analytics</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Filters -->
+    <section class="py-8">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button class="filter-btn active px-6 py-3 rounded-full font-semibold transition-all" data-filter="all">
+                    All Categories
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full border border-cyan-500/30 hover:bg-cyan-500/10 hover:border-cyan-400" data-filter="business">
+                    🏢 Business
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full border border-purple-500/30 hover:bg-purple-500/10 hover:border-purple-400" data-filter="education">
+                    📚 Education
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full border border-cyan-500/30 hover:bg-cyan-500/10 hover:border-cyan-400" data-filter="entertainment">
+                    🎭 Entertainment
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full border border-purple-500/30 hover:bg-purple-500/10 hover:border-purple-400" data-filter="networking">
+                    🤝 Networking
+                </button>
+                <button class="filter-btn px-6 py-3 rounded-full border border-cyan-500/30 hover:bg-cyan-500/10 hover:border-cyan-400" data-filter="hybrid">
+                    🔄 Hybrid
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Grid -->
+    <section class="py-10">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="categories-grid">
+                <!-- Conference -->
+                <div class="category-card glass-card rounded-2xl overflow-hidden flex flex-col" data-category="business hybrid">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Conference" 
+                             class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                        <div class="absolute top-4 right-4">
+                            <span class="bg-cyan-500/90 text-white px-3 py-1 rounded-full text-sm font-medium">Popular</span>
+                        </div>
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex items-start mb-4">
+                            <div class="category-icon w-12 h-12 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-2xl">🎤</span>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-cyan-400 mb-1">Conferences</h3>
+                                <p class="text-gray-400">Professional Business Events</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 mb-6 flex-1">
+                            Host large-scale professional gatherings with multiple tracks, keynote sessions, and expert panels. 
+                            Perfect for industry summits, corporate meetings, and professional development.
+                        </p>
+                        <div class="mb-6">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full">Multi-track Sessions</span>
+                                <span class="text-xs bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full">Virtual Networking</span>
+                                <span class="text-xs bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full">Sponsor Booths</span>
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <span class="font-medium text-cyan-300">Best for:</span> Corporate events, Industry summits, Professional development
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-gray-800">
+                            <a href="#" class="inline-flex items-center text-cyan-400 hover:text-cyan-300 font-medium">
+                                View Details 
+                                <span class="ml-2">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Webinars -->
+                <div class="category-card glass-card rounded-2xl overflow-hidden flex flex-col" data-category="education">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Webinar" 
+                             class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex items-start mb-4">
+                            <div class="category-icon w-12 h-12 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-2xl">📚</span>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-purple-400 mb-1">Webinars</h3>
+                                <p class="text-gray-400">Educational Sessions</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 mb-6 flex-1">
+                            Expert-led educational sessions with interactive features. Perfect for training, 
+                            workshops, and knowledge sharing with unlimited audience capacity.
+                        </p>
+                        <div class="mb-6">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full">Live Q&A</span>
+                                <span class="text-xs bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full">Resource Sharing</span>
+                                <span class="text-xs bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full">Certifications</span>
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <span class="font-medium text-purple-300">Best for:</span> Training sessions, Educational courses, Expert talks
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-gray-800">
+                            <a href="#" class="inline-flex items-center text-purple-400 hover:text-purple-300 font-medium">
+                                View Details 
+                                <span class="ml-2">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workshops -->
+                <div class="category-card glass-card rounded-2xl overflow-hidden flex flex-col" data-category="education hybrid">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Workshop" 
+                             class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex items-start mb-4">
+                            <div class="category-icon w-12 h-12 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-2xl">🔧</span>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-cyan-400 mb-1">Workshops</h3>
+                                <p class="text-gray-400">Interactive Learning</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 mb-6 flex-1">
+                            Hands-on training sessions with practical exercises. Interactive format with 
+                            breakout rooms, collaborative tools, and real-time feedback mechanisms.
+                        </p>
+                        <div class="mb-6">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full">Breakout Rooms</span>
+                                <span class="text-xs bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full">Collaborative Tools</span>
+                                <span class="text-xs bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full">Hands-on Practice</span>
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <span class="font-medium text-cyan-300">Best for:</span> Skill development, Team training, Creative sessions
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-gray-800">
+                            <a href="#" class="inline-flex items-center text-cyan-400 hover:text-cyan-300 font-medium">
+                                View Details 
+                                <span class="ml-2">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Concerts -->
+                <div class="category-card glass-card rounded-2xl overflow-hidden flex flex-col" data-category="entertainment">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Concert" 
+                             class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex items-start mb-4">
+                            <div class="category-icon w-12 h-12 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-2xl">🎵</span>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-purple-400 mb-1">Concerts & Shows</h3>
+                                <p class="text-gray-400">Live Entertainment</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 mb-6 flex-1">
+                            High-quality live performances with multiple camera angles, virtual audience 
+                            interaction, and immersive audio experiences for global entertainment events.
+                        </p>
+                        <div class="mb-6">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full">Multi-camera</span>
+                                <span class="text-xs bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full">Virtual Crowd</span>
+                                <span class="text-xs bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full">Merch Store</span>
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <span class="font-medium text-purple-300">Best for:</span> Music concerts, Comedy shows, Theater performances
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-gray-800">
+                            <a href="#" class="inline-flex items-center text-purple-400 hover:text-purple-300 font-medium">
+                                View Details 
+                                <span class="ml-2">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Virtual Expos -->
+                <div class="category-card glass-card rounded-2xl overflow-hidden flex flex-col" data-category="business networking">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Expo" 
+                             class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex items-start mb-4">
+                            <div class="category-icon w-12 h-12 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-2xl">🏢</span>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-cyan-400 mb-1">Virtual Expos</h3>
+                                <p class="text-gray-400">Trade Shows & Exhibitions</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 mb-6 flex-1">
+                            Interactive virtual trade shows with customizable booth spaces, 
+                            product demonstrations, and networking lounges for B2B engagement.
+                        </p>
+                        <div class="mb-6">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full">Virtual Booths</span>
+                                <span class="text-xs bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full">Product Demos</span>
+                                <span class="text-xs bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full">Lead Capture</span>
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <span class="font-medium text-cyan-300">Best for:</span> Trade shows, Product launches, Industry exhibitions
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-gray-800">
+                            <a href="#" class="inline-flex items-center text-cyan-400 hover:text-cyan-300 font-medium">
+                                View Details 
+                                <span class="ml-2">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Networking -->
+                <div class="category-card glass-card rounded-2xl overflow-hidden flex flex-col" data-category="networking">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1556155092-490a1ba16284?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Networking" 
+                             class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex items-start mb-4">
+                            <div class="category-icon w-12 h-12 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-2xl">🤝</span>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-purple-400 mb-1">Networking Events</h3>
+                                <p class="text-gray-400">Professional Connections</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 mb-6 flex-1">
+                            Virtual meetups and networking sessions with AI-powered matchmaking, 
+                            breakout rooms, and business card exchange for meaningful connections.
+                        </p>
+                        <div class="mb-6">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full">AI Matchmaking</span>
+                                <span class="text-xs bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full">Speed Networking</span>
+                                <span class="text-xs bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full">Business Cards</span>
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <span class="font-medium text-purple-300">Best for:</span> Professional networking, Community meetups, Alumni events
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-gray-800">
+                            <a href="#" class="inline-flex items-center text-purple-400 hover:text-purple-300 font-medium">
+                                View Details 
+                                <span class="ml-2">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platform Features -->
+    <section class="py-20 bg-gradient-to-b from-transparent to-cyan-900/10">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 gradient-text">Platform Features for All Categories</h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Our platform provides specialized tools and features tailored for each event type
+                </p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass-card p-8 rounded-2xl hover-lift">
+                    <div class="text-cyan-400 text-3xl mb-4">🎯</div>
+                    <h3 class="text-2xl font-bold mb-4 text-cyan-300">Custom Branding</h3>
+                    <p class="text-gray-300">
+                        Customize every aspect of your event with your branding, colors, and logo across all categories.
+                    </p>
+                </div>
+                <div class="glass-card p-8 rounded-2xl hover-lift">
+                    <div class="text-purple-400 text-3xl mb-4">📊</div>
+                    <h3 class="text-2xl font-bold mb-4 text-purple-300">Advanced Analytics</h3>
+                    <p class="text-gray-300">
+                        Get detailed insights on attendance, engagement, and ROI for every event type.
+                    </p>
+                </div>
+                <div class="glass-card p-8 rounded-2xl hover-lift">
+                    <div class="text-cyan-400 text-3xl mb-4">🔒</div>
+                    <h3 class="text-2xl font-bold mb-4 text-cyan-300">Secure & Reliable</h3>
+                    <p class="text-gray-300">
+                        Enterprise-grade security and 99.9% uptime guarantee for all your events.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 text-center">
+        <div class="container mx-auto px-6">
+            <div class="glass-card p-12 rounded-3xl max-w-4xl mx-auto relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10"></div>
+                <div class="relative z-10">
+                    <h2 class="text-4xl font-bold mb-6 gradient-text">Ready to Host Your Event?</h2>
+                    <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                        Choose the perfect category and start creating memorable experiences today
+                    </p>
+                    <a href="become-organizer.html" class="glow-btn px-12 py-4 text-xl font-bold rounded-full inline-block hover-lift">
+                        Start Planning Your Event
+                    </a>
+                    <p class="mt-6 text-gray-400">
+                        Need help choosing? <a href="#" class="text-cyan-400 hover:underline">Contact our event specialists</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-gray-900/50 border-t border-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 gradient-text">StreamConnect</h3>
+                    <p class="text-gray-400 mb-4">Professional event streaming platform for all categories</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-cyan-300">Event Types</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Conferences</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Webinars</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Workshops</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-purple-300">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-purple-400 transition">Event Planning Guide</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-purple-400 transition">Success Stories</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-purple-400 transition">Case Studies</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-cyan-300">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Help Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Contact Support</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-cyan-400 transition">Community Forum</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
+                <p>© 2024 StreamConnect Events. All rights reserved. | <a href="#" class="hover:text-cyan-400">Privacy Policy</a> | <a href="#" class="hover:text-cyan-400">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Category filtering
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const categoryCards = document.querySelectorAll('.category-card');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update active button
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active', 'bg-gradient-to-r', 'from-cyan-400', 'to-purple-400', 'text-gray-900');
+                        btn.classList.add('border');
+                    });
+                    
+                    button.classList.add('active', 'bg-gradient-to-r', 'from-cyan-400', 'to-purple-400', 'text-gray-900');
+                    button.classList.remove('border');
+                    
+                    const filter = button.getAttribute('data-filter');
+                    
+                    // Filter cards with animation
+                    categoryCards.forEach(card => {
+                        const categories = card.getAttribute('data-category').split(' ');
+                        
+                        if (filter === 'all' || categories.includes(filter)) {
+                            gsap.to(card, {
+                                opacity: 1,
+                                scale: 1,
+                                duration: 0.3,
+                                display: 'flex'
+                            });
+                        } else {
+                            gsap.to(card, {
+                                opacity: 0,
+                                scale: 0.8,
+                                duration: 0.3,
+                                display: 'none'
+                            });
+                        }
+                    });
+                });
+            });
+
+            // Animate cards on scroll
+            gsap.utils.toArray('.category-card').forEach((card, i) => {
+                gsap.from(card, {
+                    opacity: 0,
+                    y: 50,
+                    duration: 0.8,
+                    delay: i * 0.1,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 85%",
+                        toggleActions: "play none none none"
+                    }
+                });
+            });
+
+            // Navbar scroll effect
+            let lastScroll = 0;
+            const navbar = document.getElementById('navbar');
+            
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll <= 0) {
+                    navbar.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.1)';
+                    return;
+                }
+                
+                if (currentScroll > lastScroll && currentScroll > 100) {
+                    // Scrolling down
+                    navbar.style.transform = 'translateY(-100%)';
+                } else {
+                    // Scrolling up
+                    navbar.style.transform = 'translateY(0)';
+                    navbar.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.2)';
+                }
+                
+                lastScroll = currentScroll;
+            });
+
+            // Hover effects for cards
+            categoryCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    gsap.to(card, {
+                        scale: 1.02,
+                        duration: 0.3
+                    });
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, {
+                        scale: 1,
+                        duration: 0.3
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
