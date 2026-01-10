@@ -1,0 +1,4388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Connect - Paid Events</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --dark-color: #1e1e2d;
+            --light-color: #f8f9fa;
+            --success-color: #4bb543;
+            --danger-color: #ff4d4d;
+            --warning-color: #ffc107;
+            --gray-color: #6c757d;
+            --light-gray: #f8f9fa;
+            --border-color: #e9ecef;
+            --purple-color: #7209b7;
+            --pink-color: #f72585;
+            --orange-color: #ff9e00;
+            --teal-color: #20c997;
+            --cyan-color: #06d6a0;
+            --gold-color: #ffd700;
+            --silver-color: #c0c0c0;
+            --bronze-color: #cd7f32;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: #333;
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        body.dark-mode {
+            background-color: #121826;
+            color: #e0e0e0;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            height: 65px;
+            border-bottom: 1px solid #e9ecef;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0 15px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode .header {
+            background-color: var(--dark-color);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Logo Section */
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 180px;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .logo-icon {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+
+        .dark-mode .logo {
+            color: var(--accent-color);
+        }
+
+        /* Search Bar */
+        .search-section {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 15px;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border-radius: 20px;
+            border: 1px solid #e9ecef;
+            background: #f8f9fa;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .dark-mode .search-input {
+            background: #25253d;
+            border-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .dark-mode .search-input:focus {
+            background: #1e1e2d;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+        }
+
+        /* Navigation Menu */
+        .nav-section {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 2px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--gray-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 8px 10px;
+            border-radius: 6px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-color);
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        .dark-mode .nav-link {
+            color: #b0b7c3;
+        }
+
+        .dark-mode .nav-link:hover,
+        .dark-mode .nav-link.active {
+            color: var(--accent-color);
+            background: rgba(76, 201, 240, 0.1);
+        }
+
+        .nav-icon {
+            font-size: 0.9rem;
+        }
+
+        /* Header Controls */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 5px;
+        }
+
+        .control-btn {
+            background: rgba(67, 97, 238, 0.1);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .control-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .dark-mode .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger-color);
+            color: white;
+            font-size: 10px;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            border: 2px solid white;
+            font-weight: 600;
+        }
+
+        .dark-mode .notification-badge {
+            border-color: var(--dark-color);
+        }
+
+        /* Profile Dropdown - MP */
+        .profile-mp {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4361ee, #4cc9f0);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: 2px solid white;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .profile-mp {
+            border-color: var(--dark-color);
+        }
+
+        .profile-mp:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        /* Dropdown Styles */
+        .dropdown-menu {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 10px 0;
+            min-width: 240px;
+            animation: dropdownFade 0.2s ease;
+        }
+
+        @keyframes dropdownFade {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            color: #333;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            margin: 2px 10px;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .dark-mode .dropdown-menu {
+            background: #1e1e2d;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dark-mode .dropdown-item {
+            color: #e0e0e0;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 85px;
+            padding: 20px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: calc(100vh - 85px);
+        }
+
+        .dark-mode .main-content {
+            background-color: #121826;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold-color), var(--silver-color), var(--bronze-color));
+        }
+
+        .dark-mode .page-header {
+            background: #1e1e2d;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--gold-color), var(--orange-color));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .page-title h1 {
+            font-weight: 700;
+            font-size: 1.9rem;
+            margin: 0;
+            background: linear-gradient(135deg, var(--gold-color), var(--orange-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dark-mode .page-title h1 {
+            background: linear-gradient(135deg, var(--orange-color), var(--gold-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-subtitle {
+            color: var(--gray-color);
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        /* Payment Status Badges */
+        .payment-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .payment-status.paid {
+            background: rgba(75, 181, 67, 0.15);
+            color: var(--success-color);
+            border: 1px solid rgba(75, 181, 67, 0.3);
+        }
+
+        .payment-status.pending {
+            background: rgba(255, 193, 7, 0.15);
+            color: var(--warning-color);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .payment-status.unpaid {
+            background: rgba(255, 77, 77, 0.15);
+            color: var(--danger-color);
+            border: 1px solid rgba(255, 77, 77, 0.3);
+        }
+
+        .payment-status.refunded {
+            background: rgba(108, 117, 125, 0.15);
+            color: var(--gray-color);
+            border: 1px solid rgba(108, 117, 125, 0.3);
+        }
+
+        /* Enhanced Stats Grid for Paid Events */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold-color), var(--silver-color));
+        }
+
+        .dark-mode .stat-card {
+            background: #1e1e2d;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon.revenue { background: linear-gradient(135deg, var(--gold-color), var(--orange-color)); }
+        .stat-icon.tickets { background: linear-gradient(135deg, #4361ee, #4cc9f0); }
+        .stat-icon.available { background: linear-gradient(135deg, #20c997, #38b000); }
+        .stat-icon.price { background: linear-gradient(135deg, #7209b7, #b5179e); }
+        .stat-icon.duration { background: linear-gradient(135deg, #ff6b6b, #ff9e00); }
+        .stat-icon.attendees { background: linear-gradient(135deg, #f72585, #ff6b6b); }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 10px 0;
+            color: var(--dark-color);
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+        }
+
+        .dark-mode .stat-value {
+            color: white;
+        }
+
+        .stat-label {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .stat-trend.positive { color: var(--success-color); }
+        .stat-trend.negative { color: var(--danger-color); }
+
+        /* Enhanced Tracking Container */
+        .tracking-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 1200px) {
+            .tracking-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        /* Payment Section Enhancement */
+        .payment-section {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .dark-mode .payment-section {
+            background: #1e1e2d;
+        }
+
+        .payment-header {
+            padding: 25px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, #fff9db, #ffeaa7);
+        }
+
+        .dark-mode .payment-header {
+            background: linear-gradient(135deg, #2d2d42, #1e1e2d);
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .payment-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0;
+            font-size: 1.4rem;
+            color: #e67e22;
+        }
+
+        .payment-content {
+            padding: 25px;
+        }
+
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .payment-option {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            position: relative;
+        }
+
+        .payment-option:hover {
+            border-color: var(--gold-color);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.1);
+        }
+
+        .payment-option.selected {
+            border-color: var(--gold-color);
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .payment-option-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 15px;
+            color: white;
+        }
+
+        .payment-option.credit .payment-option-icon {
+            background: linear-gradient(135deg, #4361ee, #4cc9f0);
+        }
+
+        .payment-option.paypal .payment-option-icon {
+            background: linear-gradient(135deg, #003087, #009cde);
+        }
+
+        .payment-option.crypto .payment-option-icon {
+            background: linear-gradient(135deg, #f7931a, #ff9e00);
+        }
+
+        .payment-option.bank .payment-option-icon {
+            background: linear-gradient(135deg, #20c997, #38b000);
+        }
+
+        /* Screenshot Verification Section */
+        .verification-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .dark-mode .verification-section {
+            background: #1e1e2d;
+            border-left-color: var(--primary-color);
+        }
+
+        .verification-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(67, 97, 238, 0.1);
+        }
+
+        .verification-header h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .verification-header h3 i {
+            color: var(--success-color);
+        }
+
+        .upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 20px 0;
+            position: relative;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: rgba(67, 97, 238, 0.02);
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(67, 97, 238, 0.05);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--success-color);
+            background: rgba(75, 181, 67, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .upload-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            display: none;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .verification-steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .verification-step {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            background: rgba(67, 97, 238, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .verification-step h5 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .verification-step-number {
+            width: 30px;
+            height: 30px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Organizer Verification Panel */
+        .organizer-verification-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid var(--gold-color);
+        }
+
+        .dark-mode .organizer-verification-panel {
+            background: #1e1e2d;
+        }
+
+        .organizer-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .organizer-panel-header h3 {
+            margin: 0;
+            color: var(--gold-color);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .verification-users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .verification-user-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .verification-user-card {
+            background: #25253d;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .verification-user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-verification-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4361ee, #4cc9f0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .user-details h5 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .user-details small {
+            color: var(--gray-color);
+            font-size: 0.85rem;
+        }
+
+        .verification-status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.15);
+            color: var(--warning-color);
+        }
+
+        .status-verified {
+            background: rgba(75, 181, 67, 0.15);
+            color: var(--success-color);
+        }
+
+        .status-rejected {
+            background: rgba(255, 77, 77, 0.15);
+            color: var(--danger-color);
+        }
+
+        .screenshot-preview {
+            width: 100%;
+            height: 150px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .screenshot-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .screenshot-placeholder {
+            text-align: center;
+            color: var(--gray-color);
+        }
+
+        .screenshot-placeholder i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .verification-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .verification-actions button {
+            flex: 1;
+        }
+
+        /* Enhanced Timeline */
+        .timeline-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .dark-mode .timeline-container {
+            background: #1e1e2d;
+        }
+
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(67, 97, 238, 0.1);
+        }
+
+        .timeline-header h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #4361ee, #4cc9f0, #7209b7);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(67, 97, 238, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .timeline-item:hover {
+            transform: translateX(5px);
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        .timeline-item.completed {
+            border-left-color: var(--success-color);
+            background: rgba(75, 181, 67, 0.1);
+        }
+
+        .timeline-item.active {
+            border-left-color: var(--primary-color);
+            background: rgba(67, 97, 238, 0.15);
+            box-shadow: 0 5px 20px rgba(67, 97, 238, 0.2);
+            animation: activeGlow 2s infinite;
+        }
+
+        @keyframes activeGlow {
+            0%, 100% { box-shadow: 0 5px 20px rgba(67, 97, 238, 0.2); }
+            50% { box-shadow: 0 5px 30px rgba(67, 97, 238, 0.4); }
+        }
+
+        .timeline-icon {
+            position: absolute;
+            left: -35px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            font-size: 0.9rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .timeline-icon {
+            background: #25253d;
+            border-color: #444;
+        }
+
+        .timeline-item.completed .timeline-icon {
+            background: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+
+        .timeline-item.active .timeline-icon {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            animation: iconPulse 2s infinite;
+        }
+
+        @keyframes iconPulse {
+            0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(67, 97, 238, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+        }
+
+        /* Enhanced Details Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .detail-card {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .detail-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--card-color), var(--card-color-dark));
+        }
+
+        .dark-mode .detail-card {
+            background: #1e1e2d;
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .detail-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Color variants for detail cards */
+        .detail-card:nth-child(1) .detail-icon { 
+            background: linear-gradient(135deg, var(--gold-color), var(--orange-color)); 
+        }
+        .detail-card:nth-child(2) .detail-icon { 
+            background: linear-gradient(135deg, #4361ee, #4cc9f0); 
+        }
+        .detail-card:nth-child(3) .detail-icon { 
+            background: linear-gradient(135deg, #20c997, #38b000); 
+        }
+        .detail-card:nth-child(4) .detail-icon { 
+            background: linear-gradient(135deg, #f72585, #ff6b6b); 
+        }
+
+        /* Tier Pricing */
+        .tier-pricing {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tier-card {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tier-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+        }
+
+        .tier-card.popular {
+            border-color: var(--gold-color);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.15);
+        }
+
+        .tier-card.popular::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: 10px;
+            right: -30px;
+            background: var(--gold-color);
+            color: white;
+            padding: 5px 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transform: rotate(45deg);
+        }
+
+        .tier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .tier-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        .dark-mode .tier-price {
+            color: white;
+        }
+
+        .tier-name {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .tier-features {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .tier-features li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tier-features li i {
+            color: var(--success-color);
+        }
+
+        /* Payment History */
+        .payment-history {
+            margin-top: 30px;
+        }
+
+        .payment-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .payment-table th {
+            background: linear-gradient(135deg, #4361ee, #3f37c9);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .payment-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            background: white;
+        }
+
+        .dark-mode .payment-table td {
+            background: #25253d;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .dark-mode .payment-table th {
+            background: linear-gradient(135deg, #3f37c9, #4361ee);
+        }
+
+        /* Attendee List */
+        .attendee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .attendee-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            border: 1px solid #e9ecef;
+        }
+
+        .attendee-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .dark-mode .attendee-card {
+            background: #25253d;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .attendee-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-color);
+        }
+
+        /* Progress Indicator */
+        .progress-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .dark-mode .progress-section {
+            background: #1e1e2d;
+        }
+
+        .progress-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .progress-header h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: #e9ecef;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .dark-mode .progress-bar {
+            background: #25253d;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4361ee, #4cc9f0, #7209b7);
+            border-radius: 6px;
+            width: 65%;
+            position: relative;
+            transition: width 1.5s ease;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1400px) {
+            .header-container {
+                padding: 0 10px;
+            }
+            
+            .search-section {
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .nav-link span {
+                display: none;
+            }
+            
+            .nav-link {
+                padding: 8px;
+            }
+            
+            .logo span {
+                display: inline;
+            }
+            
+            .tier-pricing {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .header {
+                height: auto;
+                padding: 10px;
+            }
+            
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            .logo-section {
+                order: 1;
+            }
+            
+            .search-section {
+                order: 3;
+                flex: 0 0 100%;
+                margin: 10px 0;
+                max-width: 100%;
+            }
+            
+            .nav-section {
+                order: 2;
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block !important;
+                order: 2;
+            }
+            
+            .header-controls {
+                order: 4;
+                margin-left: auto;
+            }
+            
+            .main-content {
+                margin-top: 120px;
+                padding: 15px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+                text-align: center;
+            }
+            
+            .page-title {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .attendee-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .payment-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .verification-users-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title h1 {
+                font-size: 1.6rem;
+            }
+            
+            .page-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .timeline-container {
+                padding: 20px;
+            }
+            
+            .payment-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .progress-section {
+                padding: 20px;
+            }
+            
+            .attendee-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .payment-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .verification-users-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .verification-steps {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .logo span {
+                font-size: 1.2rem;
+            }
+            
+            .page-header {
+                padding: 15px;
+            }
+            
+            .page-title h1 {
+                font-size: 1.4rem;
+            }
+            
+            .detail-card {
+                padding: 20px;
+            }
+            
+            .timeline-item {
+                padding: 15px;
+            }
+            
+            .control-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 65px;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            display: none;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .dark-mode .mobile-menu {
+            background: #1e1e2d;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-nav {
+            list-style: none;
+            padding: 20px 0;
+            margin: 0;
+        }
+
+        .mobile-nav-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode .mobile-nav-item {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 25px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .mobile-nav-link:hover,
+        .mobile-nav-link.active {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            padding-left: 30px;
+        }
+
+        .dark-mode .mobile-nav-link {
+            color: #e0e0e0;
+        }
+
+        .mobile-nav-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Alert Notification */
+        .alert-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 350px;
+            animation: slideInRight 0.3s ease, fadeOut 0.3s ease 4.7s forwards;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #25253d;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4361ee;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f37c9;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #4361ee, #3f37c9);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent);
+            transform: translateX(-100%);
+        }
+
+        .btn-primary:hover::after {
+            animation: btnShine 0.8s;
+        }
+
+        @keyframes btnShine {
+            to { transform: translateX(100%); }
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold-color), var(--orange-color));
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+            background: linear-gradient(135deg, var(--orange-color), var(--gold-color));
+        }
+
+        /* NEW ENHANCED FOOTER STYLES */
+        .footer {
+            background: linear-gradient(135deg, #1e1e2d, #25253d);
+            color: #e0e0e0;
+            padding: 60px 0 30px;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color), var(--purple-color));
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-tagline {
+            color: #b0b7c3;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .footer-copyright {
+            color: #8a94a6;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-section h4 {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #b0b7c3;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+            transform: translateX(5px);
+        }
+
+        .footer-contact-info {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-contact-info li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            color: #b0b7c3;
+            font-size: 0.9rem;
+        }
+
+        .footer-contact-info i {
+            color: var(--accent-color);
+            font-size: 1rem;
+            margin-top: 3px;
+        }
+
+        .footer-contact-info strong {
+            color: white;
+            font-weight: 600;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .footer-social a:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            text-align: center;
+            color: #8a94a6;
+            font-size: 0.85rem;
+        }
+
+        .footer-security-badges {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .footer-security-badges span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+        }
+
+        .footer-security-badges i {
+            color: var(--success-color);
+        }
+
+        .dark-mode .footer {
+            background: linear-gradient(135deg, #0f0f1a, #1a1a2e);
+        }
+
+        @media (max-width: 768px) {
+            .footer {
+                padding: 40px 0 20px;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .footer-social {
+                justify-content: center;
+            }
+        }
+
+        /* Modal Customization */
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+            overflow: hidden;
+        }
+
+        .dark-mode .modal-content {
+            background: #1e1e2d;
+        }
+
+        /* Event Cards Grid */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .event-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .dark-mode .event-card {
+            background: #1e1e2d;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .event-card-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #4361ee, #4cc9f0);
+            color: white;
+            position: relative;
+        }
+
+        .event-card-header.premium {
+            background: linear-gradient(135deg, var(--gold-color), var(--orange-color));
+        }
+
+        .event-card-header.vip {
+            background: linear-gradient(135deg, #7209b7, #b5179e);
+        }
+
+        .event-price {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .event-card-body {
+            padding: 25px;
+        }
+
+        .event-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .event-date {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-color);
+        }
+
+        .event-attendees {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--gray-color);
+        }
+
+        .event-progress {
+            margin: 20px 0;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .event-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .event-tag {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .dark-mode .event-tag {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--accent-color);
+        }
+
+        /* New Styles for Payment Processing */
+        .payment-method-card {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            height: 100%;
+        }
+        .payment-method-card.selected {
+            border-color: var(--primary-color);
+            background: rgba(67, 97, 238, 0.05);
+        }
+        .payment-method-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .step-indicator {
+            text-align: center;
+            position: relative;
+        }
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 5px;
+            font-weight: bold;
+        }
+        .step-indicator.active .step-number {
+            background: var(--primary-color);
+            color: white;
+        }
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: #e9ecef;
+            margin: 0 10px;
+            align-self: center;
+        }
+        .payment-process-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+        }
+        .screenshot-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s;
+        }
+        .screenshot-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .screenshot-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .screenshot-user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .screenshot-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4361ee, #4cc9f0);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .screenshot-card-body {
+            margin-bottom: 10px;
+        }
+        .screenshot-details {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        .screenshot-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .screenshot-card-actions {
+            display: flex;
+            gap: 5px;
+        }
+        .screenshot-card-actions button {
+            flex: 1;
+            padding: 5px;
+            font-size: 0.8rem;
+        }
+        .payment-animation {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4361ee, #4cc9f0);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            animation: pulse 2s infinite;
+        }
+        .payment-icon {
+            color: white;
+            font-size: 2rem;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .invoice {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        .invoice-header {
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .invoice-body {
+            padding-top: 20px;
+        }
+        .btn-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="fas fa-satellite-dish logo-icon"></i>
+                    <span>Stream Connect</span>
+                </div>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+          
+            <!-- Navigation Menu -->
+            <div class="nav-section">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="user-dash.html" class="nav-link">
+                            <i class="fas fa-user-circle nav-icon"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-calendar-alt nav-icon"></i>
+                            <span>Events</span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="event-details.html"><i class="fas fa-info-circle me-2"></i>Event Details</a>
+                            <a class="dropdown-item" href="track-event.html"><i class="fas fa-map-marked-alt me-2"></i>Track Event</a>
+                            <a class="dropdown-item" href="join-event.html"><i class="fas fa-door-open me-2"></i>Join Event</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="live-stream.html" class="nav-link">
+                            <i class="fas fa-video nav-icon"></i>
+                            <span>Live</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="ai-matchmaking.html" class="nav-link">
+                            <i class="fas fa-robot nav-icon"></i>
+                            <span>AI Match</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="paid-events.html" class="nav-link active">
+                            <i class="fas fa-ticket-alt nav-icon"></i>
+                            <span>Paid</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="qa-chatbot.html" class="nav-link">
+                            <i class="fas fa-comments nav-icon"></i>
+                            <span>Q/A Chatbot</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="notifications.html" class="nav-link">
+                            <i class="fas fa-bell nav-icon"></i>
+                            <span>Notifications</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Header Controls -->
+            <div class="header-controls">
+               
+                <!-- Profile MP -->
+                <div class="dropdown">
+                    <div class="profile-mp dropdown-toggle" data-bs-toggle="dropdown" title="Mohanapriya R">
+                        MP
+                    </div>
+                    
+                    <!-- Profile Dropdown -->
+                    <div class="dropdown-menu dropdown-menu-end p-0">
+                        <div class="p-3 text-center border-bottom">
+                            <div class="profile-mp mx-auto mb-2" style="width: 60px; height: 60px; font-size: 1.2rem;">
+                                MP
+                            </div>
+                            <h6 class="mb-1" id="profileName">Mohanapriya R</h6>
+                            <small class="text-muted d-block" id="profileTier">Premium Member • Gold Tier</small>
+                            <div class="mt-2">
+                                <span class="badge bg-gradient-primary">Event Organizer</span>
+                                <span class="badge bg-gradient-success ms-1">VIP Access</span>
+                                <span class="badge bg-gradient-warning ms-1 mt-1">Verifier</span>
+                            </div>
+                        </div>
+                        <a class="dropdown-item" href="settings.html">
+                            <i class="fas fa-cog me-2"></i>Profile Settings
+                        </a>
+                        <a class="dropdown-item" href="organizer-dashboard.html">
+                            <i class="fas fa-chart-line me-2"></i>Organizer Dashboard
+                        </a>
+                        <a class="dropdown-item" href="users-upload-screenshot.html">
+                            <i class="fas fa-user-check me-2"></i>Verification Panel
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger" href="logout.html">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <ul class="mobile-nav">
+                <li class="mobile-nav-item">
+                    <a href="user-dash.html" class="mobile-nav-link">
+                        <i class="fas fa-user-circle mobile-nav-icon"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="event-details.html" class="mobile-nav-link">
+                        <i class="fas fa-calendar-alt mobile-nav-icon"></i>
+                        <span>Events</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="track-event.html" class="mobile-nav-link">
+                        <i class="fas fa-map-marked-alt mobile-nav-icon"></i>
+                        <span>Track Event</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="live-stream.html" class="mobile-nav-link">
+                        <i class="fas fa-video mobile-nav-icon"></i>
+                        <span>Live Streaming</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="ai-matchmaking.html" class="mobile-nav-link">
+                        <i class="fas fa-robot mobile-nav-icon"></i>
+                        <span>AI Matchmaking</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="paid-events.html" class="mobile-nav-link active">
+                        <i class="fas fa-ticket-alt mobile-nav-icon"></i>
+                        <span>Paid Events</span>
+                        <span class="badge bg-warning rounded-pill ms-auto">5</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="users-upload-screenshot.html" class="mobile-nav-link">
+                        <i class="fas fa-user-check mobile-nav-icon"></i>
+                        <span>Verification Panel</span>
+                        <span class="badge bg-danger rounded-pill ms-auto">3</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="notifications.html" class="mobile-nav-link">
+                        <i class="fas fa-bell mobile-nav-icon"></i>
+                        <span>Alerts & Notifications</span>
+                        <span class="badge bg-danger rounded-pill ms-auto">5</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="wallet.html" class="mobile-nav-link">
+                        <i class="fas fa-wallet mobile-nav-icon"></i>
+                        <span>Wallet</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="settings.html" class="mobile-nav-link">
+                        <i class="fas fa-cog mobile-nav-icon"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="logout.html" class="mobile-nav-link text-danger">
+                        <i class="fas fa-sign-out-alt mobile-nav-icon"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-title">
+                <div class="page-icon">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+                <div>
+                    <h1>Paid Events</h1>
+                    <p class="page-subtitle">Premium Events with Verified Access • Secure Payments • Exclusive Content</p>
+                    <div class="d-flex align-items-center gap-3 mt-2 flex-wrap">
+                        <span class="payment-status paid"><i class="fas fa-check-circle me-1"></i>2 Events Paid</span>
+                        <span class="payment-status pending"><i class="fas fa-clock me-1"></i>1 Pending Payment</span>
+                        <span class="badge bg-warning"><i class="fas fa-crown me-1"></i>Premium Access</span>
+                        <span class="badge bg-success"><i class="fas fa-shield-alt me-1"></i>Payment Verified</span>
+                        <span class="badge bg-primary"><i class="fas fa-user-check me-1"></i>Organizer Access</span>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="wallet.html" class="btn btn-outline-primary">
+                    <i class="fas fa-wallet me-2"></i>Wallet: $245.50
+                </a>
+                <a href="users-upload-screenshot.html" class="btn btn-primary">
+                    <i class="fas fa-user-check me-2"></i>Verification Panel
+                </a>
+            </div>
+        </div>
+
+        <!-- Enhanced Stats Grid for Paid Events -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon revenue">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i> 18.7%
+                    </div>
+                </div>
+                <div class="stat-value">$12,450<span class="fs-6"></span></div>
+                <div class="stat-label">Total Revenue Generated</div>
+                <div class="mt-3">
+                    <small class="text-muted">This month: $3,240 | Lifetime: $28,560</small>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon tickets">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i> 24.3%
+                    </div>
+                </div>
+                <div class="stat-value">156</div>
+                <div class="stat-label">Paid Tickets Sold</div>
+                <div class="mt-3">
+                    <small class="text-muted">Confirmed: 142 | Pending: 14</small>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon available">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i> 8.9%
+                    </div>
+                </div>
+                <div class="stat-value">24</div>
+                <div class="stat-label">Available Paid Events</div>
+                <div class="mt-3">
+                    <small class="text-muted">Active: 18 | Upcoming: 6</small>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon price">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i> 5.2%
+                    </div>
+                </div>
+                <div class="stat-value">$89<span class="fs-6">avg</span></div>
+                <div class="stat-label">Average Ticket Price</div>
+                <div class="mt-3">
+                    <small class="text-muted">Range: $25 - $499 | Most popular: $99</small>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon duration">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-trend negative">
+                        <i class="fas fa-arrow-down"></i> 3.1%
+                    </div>
+                </div>
+                <div class="stat-value">4.2<span class="fs-6">h</span></div>
+                <div class="stat-label">Average Event Duration</div>
+                <div class="mt-3">
+                    <small class="text-muted">Shortest: 1h | Longest: 3 days</small>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon attendees">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i> 12.6%
+                    </div>
+                </div>
+                <div class="stat-value">48<span class="fs-6">avg</span></div>
+                <div class="stat-label">Avg. Attendees Per Event</div>
+                <div class="mt-3">
+                    <small class="text-muted">Smallest: 10 | Largest: 250</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Cards Grid -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <h3>
+                    <i class="fas fa-calendar-star me-2"></i>
+                    Featured Paid Events
+                </h3>
+                <a href="all-paid-events.html" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-list me-1"></i>View All
+                </a>
+            </div>
+            
+            <div class="events-grid">
+                <!-- Event Card 1 -->
+                <div class="event-card">
+                    <div class="event-card-header premium">
+                        <h5 class="mb-1">AI Masterclass 2023</h5>
+                        <p class="mb-0">Advanced AI & Machine Learning</p>
+                        <div class="event-price">$299</div>
+                    </div>
+                    <div class="event-card-body">
+                        <div class="event-meta">
+                            <div class="event-date">
+                                <i class="far fa-calendar"></i>
+                                <span>Oct 20-22, 2023</span>
+                            </div>
+                            <div class="event-attendees">
+                                <i class="fas fa-users"></i>
+                                <span>42/50</span>
+                            </div>
+                        </div>
+                        <p class="text-muted mb-3">Advanced workshop on AI and machine learning with hands-on projects and expert guidance.</p>
+                        
+                        <div class="event-progress">
+                            <div class="progress-text">
+                                <span>Registration Progress</span>
+                                <span>84%</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: 84%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="event-tags">
+                            <span class="event-tag">AI/ML</span>
+                            <span class="event-tag">Workshop</span>
+                            <span class="event-tag">3 Days</span>
+                            <span class="event-tag bg-warning text-dark">Verification Required</span>
+                        </div>
+                        
+                        <div class="d-flex gap-2 mt-3">
+                            <a href="event-details.html?id=ai-masterclass" class="btn btn-primary btn-sm flex-grow-1">
+                                View Details
+                            </a>
+                            <a href="payment -processing.html" class="btn btn-outline-primary btn-sm">
+                                Register Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Event Card 2 -->
+                <div class="event-card">
+                    <div class="event-card-header">
+                        <h5 class="mb-1">Web Dev Bootcamp</h5>
+                        <p class="mb-0">Full Stack Development Intensive</p>
+                        <div class="event-price">$499</div>
+                    </div>
+                    <div class="event-card-body">
+                        <div class="event-meta">
+                            <div class="event-date">
+                                <i class="far fa-calendar"></i>
+                                <span>Nov 5-10, 2023</span>
+                            </div>
+                            <div class="event-attendees">
+                                <i class="fas fa-users"></i>
+                                <span>28/30</span>
+                            </div>
+                        </div>
+                        <p class="text-muted mb-3">Comprehensive full-stack development bootcamp with real-world projects and career support.</p>
+                        
+                        <div class="event-progress">
+                            <div class="progress-text">
+                                <span>Registration Progress</span>
+                                <span>93%</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-warning" style="width: 93%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="event-tags">
+                            <span class="event-tag">Web Development</span>
+                            <span class="event-tag">Bootcamp</span>
+                            <span class="event-tag">6 Days</span>
+                        </div>
+                        
+                        <div class="d-flex gap-2 mt-3">
+                            <a href="event-details.html?id=web-dev-bootcamp" class="btn btn-primary btn-sm flex-grow-1">
+                                View Details
+                            </a>
+                            <a href="payment -processing.html" class="btn btn-outline-primary btn-sm">
+                                Register Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Event Card 3 -->
+                <div class="event-card">
+                    <div class="event-card-header vip">
+                        <h5 class="mb-1">Data Science Workshop</h5>
+                        <p class="mb-0">Advanced Analytics & Visualization</p>
+                        <div class="event-price">$199</div>
+                    </div>
+                    <div class="event-card-body">
+                        <div class="event-meta">
+                            <div class="event-date">
+                                <i class="far fa-calendar"></i>
+                                <span>Dec 1-3, 2023</span>
+                            </div>
+                            <div class="event-attendees">
+                                <i class="fas fa-users"></i>
+                                <span>32/40</span>
+                            </div>
+                        </div>
+                        <p class="text-muted mb-3">Intensive data science workshop focusing on analytics, visualization, and real-world applications.</p>
+                        
+                        <div class="event-progress">
+                            <div class="progress-text">
+                                <span>Registration Progress</span>
+                                <span>80%</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-info" style="width: 80%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="event-tags">
+                            <span class="event-tag">Data Science</span>
+                            <span class="event-tag">Analytics</span>
+                            <span class="event-tag">3 Days</span>
+                        </div>
+                        
+                        <div class="d-flex gap-2 mt-3">
+                            <a href="event-details.html?id=data-science" class="btn btn-primary btn-sm flex-grow-1">
+                                View Details
+                            </a>
+                            <a href="payment -processing.html" class="btn btn-outline-primary btn-sm">
+                                Register Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Payment Processing System -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <h3>
+                    <i class="fas fa-credit-card me-2"></i>
+                    Payment Processing System
+                </h3>
+                <div class="d-flex gap-2">
+                    <a href="payment-success.html" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-check-circle me-1"></i>Test Success
+                    </a>
+                    <a href="payment-failed.html" class="btn btn-outline-danger btn-sm">
+                        <i class="fas fa-times-circle me-1"></i>Test Failure
+                    </a>
+                </div>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-8">
+                    <div class="payment-process-container bg-light p-4 rounded-3">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="mb-0">Process Payment for: <span class="text-primary">AI Masterclass 2023</span></h5>
+                            <span class="badge bg-warning">$299.00</span>
+                        </div>
+                        
+                        <!-- Payment Status Indicators -->
+                        <div class="payment-status-indicators mb-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="step-indicator active">
+                                    <div class="step-number">1</div>
+                                    <div class="step-label">Select Method</div>
+                                </div>
+                                <div class="step-line"></div>
+                                <div class="step-indicator">
+                                    <div class="step-number">2</div>
+                                    <div class="step-label">Enter Details</div>
+                                </div>
+                                <div class="step-line"></div>
+                                <div class="step-indicator">
+                                    <div class="step-number">3</div>
+                                    <div class="step-label">Process</div>
+                                </div>
+                                <div class="step-line"></div>
+                                <div class="step-indicator">
+                                    <div class="step-number">4</div>
+                                    <div class="step-label">Complete</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Method Selection -->
+                        <div class="payment-methods mb-4">
+                            <h6 class="mb-3">Select Payment Method:</h6>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="payment-method-card selected">
+                                        <i class="fas fa-credit-card fa-2x mb-2"></i>
+                                        <div>Credit Card</div>
+                                        <small class="text-muted">Visa/Mastercard</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="payment-method-card">
+                                        <i class="fab fa-paypal fa-2x mb-2"></i>
+                                        <div>PayPal</div>
+                                        <small class="text-muted">Fast & Secure</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Form -->
+                        <div class="payment-form mb-4">
+                            <h6 class="mb-3">Payment Details:</h6>
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label class="form-label">Card Number</label>
+                                    <input type="text" class="form-control" placeholder="1234 5678 9012 3456" id="cardNumber">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Expiry Date</label>
+                                    <input type="text" class="form-control" placeholder="MM/YY" id="expiryDate">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">CVV</label>
+                                    <input type="text" class="form-control" placeholder="123" id="cvv">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">Cardholder Name</label>
+                                    <input type="text" class="form-control" placeholder="MOHANAPRIYA R" id="cardholderName">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Buttons -->
+                        <div class="payment-buttons">
+                            <button class="btn btn-primary w-100 py-3 mb-2" id="processPaymentBtn">
+                                <i class="fas fa-lock me-2"></i>
+                                <strong>PROCESS PAYMENT - $299.00</strong>
+                            </button>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="payment-info-card bg-white p-4 rounded-3 shadow-sm">
+                        <h6 class="mb-3"><i class="fas fa-info-circle me-2 text-info"></i>Payment Information</h6>
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Event</small>
+                            <strong>AI Masterclass 2023</strong>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Amount</small>
+                            <strong class="text-primary">$299.00</strong>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Payment ID</small>
+                            <strong>PAY-<span id="paymentId">789456</span></strong>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Date</small>
+                            <strong><span id="paymentDate">Oct 15, 2023</span></strong>
+                        </div>
+                        <div class="alert alert-info small">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            <strong>Secure Payment:</strong> Your payment is encrypted and secure
+                        </div>
+                        <div class="alert alert-warning small">
+                            <i class="fas fa-camera me-2"></i>
+                            <strong>Remember:</strong> Upload payment screenshot after successful payment
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Screenshot Verification Section -->
+        <div class="verification-section">
+            <div class="verification-header">
+                <h3>
+                    <i class="fas fa-camera me-2"></i>
+                    Screenshot Verification System
+                </h3>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-success btn-sm" id="verifyAllBtn">
+                        <i class="fas fa-check-double me-1"></i>Verify All
+                    </button>
+                    <button class="btn btn-danger btn-sm" id="rejectAllBtn">
+                        <i class="fas fa-times-circle me-1"></i>Reject All
+                    </button>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="verification-controls mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    <input type="text" class="form-control" placeholder="Search by user or transaction ID" id="searchScreenshots">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filterStatus">
+                                    <option value="all">All Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="verified">Verified</option>
+                                    <option value="rejected">Rejected</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-outline-primary w-100" id="refreshVerifications">
+                                    <i class="fas fa-sync-alt me-1"></i>Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Screenshot Gallery -->
+                    <div class="screenshot-gallery">
+                        <div class="row g-3">
+                            <!-- Screenshot Card 1 -->
+                            <div class="col-md-6 col-lg-4">
+                                <div class="screenshot-card">
+                                    <div class="screenshot-card-header">
+                                        <div class="screenshot-user-info">
+                                            <div class="screenshot-user-avatar">AJ</div>
+                                            <div>
+                                                <h6 class="screenshot-user">Alex Johnson</h6>
+                                                <small class="screenshot-transaction">TXN-789456</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input screenshot-checkbox" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="screenshot-card-body">
+                                        <div class="screenshot-details">
+                                            <div><strong>Event:</strong> AI Masterclass 2023</div>
+                                            <div><strong>Amount:</strong> $299.00</div>
+                                            <div><strong>Submitted:</strong> 2 hours ago</div>
+                                        </div>
+                                        <div class="screenshot-status status-pending">Pending</div>
+                                    </div>
+                                    <div class="screenshot-card-actions">
+                                        <button class="btn btn-sm btn-success verify-btn">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger reject-btn">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-info view-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-warning request-btn">
+                                            <i class="fas fa-question"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Screenshot Card 2 -->
+                            <div class="col-md-6 col-lg-4">
+                                <div class="screenshot-card">
+                                    <div class="screenshot-card-header">
+                                        <div class="screenshot-user-info">
+                                            <div class="screenshot-user-avatar">SM</div>
+                                            <div>
+                                                <h6 class="screenshot-user">Sarah Miller</h6>
+                                                <small class="screenshot-transaction">TXN-123789</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input screenshot-checkbox" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="screenshot-card-body">
+                                        <div class="screenshot-details">
+                                            <div><strong>Event:</strong> Web Dev Bootcamp</div>
+                                            <div><strong>Amount:</strong> $499.00</div>
+                                            <div><strong>Submitted:</strong> 5 hours ago</div>
+                                        </div>
+                                        <div class="screenshot-status status-pending">Pending</div>
+                                    </div>
+                                    <div class="screenshot-card-actions">
+                                        <button class="btn btn-sm btn-success verify-btn">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger reject-btn">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-info view-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-warning request-btn">
+                                            <i class="fas fa-question"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Screenshot Card 3 -->
+                            <div class="col-md-6 col-lg-4">
+                                <div class="screenshot-card">
+                                    <div class="screenshot-card-header">
+                                        <div class="screenshot-user-info">
+                                            <div class="screenshot-user-avatar">RK</div>
+                                            <div>
+                                                <h6 class="screenshot-user">Robert Kim</h6>
+                                                <small class="screenshot-transaction">TXN-456123</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input screenshot-checkbox" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="screenshot-card-body">
+                                        <div class="screenshot-details">
+                                            <div><strong>Event:</strong> Data Science Workshop</div>
+                                            <div><strong>Amount:</strong> $199.00</div>
+                                            <div><strong>Submitted:</strong> 1 day ago</div>
+                                        </div>
+                                        <div class="screenshot-status status-verified">Verified</div>
+                                    </div>
+                                    <div class="screenshot-card-actions">
+                                        <button class="btn btn-sm btn-outline-secondary w-100" disabled>
+                                            <i class="fas fa-check-circle me-1"></i>Verified
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bulk Actions -->
+                    <div class="bulk-actions mt-4 p-3 bg-light rounded-3">
+                        <h6 class="mb-3"><i class="fas fa-tasks me-2"></i>Bulk Actions</h6>
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-success w-100" id="verifySelectedBtn">
+                                    <i class="fas fa-check me-1"></i>Verify Selected
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-danger w-100" id="rejectSelectedBtn">
+                                    <i class="fas fa-times me-1"></i>Reject Selected
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-warning w-100" id="requestInfoSelectedBtn">
+                                    <i class="fas fa-question me-1"></i>Request Info
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="verification-stats-card bg-white p-4 rounded-3 shadow-sm">
+                        <h6 class="mb-3"><i class="fas fa-chart-bar me-2 text-primary"></i>Verification Statistics</h6>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Pending Verification:</span>
+                                <strong class="text-warning">3</strong>
+                            </div>
+                            <div class="progress mt-1" style="height: 8px;">
+                                <div class="progress-bar bg-warning" style="width: 30%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Verified Today:</span>
+                                <strong class="text-success">25</strong>
+                            </div>
+                            <div class="progress mt-1" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: 70%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span>Rejected Today:</span>
+                                <strong class="text-danger">2</strong>
+                            </div>
+                            <div class="progress mt-1" style="height: 8px;">
+                                <div class="progress-bar bg-danger" style="width: 10%"></div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="alert alert-info small">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <strong>Tip:</strong> Verify screenshots within 24 hours for best user experience
+                            </div>
+                            <button class="btn btn-primary w-100 mt-2" id="downloadReportBtn">
+                                <i class="fas fa-download me-2"></i>Download Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Payment History & Invoices Section -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <h3>
+                    <i class="fas fa-history me-2"></i>
+                    Payment History & Invoices
+                </h3>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary btn-sm" id="newInvoiceBtn">
+                        <i class="fas fa-plus me-1"></i>New Invoice
+                    </button>
+                    <button class="btn btn-success btn-sm" id="exportAllBtn">
+                        <i class="fas fa-file-export me-1"></i>Export All
+                    </button>
+                    <a href="payment-history.html" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-history me-1"></i>View Full History
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Invoice Generation -->
+            <div class="invoice-generation mb-4">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0"><i class="fas fa-file-invoice me-2"></i>Generate New Invoice</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Client Name</label>
+                                <input type="text" class="form-control" id="clientName" placeholder="Enter client name">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Amount</label>
+                                <input type="number" class="form-control" id="invoiceAmount" placeholder="0.00">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Event</label>
+                                <select class="form-select" id="invoiceEvent">
+                                    <option>AI Masterclass 2023</option>
+                                    <option>Web Dev Bootcamp</option>
+                                    <option>Data Science Workshop</option>
+                                    <option>Cloud Computing Summit</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" id="invoiceDesc" rows="2" placeholder="Invoice description..."></textarea>
+                            </div>
+                            <div class="col-md-12">
+                                <button class="btn btn-primary" id="generateInvoiceBtn">
+                                    <i class="fas fa-file-invoice-dollar me-2"></i>Generate Invoice
+                                </button>
+                                <button class="btn btn-outline-secondary ms-2" id="previewInvoiceBtn">
+                                    <i class="fas fa-eye me-2"></i>Preview
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment History Table -->
+            <div class="payment-history">
+                <div class="table-responsive">
+                    <table class="payment-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllPayments"></th>
+                                <th>Date</th>
+                                <th>Invoice #</th>
+                                <th>Event</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Status</th>
+                                <th>Verification</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input class="form-check-input payment-checkbox" type="checkbox"></td>
+                                <td>Oct 10, 2023</td>
+                                <td>INV-001</td>
+                                <td>AI Masterclass 2023</td>
+                                <td><strong>$299.00</strong></td>
+                                <td><span class="badge bg-primary">Credit Card</span></td>
+                                <td><span class="payment-status paid">PAID</span></td>
+                                <td><span class="badge bg-warning">Pending Review</span></td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-primary view-invoice-btn">
+                                            <i class="fas fa-file-invoice"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success download-invoice-btn">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-info email-invoice-btn">
+                                            <i class="fas fa-envelope"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input class="form-check-input payment-checkbox" type="checkbox"></td>
+                                <td>Sep 28, 2023</td>
+                                <td>INV-002</td>
+                                <td>Data Science Workshop</td>
+                                <td><strong>$199.00</strong></td>
+                                <td><span class="badge bg-success">PayPal</span></td>
+                                <td><span class="payment-status paid">PAID</span></td>
+                                <td><span class="badge bg-success">Verified ✓</span></td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-primary view-invoice-btn">
+                                            <i class="fas fa-file-invoice"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success download-invoice-btn">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-info email-invoice-btn">
+                                            <i class="fas fa-envelope"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input class="form-check-input payment-checkbox" type="checkbox"></td>
+                                <td>Aug 15, 2023</td>
+                                <td>INV-003</td>
+                                <td>Web Dev Bootcamp</td>
+                                <td><strong>$499.00</strong></td>
+                                <td><span class="badge bg-warning">Pending</span></td>
+                                <td><span class="payment-status pending">PENDING</span></td>
+                                <td><span class="badge bg-secondary">Not Submitted</span></td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-warning process-payment-btn">
+                                            <i class="fas fa-credit-card"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input class="form-check-input payment-checkbox" type="checkbox"></td>
+                                <td>Jul 22, 2023</td>
+                                <td>INV-004</td>
+                                <td>Cloud Computing Summit</td>
+                                <td><strong>$149.00</strong></td>
+                                <td><span class="badge bg-info">Bank Transfer</span></td>
+                                <td><span class="payment-status refunded">REFUNDED</span></td>
+                                <td><span class="badge bg-info">Refunded</span></td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-secondary view-refund-btn">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="9" class="text-end">
+                                    <strong>Total: <span class="text-primary">$1,146.00</span></strong>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Invoice Actions -->
+            <div class="invoice-actions mt-4">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-primary w-100" id="downloadSelectedBtn">
+                            <i class="fas fa-download me-2"></i>Download Selected
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-success w-100" id="emailSelectedBtn">
+                            <i class="fas fa-envelope me-2"></i>Email Selected
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-warning w-100" id="printSelectedBtn">
+                            <i class="fas fa-print me-2"></i>Print Selected
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-danger w-100" id="deleteSelectedBtn">
+                            <i class="fas fa-trash me-2"></i>Delete Selected
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Success/Failure Status Panel -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <h3>
+                    <i class="fas fa-clipboard-check me-2"></i>
+                    Payment Status Dashboard
+                </h3>
+                <div class="d-flex gap-2">
+                    <span class="badge bg-success">Success Rate: 94%</span>
+                    <span class="badge bg-warning">Pending: 6%</span>
+                </div>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card h-100 border-success">
+                        <div class="card-header bg-success text-white">
+                            <h6 class="mb-0"><i class="fas fa-check-circle me-2"></i>Successful Payments</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-4">
+                                <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+                                <h4 class="text-success">142 Payments</h4>
+                                <p class="text-muted">Successfully processed</p>
+                            </div>
+                            <div class="success-stats">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Today:</span>
+                                    <strong>8 payments</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>This Week:</span>
+                                    <strong>42 payments</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>This Month:</span>
+                                    <strong>156 payments</strong>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span>Total Revenue:</span>
+                                    <strong class="text-success">$12,450.00</strong>
+                                </div>
+                            </div>
+                            <a href="payment-success.html" class="btn btn-success w-100 mt-4">
+                                <i class="fas fa-list me-2"></i>View All Successful
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card h-100 border-danger">
+                        <div class="card-header bg-danger text-white">
+                            <h6 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Failed Payments</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-4">
+                                <i class="fas fa-times-circle fa-4x text-danger mb-3"></i>
+                                <h4 class="text-danger">8 Payments</h4>
+                                <p class="text-muted">Failed or declined</p>
+                            </div>
+                            <div class="failure-stats">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Card Declined:</span>
+                                    <strong>3 cases</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Insufficient Funds:</span>
+                                    <strong>2 cases</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Network Error:</span>
+                                    <strong>2 cases</strong>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span>Other Issues:</span>
+                                    <strong>1 case</strong>
+                                </div>
+                            </div>
+                            <div class="row g-2 mt-4">
+                                <div class="col-6">
+                                    <button class="btn btn-outline-danger w-100" id="retryFailedBtn">
+                                        <i class="fas fa-redo me-2"></i>Retry Failed
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <a href="payment-failed.html" class="btn btn-danger w-100">
+                                        <i class="fas fa-list me-2"></i>View All Failed
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Filler for Empty Space -->
+        <div class="content-filler">
+            <div class="text-center">
+                <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                <h4 class="mb-2">Secure & Verified Paid Events</h4>
+                <p class="text-muted mb-3">All paid events feature screenshot verification to ensure legitimate access and premium experience.</p>
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="users-upload-screenshot.html" class="btn btn-primary">
+                        <i class="fas fa-user-check me-2"></i>Verification Panel
+                    </a>
+                    <a href="payment -processing.html" class="btn btn-success">
+                        <i class="fas fa-credit-card me-2"></i>Process Payment
+                    </a>
+                    <a href="payment-history.html" class="btn btn-warning">
+                        <i class="fas fa-history me-2"></i>Payment History
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ENHANCED FOOTER BASED ON IMAGE CONTENT -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Brand Section -->
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <h2>StreamConnect Events</h2>
+                    </div>
+                    
+                    <div class="footer-copyright">
+                        <i class="fas fa-copyright"></i>
+                        2025 Stream Connect Events. All rights reserved.
+                    </div>
+                </div>
+
+                <!-- Quick Links Section -->
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-chevron-right"></i>
+                                Features
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-chevron-right"></i>
+                                How It Works
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-chevron-right"></i>
+                                Pricing
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-chevron-right"></i>
+                                Event Categories
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Contact Us Section -->
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <ul class="footer-contact-info">
+                        <li>
+                            <i class="fas fa-building"></i>
+                            <div>
+                                <strong>Company Name:</strong> AngamTech
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <strong>Email:</strong> support@streamconnectevents
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <strong>Phone:</strong> +91 8056484806
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <strong>Address:</strong> Dharmapuri, TamilNadu, India
+                            </div>
+                        </li>
+                    </ul>
+                    
+                    <!-- Follow Us Section -->
+                    <div class="mt-4">
+                        <h4>Follow Us</h4>
+                        <div class="footer-social">
+                            <a href="#" title="LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" title="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" title="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" title="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>Stream Connect Events - Connecting the world through premium virtual experiences</p>
+                <div class="footer-security-badges">
+                    <span><i class="fas fa-lock"></i> Secure Payments</span>
+                    <span><i class="fas fa-shield-alt"></i> Privacy Protected</span>
+                    <span><i class="fas fa-check-circle"></i> Verified Events</span>
+                    <span><i class="fas fa-globe"></i> Worldwide Access</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Payment Processing Modal -->
+    <div class="modal fade" id="paymentProcessingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-spinner fa-spin me-2"></i>
+                        Processing Payment
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <div class="payment-animation mb-4">
+                            <div class="payment-icon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                        </div>
+                        <h5>Processing Your Payment</h5>
+                        <p>Please wait while we securely process your payment...</p>
+                        <div class="progress mt-4">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+                        </div>
+                        <small class="text-muted mt-2 d-block">Transaction ID: PAY-789456</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Result Modal -->
+    <div class="modal fade" id="paymentResultModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle me-2 text-success"></i>
+                        Payment Successful
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <div class="mb-4">
+                            <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+                            <h4>Payment Successful!</h4>
+                            <p>Your payment of <strong>$299.00</strong> has been processed successfully.</p>
+                        </div>
+                        <div class="payment-details p-3 bg-light rounded-3 text-start mb-4">
+                            <h6>Transaction Details:</h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <small class="text-muted">Transaction ID</small>
+                                    <p class="mb-1"><strong>PAY-789456123</strong></p>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Date & Time</small>
+                                    <p class="mb-1"><strong>Oct 15, 2023 14:30</strong></p>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Amount</small>
+                                    <p class="mb-1"><strong>$299.00</strong></p>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Method</small>
+                                    <p class="mb-1"><strong>Credit Card</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-camera me-2"></i>
+                            <strong>Next Step:</strong> Please upload a screenshot of your payment confirmation for verification.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="users-upload-screenshot.html" class="btn btn-primary">
+                        <i class="fas fa-camera me-2"></i>Upload Screenshot
+                    </a>
+                    <button class="btn btn-outline-primary" id="downloadReceiptBtn">
+                        <i class="fas fa-download me-2"></i>Download Receipt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Preview Modal -->
+    <div class="modal fade" id="invoicePreviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-file-invoice me-2"></i>
+                        Invoice Preview
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="invoice-preview-container" id="invoicePreviewContent">
+                        <!-- Invoice content will be dynamically generated -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="printInvoiceBtn">
+                        <i class="fas fa-print me-2"></i>Print Invoice
+                    </button>
+                    <button class="btn btn-success" id="downloadInvoicePdfBtn">
+                        <i class="fas fa-download me-2"></i>Download PDF
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            initMobileMenu();
+            generatePaymentId();
+            updateCurrentDate();
+            
+            // Check for saved preferences
+            if (localStorage.getItem('darkMode') === 'true') {
+                enableDarkMode();
+            }
+            
+            // Initialize verification actions
+            initVerificationActions();
+            
+            // Initialize invoice generation
+            initInvoiceGeneration();
+            
+            // Initialize payment processing
+            initPaymentProcessing();
+        });
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            mobileMenuToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('active');
+                const icon = mobileMenuToggle.querySelector('i');
+                if (mobileMenu.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            // Dark mode toggle
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+            
+            // Fullscreen toggle
+            const fullscreenToggle = document.getElementById('fullscreenToggle');
+            fullscreenToggle.addEventListener('click', toggleFullscreen);
+            
+            // Search functionality
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+            }
+
+            // Payment method selection
+            const paymentMethodCards = document.querySelectorAll('.payment-method-card');
+            paymentMethodCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    paymentMethodCards.forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+
+            // Select all payments checkbox
+            const selectAllPayments = document.getElementById('selectAllPayments');
+            if (selectAllPayments) {
+                selectAllPayments.addEventListener('change', function() {
+                    const checkboxes = document.querySelectorAll('.payment-checkbox');
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = this.checked;
+                    });
+                });
+            }
+
+            // Process payment button
+            const processPaymentBtn = document.getElementById('processPaymentBtn');
+            if (processPaymentBtn) {
+                processPaymentBtn.addEventListener('click', processPayment);
+            }
+            
+            // Refresh verifications button
+            const refreshVerifications = document.getElementById('refreshVerifications');
+            if (refreshVerifications) {
+                refreshVerifications.addEventListener('click', function() {
+                    showNotification('Refreshing verification data...', 'info');
+                    setTimeout(() => {
+                        showNotification('Verification data refreshed successfully!', 'success');
+                    }, 1000);
+                });
+            }
+            
+            // Download report button
+            const downloadReportBtn = document.getElementById('downloadReportBtn');
+            if (downloadReportBtn) {
+                downloadReportBtn.addEventListener('click', function() {
+                    showNotification('Downloading verification report...', 'info');
+                    setTimeout(() => {
+                        showNotification('Report downloaded successfully!', 'success');
+                    }, 1500);
+                });
+            }
+            
+            // New invoice button
+            const newInvoiceBtn = document.getElementById('newInvoiceBtn');
+            if (newInvoiceBtn) {
+                newInvoiceBtn.addEventListener('click', function() {
+                    document.getElementById('clientName').value = '';
+                    document.getElementById('invoiceAmount').value = '';
+                    document.getElementById('invoiceDesc').value = '';
+                    showNotification('New invoice form cleared. Fill in the details.', 'info');
+                });
+            }
+            
+            // Export all button
+            const exportAllBtn = document.getElementById('exportAllBtn');
+            if (exportAllBtn) {
+                exportAllBtn.addEventListener('click', function() {
+                    showNotification('Exporting all payment data to CSV...', 'info');
+                    setTimeout(() => {
+                        showNotification('Payment data exported successfully!', 'success');
+                    }, 1500);
+                });
+            }
+            
+            // Retry failed payments button
+            const retryFailedBtn = document.getElementById('retryFailedBtn');
+            if (retryFailedBtn) {
+                retryFailedBtn.addEventListener('click', function() {
+                    showNotification('Retrying failed payments...', 'info');
+                    setTimeout(() => {
+                        showNotification('Failed payment retry process completed!', 'success');
+                    }, 1500);
+                });
+            }
+            
+            // Download receipt button
+            const downloadReceiptBtn = document.getElementById('downloadReceiptBtn');
+            if (downloadReceiptBtn) {
+                downloadReceiptBtn.addEventListener('click', function() {
+                    showNotification('Downloading payment receipt...', 'info');
+                    setTimeout(() => {
+                        showNotification('Receipt downloaded successfully!', 'success');
+                    }, 1000);
+                });
+            }
+            
+            // Print invoice button
+            const printInvoiceBtn = document.getElementById('printInvoiceBtn');
+            if (printInvoiceBtn) {
+                printInvoiceBtn.addEventListener('click', function() {
+                    showNotification('Opening print dialog...', 'info');
+                    setTimeout(() => {
+                        window.print();
+                    }, 500);
+                });
+            }
+            
+            // Download invoice PDF button
+            const downloadInvoicePdfBtn = document.getElementById('downloadInvoicePdfBtn');
+            if (downloadInvoicePdfBtn) {
+                downloadInvoicePdfBtn.addEventListener('click', function() {
+                    showNotification('Downloading invoice as PDF...', 'info');
+                    setTimeout(() => {
+                        showNotification('Invoice PDF downloaded successfully!', 'success');
+                    }, 1500);
+                });
+            }
+            
+            // Invoice action buttons
+            const invoiceActionButtons = document.querySelectorAll('.view-invoice-btn, .download-invoice-btn, .email-invoice-btn, .process-payment-btn, .view-refund-btn');
+            invoiceActionButtons.forEach(btn => {
+                btn.addEventListener('click', handleInvoiceAction);
+            });
+            
+            // Bulk action buttons
+            const bulkActionButtons = document.querySelectorAll('#downloadSelectedBtn, #emailSelectedBtn, #printSelectedBtn, #deleteSelectedBtn');
+            bulkActionButtons.forEach(btn => {
+                btn.addEventListener('click', handleBulkAction);
+            });
+        }
+        
+        // Initialize mobile menu
+        function initMobileMenu() {
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                const mobileMenu = document.getElementById('mobileMenu');
+                const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+                
+                if (mobileMenu && mobileMenu.classList.contains('active') && 
+                    !mobileMenu.contains(event.target) && 
+                    !mobileMenuToggle.contains(event.target)) {
+                    mobileMenu.classList.remove('active');
+                    const icon = mobileMenuToggle.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            });
+            
+            // Close mobile menu when clicking a link
+            const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+                    if (mobileMenu) mobileMenu.classList.remove('active');
+                    const icon = mobileMenuToggle.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            });
+        }
+        
+        // Update current date
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = now.toLocaleDateString('en-US', options);
+            
+            // Update payment date
+            const paymentDateElement = document.getElementById('paymentDate');
+            if (paymentDateElement) {
+                const formattedDate = now.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                paymentDateElement.textContent = formattedDate;
+            }
+        }
+        
+        // Generate random payment ID
+        function generatePaymentId() {
+            const paymentIdElement = document.getElementById('paymentId');
+            
+            if (paymentIdElement) {
+                const randomId = Math.floor(100000 + Math.random() * 900000);
+                paymentIdElement.textContent = randomId;
+            }
+        }
+        
+        // Search functionality
+        function performSearch() {
+            const searchInput = document.querySelector('.search-input');
+            const query = searchInput.value.trim();
+            
+            if (query === '') {
+                showNotification('Please enter a search term', 'warning');
+                return;
+            }
+            
+            showNotification(`Searching paid events: "${query}"`, 'info');
+            
+            // Simulate search results
+            setTimeout(() => {
+                const results = [
+                    'AI Masterclass 2023',
+                    'Web Development Bootcamp',
+                    'Data Science Workshop',
+                    'Premium tech events'
+                ];
+                
+                const randomResult = results[Math.floor(Math.random() * results.length)];
+                showNotification(`Found results for "${query}". Try: "${randomResult}"`, 'success');
+            }, 1000);
+        }
+        
+        // Toggle dark mode
+        function toggleDarkMode() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            
+            if (isDarkMode) {
+                document.body.classList.remove('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('darkMode', 'false');
+                showNotification('Light mode activated', 'info');
+            } else {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('darkMode', 'true');
+                showNotification('Dark mode activated', 'info');
+            }
+        }
+        
+        function enableDarkMode() {
+            document.body.classList.add('dark-mode');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            const fullscreenToggle = document.getElementById('fullscreenToggle');
+            
+            if (!document.fullscreenElement) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                }
+                fullscreenToggle.innerHTML = '<i class="fas fa-compress"></i>';
+                showNotification('Fullscreen mode activated', 'info');
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+                fullscreenToggle.innerHTML = '<i class="fas fa-expand"></i>';
+                showNotification('Fullscreen mode exited', 'info');
+            }
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            // Remove any existing notifications
+            const existingAlerts = document.querySelectorAll('.alert-notification');
+            existingAlerts.forEach(alert => alert.remove());
+            
+            // Determine icon and color
+            let icon, colorClass;
+            switch(type) {
+                case 'success':
+                    icon = 'fa-check-circle';
+                    colorClass = 'alert-success';
+                    break;
+                case 'warning':
+                    icon = 'fa-exclamation-triangle';
+                    colorClass = 'alert-warning';
+                    break;
+                case 'danger':
+                    icon = 'fa-times-circle';
+                    colorClass = 'alert-danger';
+                    break;
+                case 'info':
+                default:
+                    icon = 'fa-info-circle';
+                    colorClass = 'alert-info';
+                    break;
+            }
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert ${colorClass} alert-notification alert-dismissible fade show`;
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 me-3">
+                        <i class="fas ${icon} fa-lg"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }
+            }, 5000);
+        }
+        
+        // Handle fullscreen change events
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        
+        function handleFullscreenChange() {
+            const fullscreenToggle = document.getElementById('fullscreenToggle');
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                fullscreenToggle.innerHTML = '<i class="fas fa-expand"></i>';
+            }
+        }
+        
+        // Initialize verification actions
+        function initVerificationActions() {
+            // Verification buttons
+            const verifyBtns = document.querySelectorAll('.verify-btn');
+            const rejectBtns = document.querySelectorAll('.reject-btn');
+            const viewBtns = document.querySelectorAll('.view-btn');
+            const requestBtns = document.querySelectorAll('.request-btn');
+            
+            // Bulk action buttons
+            const verifyAllBtn = document.getElementById('verifyAllBtn');
+            const rejectAllBtn = document.getElementById('rejectAllBtn');
+            const verifySelectedBtn = document.getElementById('verifySelectedBtn');
+            const rejectSelectedBtn = document.getElementById('rejectSelectedBtn');
+            const requestInfoSelectedBtn = document.getElementById('requestInfoSelectedBtn');
+            
+            // Single verification actions
+            verifyBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const card = this.closest('.screenshot-card');
+                    const status = card.querySelector('.screenshot-status');
+                    status.textContent = 'Verified';
+                    status.className = 'screenshot-status status-verified';
+                    showNotification('Payment verified successfully!', 'success');
+                });
+            });
+            
+            rejectBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const card = this.closest('.screenshot-card');
+                    const status = card.querySelector('.screenshot-status');
+                    status.textContent = 'Rejected';
+                    status.className = 'screenshot-status status-rejected';
+                    showNotification('Payment rejected.', 'warning');
+                });
+            });
+            
+            viewBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    showNotification('Opening screenshot view...', 'info');
+                });
+            });
+            
+            requestBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    showNotification('Requesting additional information...', 'info');
+                });
+            });
+            
+            // Bulk verification actions
+            if (verifyAllBtn) {
+                verifyAllBtn.addEventListener('click', function() {
+                    const pendingCards = document.querySelectorAll('.screenshot-card .screenshot-status.status-pending');
+                    pendingCards.forEach(status => {
+                        status.textContent = 'Verified';
+                        status.className = 'screenshot-status status-verified';
+                    });
+                    showNotification(`Verified ${pendingCards.length} payments!`, 'success');
+                });
+            }
+            
+            if (rejectAllBtn) {
+                rejectAllBtn.addEventListener('click', function() {
+                    const pendingCards = document.querySelectorAll('.screenshot-card .screenshot-status.status-pending');
+                    pendingCards.forEach(status => {
+                        status.textContent = 'Rejected';
+                        status.className = 'screenshot-status status-rejected';
+                    });
+                    showNotification(`Rejected ${pendingCards.length} payments!`, 'warning');
+                });
+            }
+            
+            if (verifySelectedBtn) {
+                verifySelectedBtn.addEventListener('click', function() {
+                    const selectedCheckboxes = document.querySelectorAll('.screenshot-checkbox:checked');
+                    selectedCheckboxes.forEach(cb => {
+                        const card = cb.closest('.screenshot-card');
+                        const status = card.querySelector('.screenshot-status');
+                        if (status.classList.contains('status-pending')) {
+                            status.textContent = 'Verified';
+                            status.className = 'screenshot-status status-verified';
+                        }
+                    });
+                    showNotification(`Verified ${selectedCheckboxes.length} selected payments!`, 'success');
+                });
+            }
+            
+            if (rejectSelectedBtn) {
+                rejectSelectedBtn.addEventListener('click', function() {
+                    const selectedCheckboxes = document.querySelectorAll('.screenshot-checkbox:checked');
+                    selectedCheckboxes.forEach(cb => {
+                        const card = cb.closest('.screenshot-card');
+                        const status = card.querySelector('.screenshot-status');
+                        if (status.classList.contains('status-pending')) {
+                            status.textContent = 'Rejected';
+                            status.className = 'screenshot-status status-rejected';
+                        }
+                    });
+                    showNotification(`Rejected ${selectedCheckboxes.length} selected payments!`, 'warning');
+                });
+            }
+            
+            if (requestInfoSelectedBtn) {
+                requestInfoSelectedBtn.addEventListener('click', function() {
+                    const selectedCheckboxes = document.querySelectorAll('.screenshot-checkbox:checked');
+                    showNotification(`Requested additional information for ${selectedCheckboxes.length} payments.`, 'info');
+                });
+            }
+        }
+        
+        // Initialize invoice generation
+        function initInvoiceGeneration() {
+            const generateInvoiceBtn = document.getElementById('generateInvoiceBtn');
+            const previewInvoiceBtn = document.getElementById('previewInvoiceBtn');
+            
+            if (generateInvoiceBtn) {
+                generateInvoiceBtn.addEventListener('click', generateInvoice);
+            }
+            
+            if (previewInvoiceBtn) {
+                previewInvoiceBtn.addEventListener('click', previewInvoice);
+            }
+        }
+        
+        // Generate invoice
+        function generateInvoice() {
+            const clientName = document.getElementById('clientName').value;
+            const amount = document.getElementById('invoiceAmount').value;
+            const event = document.getElementById('invoiceEvent').value;
+            const description = document.getElementById('invoiceDesc').value;
+            
+            if (!clientName || !amount || !event) {
+                showNotification('Please fill in all required fields (Client Name, Amount, Event)', 'warning');
+                return;
+            }
+            
+            const invoiceId = 'INV-' + Math.floor(1000 + Math.random() * 9000);
+            const invoiceDate = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+            
+            showNotification(`Invoice ${invoiceId} generated for ${clientName} - $${amount}`, 'success');
+            
+            // Clear form
+            document.getElementById('clientName').value = '';
+            document.getElementById('invoiceAmount').value = '';
+            document.getElementById('invoiceDesc').value = '';
+            
+            // Add to payment history table (simulated)
+            setTimeout(() => {
+                showNotification(`Invoice ${invoiceId} has been added to payment history.`, 'info');
+            }, 1000);
+        }
+        
+        // Preview invoice
+        function previewInvoice() {
+            const clientName = document.getElementById('clientName').value || 'Sample Client';
+            const amount = document.getElementById('invoiceAmount').value || '299.00';
+            const event = document.getElementById('invoiceEvent').value;
+            const description = document.getElementById('invoiceDesc').value || 'Event registration fee';
+            
+            const invoiceId = 'INV-' + Math.floor(1000 + Math.random() * 9000);
+            const invoiceDate = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            // Create invoice preview content
+            const invoiceContent = `
+                <div class="invoice">
+                    <div class="invoice-header">
+                        <div class="row">
+                            <div class="col-6">
+                                <h3>INVOICE</h3>
+                                <p class="mb-1"><strong>Invoice #:</strong> ${invoiceId}</p>
+                                <p class="mb-1"><strong>Date:</strong> ${invoiceDate}</p>
+                            </div>
+                            <div class="col-6 text-end">
+                                <h4>Stream Connect</h4>
+                                <p class="mb-1">123 Event Street</p>
+                                <p class="mb-1">New York, NY 10001</p>
+                                <p class="mb-1">contact@streamconnect.com</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="invoice-body">
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <h5>Bill To:</h5>
+                                <p class="mb-1"><strong>${clientName}</strong></p>
+                                <p class="mb-1">Event Participant</p>
+                            </div>
+                            <div class="col-6 text-end">
+                                <h5>Payment Details</h5>
+                                <p class="mb-1"><strong>Due Date:</strong> ${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                                <p class="mb-1"><strong>Status:</strong> <span class="badge bg-warning">Pending</span></p>
+                            </div>
+                        </div>
+                        
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th class="text-end">Quantity</th>
+                                    <th class="text-end">Unit Price</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>${event} - ${description}</td>
+                                    <td class="text-end">1</td>
+                                    <td class="text-end">$${amount}</td>
+                                    <td class="text-end">$${amount}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                                    <td class="text-end">$${amount}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Tax (0%):</strong></td>
+                                    <td class="text-end">$0.00</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                    <td class="text-end"><strong>$${amount}</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="mt-4">
+                            <h5>Payment Instructions:</h5>
+                            <p>Please make payment via credit card, PayPal, or bank transfer. After payment, upload screenshot for verification.</p>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Note:</strong> Payment must be completed within 7 days to secure your spot.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Set invoice preview content
+            document.getElementById('invoicePreviewContent').innerHTML = invoiceContent;
+            
+            // Show modal
+            const invoiceModal = new bootstrap.Modal(document.getElementById('invoicePreviewModal'));
+            invoiceModal.show();
+        }
+        
+        // Initialize payment processing
+        function initPaymentProcessing() {
+            const processPaymentBtn = document.getElementById('processPaymentBtn');
+            if (processPaymentBtn) {
+                processPaymentBtn.addEventListener('click', processPayment);
+            }
+        }
+        
+        // Process payment
+        function processPayment() {
+            const cardNumber = document.getElementById('cardNumber').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            const cvv = document.getElementById('cvv').value;
+            const cardholderName = document.getElementById('cardholderName').value;
+            
+            // Basic validation
+            if (!cardNumber || !expiryDate || !cvv || !cardholderName) {
+                showNotification('Please fill in all payment details', 'warning');
+                return;
+            }
+            
+            // Show processing modal
+            const processingModal = new bootstrap.Modal(document.getElementById('paymentProcessingModal'));
+            processingModal.show();
+            
+            // Simulate payment processing
+            let progress = 0;
+            const progressBar = document.querySelector('#paymentProcessingModal .progress-bar');
+            const progressInterval = setInterval(() => {
+                progress += 10;
+                progressBar.style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    setTimeout(() => {
+                        processingModal.hide();
+                        
+                        // Show success modal
+                        setTimeout(() => {
+                            const successModal = new bootstrap.Modal(document.getElementById('paymentResultModal'));
+                            successModal.show();
+                        }, 500);
+                        
+                        showNotification('Payment processed successfully!', 'success');
+                    }, 500);
+                }
+            }, 200);
+        }
+        
+        // Handle invoice actions
+        function handleInvoiceAction(event) {
+            const btn = event.currentTarget;
+            const icon = btn.querySelector('i').className;
+            
+            if (icon.includes('fa-file-invoice')) {
+                showNotification('Viewing invoice details...', 'info');
+                previewInvoice();
+            } else if (icon.includes('fa-download')) {
+                showNotification('Downloading invoice...', 'info');
+            } else if (icon.includes('fa-envelope')) {
+                showNotification('Sending invoice via email...', 'info');
+            } else if (icon.includes('fa-credit-card')) {
+                showNotification('Redirecting to payment processing...', 'info');
+                setTimeout(() => {
+                    window.location.href = 'payment-processing.html';
+                }, 1000);
+            } else if (icon.includes('fa-undo')) {
+                showNotification('Viewing refund details...', 'info');
+            }
+        }
+        
+        // Handle bulk actions
+        function handleBulkAction(event) {
+            const btn = event.currentTarget;
+            const text = btn.textContent.trim();
+            const selectedCount = document.querySelectorAll('.payment-checkbox:checked').length;
+            
+            if (selectedCount === 0) {
+                showNotification('Please select at least one payment to perform this action', 'warning');
+                return;
+            }
+            
+            if (text.includes('Download')) {
+                showNotification(`Downloading ${selectedCount} selected invoices...`, 'info');
+            } else if (text.includes('Email')) {
+                showNotification(`Emailing ${selectedCount} selected invoices...`, 'info');
+            } else if (text.includes('Print')) {
+                showNotification(`Printing ${selectedCount} selected invoices...`, 'info');
+                setTimeout(() => {
+                    window.print();
+                }, 1000);
+            } else if (text.includes('Delete')) {
+                if (confirm(`Are you sure you want to delete ${selectedCount} selected invoices?`)) {
+                    showNotification(`Deleted ${selectedCount} selected invoices`, 'success');
+                }
+            }
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            // Ctrl/Cmd + P for payment processing
+            if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
+                event.preventDefault();
+                window.location.href = 'payment-processing.html';
+            }
+            
+            // Ctrl/Cmd + V for verification panel
+            if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
+                event.preventDefault();
+                window.location.href = 'users-upload-screenshot.html';
+            }
+            
+            // Ctrl/Cmd + I for invoice generation
+            if ((event.ctrlKey || event.metaKey) && event.key === 'i') {
+                event.preventDefault();
+                document.getElementById('newInvoiceBtn').click();
+            }
+            
+            // Ctrl/Cmd + H for payment history
+            if ((event.ctrlKey || event.metaKey) && event.key === 'h') {
+                event.preventDefault();
+                window.location.href = 'payment-history.html';
+            }
+            
+            // Escape to close mobile menu
+            if (event.key === 'Escape') {
+                const mobileMenu = document.getElementById('mobileMenu');
+                if (mobileMenu && mobileMenu.classList.contains('active')) {
+                    mobileMenu.classList.remove('active');
+                    const icon = document.getElementById('mobileMenuToggle').querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            }
+        });
+        
+        // Window resize handling
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                // Close mobile menu on resize if window is large
+                if (window.innerWidth >= 992) {
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+                    if (mobileMenu && mobileMenu.classList.contains('active')) {
+                        mobileMenu.classList.remove('active');
+                        const icon = mobileMenuToggle.querySelector('i');
+                        if (icon) {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                }
+            }, 250);
+        });
+    </script>
+</body>
+</html>

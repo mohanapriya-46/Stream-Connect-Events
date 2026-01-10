@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Events Hub - Paid Events</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --dark: #333;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.2rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .logo i {
+            color: var(--accent);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background: #ff5252;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(74, 111, 165, 0.9), rgba(22, 96, 136, 0.9)), url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 4rem 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* Filter Section */
+        .filters {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 180px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+
+        .filter-group select {
+            padding: 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+            color: var(--dark);
+        }
+
+        /* Events Grid */
+        .events-section {
+            padding: 2rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--secondary);
+            font-size: 2rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Event Card */
+        .event-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .event-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .event-category {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--accent);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .event-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: var(--secondary);
+        }
+
+        .event-description {
+            color: var(--gray);
+            margin-bottom: 1.2rem;
+            flex-grow: 1;
+        }
+
+        .event-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-item i {
+            color: var(--primary);
+            width: 20px;
+        }
+
+        .event-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success);
+            text-align: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .event-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .members-count {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .members-count i {
+            color: var(--info);
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--primary);
+            color: white;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-content {
+            padding: 1.5rem;
+        }
+
+        /* Navigation Modal */
+        .nav-modal .modal-content {
+            padding: 0;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            border-bottom: 1px solid #eee;
+        }
+
+        .nav-links li:last-child {
+            border-bottom: none;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem 1.5rem;
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: #f5f7fb;
+        }
+
+        .nav-links a i {
+            color: var(--primary);
+            width: 24px;
+            font-size: 1.2rem;
+        }
+
+        .nav-links a.active {
+            background: #f5f7fb;
+            color: var(--primary);
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Booking Modal */
+        .booking-modal .modal {
+            max-width: 600px;
+        }
+
+        .booking-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .booking-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+        }
+
+        .booking-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .booking-info .detail-item {
+            margin-bottom: 0.8rem;
+        }
+
+        .booking-form {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .booking-summary {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            border: 1px solid #eee;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--success);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #eee;
+        }
+
+        /* Footer Modal */
+        .footer-modal .modal {
+            max-width: 700px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column a {
+            color: var(--dark);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: var(--accent);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--light-gray);
+            border-radius: 50%;
+            color: var(--primary);
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .social-icons a:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        /* Last Events Section */
+        .last-events-section {
+            padding: 2rem 0 4rem;
+            background: #f9fafc;
+            border-top: 1px solid #eee;
+        }
+
+        .last-events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .last-event-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--gray);
+        }
+
+        .last-event-content {
+            padding: 1.2rem;
+        }
+
+        .last-event-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+
+        .last-event-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .last-event-price {
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .completed-badge {
+            display: inline-block;
+            background: var(--gray);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .booking-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .booking-image {
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: row;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .hero {
+                padding: 3rem 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .events-grid, .last-events-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .filter-container {
+                justify-content: flex-start;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .events-grid, .last-events-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-group {
+                min-width: 100%;
+            }
+            
+            .event-actions {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .members-count {
+                justify-content: center;
+            }
+            
+            .modal {
+                width: 95%;
+            }
+        }
+
+        /* Category Colors */
+        .category-music {
+            background-color: #8a2be2;
+        }
+        
+        .category-business {
+            background-color: #2e8b57;
+        }
+        
+        .category-tech {
+            background-color: #1e90ff;
+        }
+        
+        .category-arts {
+            background-color: #ff6347;
+        }
+        
+        .category-sports {
+            background-color: #ffa500;
+        }
+        
+        .category-food {
+            background-color: #9b59b6;
+        }
+        
+        .category-wellness {
+            background-color: #2ecc71;
+        }
+        
+        .category-education {
+            background-color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo" id="openNavModal">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>EventHub Pro</span>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="btn btn-accent" id="openBookingModal">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>My Bookings (3)</span>
+                    </button>
+                    <button class="mobile-menu-btn" id="openNavModalBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Discover Premium Paid Events</h1>
+            <p>Explore exclusive experiences, workshops, and gatherings with industry experts. Each event offers unique value and limited spots to ensure quality interaction.</p>
+            <button class="btn btn-primary" id="openFooterModal">
+                <i class="fas fa-info-circle"></i>
+                About & Contact
+            </button>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="filters">
+        <div class="container">
+            <h2>Filter Events</h2>
+            <div class="filter-container">
+                <div class="filter-group">
+                    <label for="category">Category</label>
+                    <select id="category">
+                        <option value="all">All Categories</option>
+                        <option value="music">Music & Concerts</option>
+                        <option value="business">Business & Networking</option>
+                        <option value="tech">Technology</option>
+                        <option value="arts">Arts & Culture</option>
+                        <option value="sports">Sports & Fitness</option>
+                        <option value="food">Food & Drink</option>
+                        <option value="wellness">Health & Wellness</option>
+                        <option value="education">Education</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="price">Price Range</label>
+                    <select id="price">
+                        <option value="all">Any Price</option>
+                        <option value="low">Under $50</option>
+                        <option value="medium">$50 - $150</option>
+                        <option value="high">$150+</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="duration">Duration</label>
+                    <select id="duration">
+                        <option value="all">Any Duration</option>
+                        <option value="short">Under 2 hours</option>
+                        <option value="medium">2-5 hours</option>
+                        <option value="long">Full day</option>
+                        <option value="multi">Multi-day</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="availability">Availability</label>
+                    <select id="availability">
+                        <option value="all">All Events</option>
+                        <option value="available">Spots Available</option>
+                        <option value="limited">Limited Spots</option>
+                        <option value="soldout">Sold Out</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Events Section -->
+    <section class="events-section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-calendar-plus"></i>
+                Upcoming Paid Events
+            </h2>
+            
+            <div class="events-grid" id="upcomingEventsGrid">
+                <!-- Event cards will be generated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Last Paid Events Section -->
+    <section class="last-events-section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-history"></i>
+                Last Paid Events
+            </h2>
+            
+            <div class="last-events-grid" id="lastEventsGrid">
+                <!-- Last event cards will be generated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation Modal -->
+    <div class="modal-overlay" id="navModal">
+        <div class="modal nav-modal">
+            <div class="modal-header">
+                <h2>EventHub Pro Menu</h2>
+                <button class="modal-close" id="closeNavModal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <ul class="nav-links">
+                    <li><a href="#" class="active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-ticket-alt"></i> Paid Events</a></li>
+                    <li><a href="#"><i class="fas fa-calendar-check"></i> My Events</a></li>
+                    <li><a href="#"><i class="fas fa-star"></i> Featured Events</a></li>
+                    <li><a href="#"><i class="fas fa-user-circle"></i> Account</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#" id="openFooterModalFromNav"><i class="fas fa-info-circle"></i> About & Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Modal -->
+    <div class="modal-overlay" id="footerModal">
+        <div class="modal footer-modal">
+            <div class="modal-header">
+                <h2>About EventHub Pro</h2>
+                <button class="modal-close" id="closeFooterModal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div class="footer-content">
+                    <div class="footer-column">
+                        <h3>EventHub Pro</h3>
+                        <p>Your gateway to premium events and experiences. We connect you with exclusive gatherings that inspire, educate, and entertain.</p>
+                        <div class="social-icons">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3>Quick Links</h3>
+                        <ul>
+                            <li><a href="#">Browse Events</a></li>
+                            <li><a href="#">Create Event</a></li>
+                            <li><a href="#">Pricing</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3>Support</h3>
+                        <ul>
+                            <li><a href="#">Help Center</a></li>
+                            <li><a href="#">FAQs</a></li>
+                            <li><a href="#">Refund Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3>Contact Info</h3>
+                        <ul>
+                            <li><i class="fas fa-map-marker-alt"></i> 123 Event Street, City, State 12345</li>
+                            <li><i class="fas fa-phone"></i> (555) 123-4567</li>
+                            <li><i class="fas fa-envelope"></i> info@eventhubpro.com</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal booking-modal">
+            <div class="modal-header">
+                <h2>Book Your Event</h2>
+                <button class="modal-close" id="closeBookingModal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div id="bookingContent">
+                    <!-- Booking content will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Event data arrays
+        const upcomingEvents = [
+            {
+                id: 1,
+                title: "Jazz Night Live Concert",
+                description: "An exclusive evening with award-winning jazz musicians in an intimate setting.",
+                category: "music",
+                date: "2023-10-15",
+                time: "19:00 - 22:00",
+                duration: "3 hours",
+                price: 75,
+                capacity: 120,
+                registered: 98,
+                image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+            },
+            {
+                id: 2,
+                title: "Startup Funding Masterclass",
+                description: "Learn how to secure venture capital funding from successful entrepreneurs and investors.",
+                category: "business",
+                date: "2023-10-20",
+                time: "09:00 - 17:00",
+                duration: "8 hours",
+                price: 299,
+                capacity: 50,
+                registered: 42,
+                image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+            },
+            {
+                id: 3,
+                title: "AI & Machine Learning Workshop",
+                description: "Hands-on workshop on implementing AI solutions for business applications.",
+                category: "tech",
+                date: "2023-10-22",
+                time: "10:00 - 16:00",
+                duration: "6 hours",
+                price: 189,
+                capacity: 40,
+                registered: 40,
+                image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+            },
+            {
+                id: 4,
+                title: "Contemporary Art Exhibition Opening",
+                description: "Private viewing of groundbreaking contemporary art with the artists present.",
+                category: "arts",
+                date: "2023-10-25",
+                time: "18:00 - 21:00",
+                duration: "3 hours",
+                price: 60,
+                capacity: 200,
+                registered: 156,
+                image: "https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+            },
+            {
+                id: 5,
+                title: "Professional Basketball Training Camp",
+                description: "Training session with former NBA players for serious basketball enthusiasts.",
+                category: "sports",
+                date: "2023-10-28",
+                time: "08:00 - 14:00",
+                duration: "6 hours",
+                price: 150,
+                capacity: 30,
+                registered: 22,
+                image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+            },
+            {
+                id: 6,
+                title: "Gourmet Wine & Cheese Pairing",
+                description: "Expert-led tasting of fine wines paired with artisan cheeses from around the world.",
+                category: "food",
+                date: "2023-11-02",
+                time: "19:30 - 22:00",
+                duration: "2.5 hours",
+                price: 95,
+                capacity: 35,
+                registered: 35,
+                image: "https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+            },
+            {
+                id: 7,
+                title: "Mindfulness & Meditation Retreat",
+                description: "Full-day retreat focused on mindfulness practices and stress reduction techniques.",
+                category: "wellness",
+                date: "2023-11-05",
+                time: "09:00 - 18:00",
+                duration: "9 hours",
+                price: 120,
+                capacity: 60,
+                registered: 45,
+                image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+            },
+            {
+                id: 8,
+                title: "Digital Marketing Certification",
+                description: "Comprehensive two-day course covering SEO, social media, and content marketing strategies.",
+                category: "education",
+                date: "2023-11-10",
+                time: "09:00 - 17:00",
+                duration: "2 days (16 hours)",
+                price: 349,
+                capacity: 80,
+                registered: 72,
+                image: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+            }
+        ];
+
+        const lastEvents = [
+            {
+                id: 9,
+                title: "Summer Music Festival",
+                description: "Three-day outdoor music festival featuring international artists.",
+                category: "music",
+                date: "2023-08-15",
+                time: "14:00 - 23:00",
+                duration: "3 days",
+                price: 199,
+                capacity: 5000,
+                registered: 5000,
+                image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+            },
+            {
+                id: 10,
+                title: "Blockchain Conference",
+                description: "Annual conference on blockchain technology and cryptocurrency trends.",
+                category: "tech",
+                date: "2023-09-10",
+                time: "09:00 - 18:00",
+                duration: "2 days",
+                price: 399,
+                capacity: 300,
+                registered: 300,
+                image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+            },
+            {
+                id: 11,
+                title: "Yoga & Wellness Retreat",
+                description: "Weekend retreat focusing on yoga, meditation, and healthy living.",
+                category: "wellness",
+                date: "2023-09-22",
+                time: "All day",
+                duration: "2 days",
+                price: 249,
+                capacity: 40,
+                registered: 40,
+                image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+            },
+            {
+                id: 12,
+                title: "Culinary Masterclass",
+                description: "Learn advanced cooking techniques from a Michelin-star chef.",
+                category: "food",
+                date: "2023-09-30",
+                time: "10:00 - 16:00",
+                duration: "6 hours",
+                price: 175,
+                capacity: 20,
+                registered: 20,
+                image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+            }
+        ];
+
+        // Category mapping for display
+        const categoryMap = {
+            "music": "Music & Concerts",
+            "business": "Business & Networking",
+            "tech": "Technology",
+            "arts": "Arts & Culture",
+            "sports": "Sports & Fitness",
+            "food": "Food & Drink",
+            "wellness": "Health & Wellness",
+            "education": "Education"
+        };
+
+        // DOM elements
+        const upcomingEventsGrid = document.getElementById('upcomingEventsGrid');
+        const lastEventsGrid = document.getElementById('lastEventsGrid');
+        const categoryFilter = document.getElementById('category');
+        const priceFilter = document.getElementById('price');
+        const durationFilter = document.getElementById('duration');
+        const availabilityFilter = document.getElementById('availability');
+        
+        // Modal elements
+        const navModal = document.getElementById('navModal');
+        const footerModal = document.getElementById('footerModal');
+        const bookingModal = document.getElementById('bookingModal');
+        const openNavModalBtn = document.getElementById('openNavModalBtn');
+        const openNavModalLogo = document.getElementById('openNavModal');
+        const closeNavModal = document.getElementById('closeNavModal');
+        const openFooterModal = document.getElementById('openFooterModal');
+        const openFooterModalFromNav = document.getElementById('openFooterModalFromNav');
+        const closeFooterModal = document.getElementById('closeFooterModal');
+        const openBookingModal = document.getElementById('openBookingModal');
+        const closeBookingModal = document.getElementById('closeBookingModal');
+        const bookingContent = document.getElementById('bookingContent');
+
+        // Current booking event
+        let currentBookingEvent = null;
+
+        // Render upcoming events
+        function renderUpcomingEvents(filteredEvents) {
+            upcomingEventsGrid.innerHTML = '';
+            
+            filteredEvents.forEach(event => {
+                const isSoldOut = event.registered >= event.capacity;
+                const isLimited = (event.capacity - event.registered) <= 10 && !isSoldOut;
+                const spotsLeft = event.capacity - event.registered;
+                
+                const eventCard = document.createElement('div');
+                eventCard.className = 'event-card';
+                
+                // Determine button text and class based on availability
+                let buttonText, buttonClass;
+                if (isSoldOut) {
+                    buttonText = 'Sold Out';
+                    buttonClass = 'btn btn-outline';
+                } else if (isLimited) {
+                    buttonText = `Book Now (${spotsLeft} left)`;
+                    buttonClass = 'btn btn-primary';
+                } else {
+                    buttonText = 'Book Now';
+                    buttonClass = 'btn btn-primary';
+                }
+                
+                eventCard.innerHTML = `
+                    <div class="event-image" style="background-image: url('${event.image}')">
+                        <span class="event-category category-${event.category}">${categoryMap[event.category]}</span>
+                    </div>
+                    <div class="event-content">
+                        <h3 class="event-title">${event.title}</h3>
+                        <p class="event-description">${event.description}</p>
+                        
+                        <div class="event-details">
+                            <div class="detail-item">
+                                <i class="far fa-calendar-alt"></i>
+                                <span>${event.date}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="far fa-clock"></i>
+                                <span>${event.time}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-hourglass-half"></i>
+                                <span>${event.duration}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-users"></i>
+                                <span>Max: ${event.capacity}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="event-price">$${event.price}</div>
+                        
+                        <div class="event-actions">
+                            <div class="members-count">
+                                <i class="fas fa-user-check"></i>
+                                <span>${event.registered} / ${event.capacity} registered</span>
+                            </div>
+                            <button class="${buttonClass} book-btn" data-event-id="${event.id}" ${isSoldOut ? 'disabled' : ''}>
+                                <i class="fas fa-ticket-alt"></i>
+                                ${buttonText}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                upcomingEventsGrid.appendChild(eventCard);
+            });
+            
+            // Add event listeners to book buttons
+            document.querySelectorAll('.book-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const eventId = parseInt(this.getAttribute('data-event-id'));
+                    const event = upcomingEvents.find(e => e.id === eventId);
+                    if (event) {
+                        openBookingWithEvent(event);
+                    }
+                });
+            });
+        }
+
+        // Render last events
+        function renderLastEvents() {
+            lastEventsGrid.innerHTML = '';
+            
+            lastEvents.forEach(event => {
+                const eventCard = document.createElement('div');
+                eventCard.className = 'last-event-card';
+                
+                eventCard.innerHTML = `
+                    <div class="last-event-content">
+                        <h3 class="last-event-title">${event.title}</h3>
+                        <p class="event-description">${event.description}</p>
+                        
+                        <div class="last-event-details">
+                            <div class="detail-item">
+                                <i class="far fa-calendar-alt"></i>
+                                <span>${event.date}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="far fa-clock"></i>
+                                <span>${event.time}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-hourglass-half"></i>
+                                <span>${event.duration}</span>
+                            </div>
+                            <div class="detail-item last-event-price">
+                                <i class="fas fa-dollar-sign"></i>
+                                <span>${event.price}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="event-actions">
+                            <span class="completed-badge">Completed</span>
+                            <div class="members-count">
+                                <i class="fas fa-user-check"></i>
+                                <span>${event.registered} attended</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                lastEventsGrid.appendChild(eventCard);
+            });
+        }
+
+        // Filter events function
+        function filterEvents() {
+            const categoryValue = categoryFilter.value;
+            const priceValue = priceFilter.value;
+            const durationValue = durationFilter.value;
+            const availabilityValue = availabilityFilter.value;
+            
+            let filteredEvents = [...upcomingEvents];
+            
+            // Filter by category
+            if (categoryValue !== 'all') {
+                filteredEvents = filteredEvents.filter(event => event.category === categoryValue);
+            }
+            
+            // Filter by price
+            if (priceValue !== 'all') {
+                filteredEvents = filteredEvents.filter(event => {
+                    if (priceValue === 'low') return event.price < 50;
+                    if (priceValue === 'medium') return event.price >= 50 && event.price <= 150;
+                    if (priceValue === 'high') return event.price > 150;
+                    return true;
+                });
+            }
+            
+            // Filter by duration
+            if (durationValue !== 'all') {
+                filteredEvents = filteredEvents.filter(event => {
+                    const duration = event.duration.toLowerCase();
+                    if (durationValue === 'short') return duration.includes('hour') && !duration.includes('day');
+                    if (durationValue === 'medium') return duration.includes('2-5') || duration.includes('3') || duration.includes('4') || duration.includes('5');
+                    if (durationValue === 'long') return duration.includes('day') && !duration.includes('multi');
+                    if (durationValue === 'multi') return duration.includes('multi') || duration.includes('2 day');
+                    return true;
+                });
+            }
+            
+            // Filter by availability
+            if (availabilityValue !== 'all') {
+                filteredEvents = filteredEvents.filter(event => {
+                    const spotsLeft = event.capacity - event.registered;
+                    if (availabilityValue === 'available') return spotsLeft > 0;
+                    if (availabilityValue === 'limited') return spotsLeft > 0 && spotsLeft <= 10;
+                    if (availabilityValue === 'soldout') return spotsLeft <= 0;
+                    return true;
+                });
+            }
+            
+            renderUpcomingEvents(filteredEvents);
+        }
+
+        // Open booking modal with event details
+        function openBookingWithEvent(event) {
+            currentBookingEvent = event;
+            
+            const isSoldOut = event.registered >= event.capacity;
+            const spotsLeft = event.capacity - event.registered;
+            
+            bookingContent.innerHTML = `
+                <div class="booking-details">
+                    <div class="booking-image" style="background-image: url('${event.image}')"></div>
+                    <div class="booking-info">
+                        <h3>${event.title}</h3>
+                        <div class="detail-item">
+                            <i class="far fa-calendar-alt"></i>
+                            <span><strong>Date:</strong> ${event.date}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="far fa-clock"></i>
+                            <span><strong>Time:</strong> ${event.time}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-hourglass-half"></i>
+                            <span><strong>Duration:</strong> ${event.duration}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-tag"></i>
+                            <span><strong>Category:</strong> ${categoryMap[event.category]}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-users"></i>
+                            <span><strong>Availability:</strong> ${spotsLeft} of ${event.capacity} spots left</span>
+                        </div>
+                        ${isSoldOut ? '<div class="detail-item" style="color: var(--accent);"><i class="fas fa-exclamation-circle"></i><span><strong>Status:</strong> Sold Out</span></div>' : ''}
+                    </div>
+                </div>
+                
+                ${!isSoldOut ? `
+                <div class="booking-form">
+                    <h3>Booking Information</h3>
+                    <form id="bookingForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name *</label>
+                                <input type="text" id="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name *</label>
+                                <input type="text" id="lastName" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="tickets">Number of Tickets *</label>
+                            <select id="tickets" required>
+                                <option value="">Select</option>
+                                ${Array.from({length: Math.min(5, spotsLeft)}, (_, i) => `<option value="${i+1}">${i+1} ticket${i+1 > 1 ? 's' : ''}</option>`).join('')}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="specialRequests">Special Requests</label>
+                            <textarea id="specialRequests" rows="3" placeholder="Any dietary restrictions, accessibility needs, or other requests"></textarea>
+                        </div>
+                        
+                        <div class="booking-summary">
+                            <h4>Order Summary</h4>
+                            <div class="summary-item">
+                                <span>Ticket Price (x<span id="ticketCount">1</span>)</span>
+                                <span>$<span id="ticketPrice">${event.price}</span></span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Service Fee</span>
+                                <span>$<span id="serviceFee">${(event.price * 0.1).toFixed(2)}</span></span>
+                            </div>
+                            <div class="summary-total">
+                                <span>Total</span>
+                                <span>$<span id="totalPrice">${(event.price * 1.1).toFixed(2)}</span></span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                                <i class="fas fa-lock"></i>
+                                Complete Booking
+                            </button>
+                            <p style="font-size: 0.9rem; color: var(--gray); text-align: center; margin-top: 0.5rem;">
+                                By booking, you agree to our Terms of Service and Privacy Policy
+                            </p>
+                        </div>
+                    </form>
+                </div>
+                ` : `
+                <div style="text-align: center; padding: 2rem; background: #f9f9f9; border-radius: 8px;">
+                    <i class="fas fa-ticket-alt" style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;"></i>
+                    <h3>This event is sold out</h3>
+                    <p>All tickets for this event have been sold. Please check our other upcoming events.</p>
+                    <button class="btn btn-outline" id="closeSoldOutModal" style="margin-top: 1rem;">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Events
+                    </button>
+                </div>
+                `}
+            `;
+            
+            // Add event listeners for dynamic pricing
+            if (!isSoldOut) {
+                const ticketsSelect = document.getElementById('tickets');
+                const ticketCount = document.getElementById('ticketCount');
+                const ticketPrice = document.getElementById('ticketPrice');
+                const serviceFee = document.getElementById('serviceFee');
+                const totalPrice = document.getElementById('totalPrice');
+                
+                ticketsSelect.addEventListener('change', function() {
+                    const count = parseInt(this.value) || 1;
+                    ticketCount.textContent = count;
+                    
+                    const basePrice = event.price * count;
+                    const fee = basePrice * 0.1;
+                    const total = basePrice + fee;
+                    
+                    ticketPrice.textContent = basePrice.toFixed(2);
+                    serviceFee.textContent = fee.toFixed(2);
+                    totalPrice.textContent = total.toFixed(2);
+                });
+                
+                // Handle form submission
+                document.getElementById('bookingForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // In a real app, you would process the booking here
+                    alert(`Booking confirmed for ${event.title}! A confirmation email has been sent to ${document.getElementById('email').value}.`);
+                    
+                    // Close the modal
+                    closeModal(bookingModal);
+                    
+                    // Reset form
+                    this.reset();
+                });
+            } else {
+                // Handle sold out modal close button
+                document.getElementById('closeSoldOutModal').addEventListener('click', function() {
+                    closeModal(bookingModal);
+                });
+            }
+            
+            // Open the booking modal
+            openModal(bookingModal);
+        }
+
+        // Modal functions
+        function openModal(modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeModal(e.target);
+            }
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            renderUpcomingEvents(upcomingEvents);
+            renderLastEvents();
+            
+            // Add event listeners to filters
+            categoryFilter.addEventListener('change', filterEvents);
+            priceFilter.addEventListener('change', filterEvents);
+            durationFilter.addEventListener('change', filterEvents);
+            availabilityFilter.addEventListener('change', filterEvents);
+            
+            // Modal event listeners
+            openNavModalBtn.addEventListener('click', () => openModal(navModal));
+            openNavModalLogo.addEventListener('click', () => openModal(navModal));
+            closeNavModal.addEventListener('click', () => closeModal(navModal));
+            
+            openFooterModal.addEventListener('click', () => openModal(footerModal));
+            openFooterModalFromNav.addEventListener('click', () => {
+                closeModal(navModal);
+                setTimeout(() => openModal(footerModal), 300);
+            });
+            closeFooterModal.addEventListener('click', () => closeModal(footerModal));
+            
+            openBookingModal.addEventListener('click', () => {
+                // Show a generic booking page or user's bookings
+                bookingContent.innerHTML = `
+                    <div style="text-align: center; padding: 2rem;">
+                        <i class="fas fa-shopping-cart" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                        <h3>My Bookings</h3>
+                        <p>You have 3 upcoming events booked. Manage your bookings from your account page.</p>
+                        <div style="margin-top: 2rem;">
+                            <button class="btn btn-primary" onclick="openModal(navModal)">
+                                <i class="fas fa-user-circle"></i>
+                                Go to Account
+                            </button>
+                        </div>
+                    </div>
+                `;
+                openModal(bookingModal);
+            });
+            closeBookingModal.addEventListener('click', () => closeModal(bookingModal));
+        });
+    </script>
+</body>
+</html>

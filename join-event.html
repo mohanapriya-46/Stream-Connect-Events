@@ -1,0 +1,4072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Connect - Joint Events</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --dark-color: #1e1e2d;
+            --light-color: #f8f9fa;
+            --success-color: #4bb543;
+            --danger-color: #ff4d4d;
+            --warning-color: #ffc107;
+            --gray-color: #6c757d;
+            --light-gray: #f8f9fa;
+            --border-color: #e9ecef;
+            --purple-color: #7209b7;
+            --pink-color: #f72585;
+            --orange-color: #ff9e00;
+            --teal-color: #20c997;
+            --cyan-color: #06d6a0;
+            --free-color: #38b000;
+            --paid-color: #f72585;
+            --joint-color: #7209b7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: #333;
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        body.dark-mode {
+            background-color: #121826;
+            color: #e0e0e0;
+        }
+
+        /* Header Styles - Enhanced */
+        .header {
+            background: white;
+            height: 70px;
+            border-bottom: 1px solid #e9ecef;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .dark-mode .header {
+            background: rgba(30, 30, 45, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Logo Section */
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 200px;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.7rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            transition: transform 0.5s ease;
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(360deg);
+        }
+
+        .dark-mode .logo {
+            color: var(--accent-color);
+        }
+
+        /* Search Bar */
+        .search-section {
+            flex: 1;
+            max-width: 600px;
+            margin: 0 20px;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border-radius: 25px;
+            border: 2px solid #e9ecef;
+            background: #f8f9fa;
+            font-size: 0.95rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 5px rgba(67, 97, 238, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .dark-mode .search-input {
+            background: #25253d;
+            border-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .dark-mode .search-input:focus {
+            background: #1e1e2d;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+            transition: color 0.3s;
+        }
+
+        .search-input:focus + .search-icon {
+            color: var(--primary-color);
+        }
+
+        /* Navigation Menu - Enhanced */
+        .nav-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 3px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--gray-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s ease;
+        }
+
+        .nav-link:hover::before,
+        .nav-link.active::before {
+            left: 100%;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-color);
+            background: rgba(67, 97, 238, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.2);
+        }
+
+        .dark-mode .nav-link {
+            color: #b0b7c3;
+        }
+
+        .dark-mode .nav-link:hover,
+        .dark-mode .nav-link.active {
+            color: var(--accent-color);
+            background: rgba(76, 201, 240, 0.15);
+        }
+
+        .nav-icon {
+            font-size: 1rem;
+        }
+
+        /* Joint Events Badge */
+        .joint-badge {
+            background: linear-gradient(135deg, #7209b7, #b5179e);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Header Controls */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 10px;
+        }
+
+        .control-btn {
+            background: rgba(67, 97, 238, 0.1);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .control-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.3);
+        }
+
+        .dark-mode .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #ff4d4d, #ff6b6b);
+            color: white;
+            font-size: 11px;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+            border: 2px solid white;
+            font-weight: 700;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .dark-mode .notification-badge {
+            border-color: var(--dark-color);
+        }
+
+        /* Profile Dropdown - Enhanced */
+        .profile-mp {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4361ee, #4cc9f0, #7209b7);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            border: 3px solid white;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: gradientShift 3s infinite alternate;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .dark-mode .profile-mp {
+            border-color: var(--dark-color);
+        }
+
+        .profile-mp:hover {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.4);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 90px;
+            padding: 25px;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: calc(100vh - 90px);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dark-mode .main-content {
+            background-color: #121826;
+        }
+
+        /* Page Header - Enhanced */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: slideInDown 0.8s ease-out;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #4361ee, #4cc9f0, #7209b7, #b5179e);
+            animation: gradientMove 3s infinite linear;
+            background-size: 400% 100%;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 400% 0%; }
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.1) 0%, transparent 70%);
+            transform: translate(50%, -50%);
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(50%, -50%) scale(1); }
+            50% { transform: translate(50%, -50%) scale(1.2); }
+        }
+
+        .dark-mode .page-header {
+            background: #1e1e2d;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .page-icon {
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, #7209b7, #b5179e);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 10px 25px rgba(114, 9, 183, 0.4);
+            position: relative;
+            overflow: hidden;
+            animation: rotate 20s infinite linear;
+        }
+
+        .page-icon::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .page-title h1 {
+            font-weight: 800;
+            font-size: 2.2rem;
+            margin: 0;
+            background: linear-gradient(135deg, #7209b7, #b5179e, #4361ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 3s infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 10px rgba(114, 9, 183, 0.5); }
+            100% { text-shadow: 0 0 20px rgba(114, 9, 183, 0.8); }
+        }
+
+        .dark-mode .page-title h1 {
+            background: linear-gradient(135deg, #4cc9f0, #4361ee, #7209b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-subtitle {
+            color: var(--gray-color);
+            font-size: 1rem;
+            margin-top: 8px;
+            max-width: 600px;
+        }
+
+        /* Event Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        .stat-card:nth-child(5) { animation-delay: 0.5s; }
+        .stat-card:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--card-color), var(--card-color-dark));
+        }
+
+        .dark-mode .stat-card {
+            background: #1e1e2d;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 0.5s ease;
+        }
+
+        .stat-card:hover .stat-icon {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .stat-icon.joint { background: linear-gradient(135deg, #7209b7, #b5179e); }
+        .stat-icon.free { background: linear-gradient(135deg, #38b000, #2d9100); }
+        .stat-icon.paid { background: linear-gradient(135deg, #f72585, #d9048c); }
+        .stat-icon.active { background: linear-gradient(135deg, #4361ee, #4cc9f0); }
+        .stat-icon.participants { background: linear-gradient(135deg, #ff9e00, #ffd166); }
+        .stat-icon.categories { background: linear-gradient(135deg, #20c997, #06d6a0); }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin: 15px 0;
+            color: var(--dark-color);
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+        }
+
+        .dark-mode .stat-value {
+            color: white;
+        }
+
+        .stat-label {
+            color: var(--gray-color);
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .stat-trend.positive { color: var(--success-color); }
+        .stat-trend.negative { color: var(--danger-color); }
+
+        /* Event Tabs - Enhanced */
+        .event-tabs-container {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 35px;
+            box-shadow: 0 8px 35px rgba(0, 0, 0, 0.08);
+            animation: fadeIn 0.8s ease-out 0.4s both;
+        }
+
+        .dark-mode .event-tabs-container {
+            background: #1e1e2d;
+        }
+
+        .event-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 0;
+        }
+
+        .event-tab {
+            padding: 14px 28px;
+            font-weight: 700;
+            color: var(--gray-color);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 2px solid transparent;
+        }
+
+        .event-tab::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(114, 9, 183, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .event-tab:hover::before,
+        .event-tab.active::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .event-tab:hover,
+        .event-tab.active {
+            color: var(--joint-color);
+            border-color: var(--joint-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(114, 9, 183, 0.2);
+        }
+
+        .tab-badge {
+            background: var(--joint-color);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
+
+        /* Event Grid - Enhanced */
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+            animation: fadeIn 0.8s ease-out 0.6s both;
+        }
+
+        @media (max-width: 1400px) {
+            .event-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            height: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            animation: zoomIn 0.6s ease-out;
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .event-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .event-card.featured {
+            border: 3px solid var(--joint-color);
+            animation: featuredGlow 3s infinite alternate;
+        }
+
+        @keyframes featuredGlow {
+            0% { box-shadow: 0 10px 35px rgba(114, 9, 183, 0.3); }
+            100% { box-shadow: 0 15px 45px rgba(114, 9, 183, 0.5); }
+        }
+
+        .dark-mode .event-card {
+            background: #1e1e2d;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .event-image {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            background: linear-gradient(135deg, #7209b7, #b5179e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.3));
+        }
+
+        .event-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            z-index: 2;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .badge-free {
+            background: linear-gradient(135deg, #38b000, #2d9100);
+            color: white;
+        }
+
+        .badge-paid {
+            background: linear-gradient(135deg, #f72585, #d9048c);
+            color: white;
+        }
+
+        .badge-featured {
+            background: linear-gradient(135deg, #ff9e00, #ffd166);
+            color: #333;
+        }
+
+        .event-content {
+            padding: 25px;
+        }
+
+        .event-title {
+            font-weight: 800;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: var(--dark-color);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .dark-mode .event-title {
+            color: white;
+        }
+
+        .event-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .event-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .event-meta-item:hover {
+            background: rgba(114, 9, 183, 0.1);
+            color: var(--joint-color);
+            transform: translateY(-2px);
+        }
+
+        .dark-mode .event-meta-item {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .event-description {
+            color: var(--gray-color);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .event-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .event-members {
+            display: flex;
+            align-items: center;
+        }
+
+        .member-avatars {
+            display: flex;
+        }
+
+        .member-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 3px solid white;
+            margin-left: -10px;
+            background: linear-gradient(135deg, #4361ee, #4cc9f0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: transform 0.3s;
+        }
+
+        .member-avatar:hover {
+            transform: translateY(-3px) scale(1.1);
+            z-index: 10;
+        }
+
+        .member-avatar:first-child {
+            margin-left: 0;
+        }
+
+        .dark-mode .member-avatar {
+            border-color: var(--dark-color);
+        }
+
+        .member-count {
+            margin-left: 12px;
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            font-weight: 600;
+        }
+
+        /* Event Filters - Enhanced */
+        .event-filters {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            animation: slideInUp 0.8s ease-out 0.3s both;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dark-mode .event-filters {
+            background: #1e1e2d;
+        }
+
+        .filter-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(114, 9, 183, 0.1);
+        }
+
+        .filter-title {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--joint-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .filter-label {
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: block;
+            color: var(--dark-color);
+            font-size: 0.95rem;
+        }
+
+        .dark-mode .filter-label {
+            color: white;
+        }
+
+        .filter-select, .filter-input, .filter-range {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: white;
+            color: #333;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%234361ee' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 16px;
+        }
+
+        .filter-select:focus,
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--joint-color);
+            box-shadow: 0 0 0 4px rgba(114, 9, 183, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .dark-mode .filter-select,
+        .dark-mode .filter-input,
+        .dark-mode .filter-range {
+            background: #25253d;
+            border-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%234cc9f0' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        }
+
+        .filter-range {
+            background: none;
+            height: 45px;
+            padding: 0;
+        }
+
+        .filter-range::-webkit-slider-thumb {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--joint-color);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .dark-mode .filter-range::-webkit-slider-thumb {
+            border-color: var(--dark-color);
+        }
+
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+
+        /* Featured Events Section */
+        .featured-section {
+            margin: 50px 0;
+            animation: fadeIn 0.8s ease-out 0.7s both;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .dark-mode .section-title {
+            color: white;
+        }
+
+        .section-title-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #7209b7, #b5179e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            box-shadow: 0 8px 25px rgba(114, 9, 183, 0.3);
+        }
+
+        /* Event Details Modal */
+        .event-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s;
+            backdrop-filter: blur(10px);
+        }
+
+        .event-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 25px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9) translateY(50px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .event-modal.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .dark-mode .modal-content {
+            background: #1e1e2d;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            color: var(--gray-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(114, 9, 183, 0.1);
+            color: var(--joint-color);
+            transform: rotate(90deg);
+        }
+
+        /* Animation Classes */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .animate-on-scroll.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Loading Animation */
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(114, 9, 183, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--joint-color);
+            animation: spin 1s infinite linear;
+            margin: 50px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Progress Bar Animation */
+        .progress-bar-animated {
+            height: 8px;
+            background: linear-gradient(90deg, #7209b7, #b5179e, #4361ee);
+            background-size: 200% 100%;
+            animation: progressShift 2s infinite linear;
+            border-radius: 4px;
+        }
+
+        @keyframes progressShift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1400px) {
+            .header-container {
+                padding: 0 15px;
+            }
+            
+            .search-section {
+                max-width: 500px;
+            }
+            
+            .event-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .nav-link span {
+                display: none;
+            }
+            
+            .nav-link {
+                padding: 10px 12px;
+            }
+            
+            .logo span {
+                display: inline;
+            }
+            
+            .page-title h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .header {
+                height: auto;
+                padding: 15px;
+            }
+            
+            .header-container {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            
+            .logo-section {
+                order: 1;
+                flex: 1;
+            }
+            
+            .search-section {
+                order: 3;
+                flex: 0 0 100%;
+                margin: 15px 0 0;
+                max-width: 100%;
+            }
+            
+            .nav-section {
+                order: 2;
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block !important;
+                order: 2;
+            }
+            
+            .header-controls {
+                order: 4;
+                margin-left: 0;
+            }
+            
+            .main-content {
+                margin-top: 130px;
+                padding: 20px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                gap: 25px;
+                padding: 25px;
+                text-align: center;
+            }
+            
+            .page-title {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .event-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 25px;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .filter-group {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title h1 {
+                font-size: 1.6rem;
+            }
+            
+            .page-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .event-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .event-tabs {
+                justify-content: center;
+            }
+            
+            .event-tab {
+                flex: 1;
+                min-width: 140px;
+                justify-content: center;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .logo span {
+                font-size: 1.4rem;
+            }
+            
+            .logo-icon {
+                font-size: 1.3rem;
+            }
+            
+            .page-header {
+                padding: 20px;
+            }
+            
+            .page-title h1 {
+                font-size: 1.4rem;
+            }
+            
+            .page-icon {
+                width: 55px;
+                height: 55px;
+                font-size: 1.3rem;
+            }
+            
+            .stat-card {
+                padding: 25px;
+            }
+            
+            .control-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 1rem;
+            }
+            
+            .profile-mp {
+                width: 38px;
+                height: 38px;
+                font-size: 0.95rem;
+            }
+            
+            .modal-content {
+                width: 95%;
+                border-radius: 20px;
+            }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: rgba(67, 97, 238, 0.15);
+            transform: rotate(90deg);
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            display: none;
+            max-height: calc(100vh - 70px);
+            overflow-y: auto;
+            animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .dark-mode .mobile-menu {
+            background: #1e1e2d;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-nav {
+            list-style: none;
+            padding: 20px 0;
+            margin: 0;
+        }
+
+        .mobile-nav-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode .mobile-nav-item {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 18px 30px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mobile-nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(114, 9, 183, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .mobile-nav-link:hover::before,
+        .mobile-nav-link.active::before {
+            left: 100%;
+        }
+
+        .mobile-nav-link:hover,
+        .mobile-nav-link.active {
+            background: rgba(114, 9, 183, 0.1);
+            color: var(--joint-color);
+            padding-left: 35px;
+        }
+
+        .dark-mode .mobile-nav-link {
+            color: #e0e0e0;
+        }
+
+        .mobile-nav-icon {
+            font-size: 1.3rem;
+            width: 28px;
+            text-align: center;
+        }
+
+        /* Footer - Image Based */
+        .footer {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 60px 0 30px;
+            margin-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4361ee, #4cc9f0, #7209b7, #b5179e);
+            animation: gradientMove 3s infinite linear;
+            background-size: 400% 100%;
+        }
+
+        .dark-mode .footer {
+            background: linear-gradient(135deg, #0f0f1a, #0a0a14);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 992px) {
+            .footer-main {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .footer-main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .footer-brand {
+            color: white;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer-logo-icon {
+            color: #4cc9f0;
+            font-size: 1.8rem;
+        }
+
+        .footer-tagline {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+
+        .footer-copyright {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        .footer-heading {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, #4361ee, #4cc9f0);
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-links a:hover {
+            color: #4cc9f0;
+            transform: translateX(5px);
+        }
+
+        .footer-contact {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-contact li {
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .footer-contact-icon {
+            color: #4cc9f0;
+            font-size: 1rem;
+            width: 20px;
+            flex-shrink: 0;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: #4361ee;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        .social-link.linkedin {
+            background: linear-gradient(135deg, #0077b5, #00a0dc);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom a {
+            color: #4cc9f0;
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            text-decoration: underline;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #25253d;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #7209b7, #4361ee);
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #b5179e, #4cc9f0);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #7209b7, #4361ee);
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(114, 9, 183, 0.4);
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent);
+            transform: translateX(-100%);
+        }
+
+        .btn-primary:hover::after {
+            animation: btnShine 0.8s;
+        }
+
+        @keyframes btnShine {
+            to { transform: translateX(100%); }
+        }
+
+        .btn-join {
+            background: linear-gradient(135deg, #38b000, #2d9100);
+        }
+
+        .btn-join:hover {
+            box-shadow: 0 15px 35px rgba(56, 176, 0, 0.4);
+        }
+
+        .btn-enroll {
+            background: linear-gradient(135deg, #f72585, #d9048c);
+        }
+
+        .btn-enroll:hover {
+            box-shadow: 0 15px 35px rgba(247, 37, 133, 0.4);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--joint-color);
+            color: var(--joint-color);
+            background: transparent;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--joint-color);
+            color: white;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(114, 9, 183, 0.3);
+        }
+
+        /* Countdown Timer */
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .countdown-item {
+            text-align: center;
+            background: rgba(114, 9, 183, 0.1);
+            border-radius: 15px;
+            padding: 20px 15px;
+            min-width: 80px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown-item:hover {
+            transform: translateY(-5px);
+            background: rgba(114, 9, 183, 0.2);
+        }
+
+        .countdown-value {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--joint-color);
+            line-height: 1;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            margin-top: 8px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .dark-mode .countdown-item {
+            background: rgba(114, 9, 183, 0.2);
+        }
+
+        /* Event Categories */
+        .event-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .category-tag {
+            padding: 10px 20px;
+            background: rgba(114, 9, 183, 0.1);
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--joint-color);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .category-tag:hover {
+            background: rgba(114, 9, 183, 0.2);
+            transform: translateY(-3px);
+            border-color: var(--joint-color);
+        }
+
+        .category-tag.active {
+            background: var(--joint-color);
+            color: white;
+            box-shadow: 0 5px 15px rgba(114, 9, 183, 0.3);
+        }
+
+        .dark-mode .category-tag {
+            background: rgba(114, 9, 183, 0.2);
+        }
+
+        /* Loading Animation for Events */
+        .event-loading {
+            height: 300px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 20px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .dark-mode .event-loading {
+            background: linear-gradient(90deg, #25253d 25%, #2d2d44 50%, #25253d 75%);
+        }
+
+        /* Notification System */
+        .notification-system {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            z-index: 9999;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .notification {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: var(--notification-color);
+        }
+
+        .dark-mode .notification {
+            background: #1e1e2d;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--notification-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+
+        .dark-mode .notification-title {
+            color: white;
+        }
+
+        .notification-message {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--gray-color);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .notification-close:hover {
+            color: var(--joint-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-satellite-dish logo-icon"></i>
+                    <span>Stream Connect</span>
+                </a>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Menu -->
+            <div class="nav-section">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="user-dash.html" class="nav-link">
+                            <i class="fas fa-user-circle nav-icon"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-calendar-alt nav-icon"></i>
+                            <span>Events</span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="event-details.html"><i class="fas fa-info-circle me-2"></i>Event Details</a>
+                            <a class="dropdown-item" href="track-event.html"><i class="fas fa-map-marked-alt me-2"></i>Track Event</a>
+                            <a class="dropdown-item" href="join-event.html"><i class="fas fa-door-open me-2"></i>Join Event</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="live-stream.html" class="nav-link">
+                            <i class="fas fa-video nav-icon"></i>
+                            <span>Live</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="ai-matchmaking.html" class="nav-link ">
+                            <i class="fas fa-robot nav-icon"></i>
+                            <span>AI Match</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="paid-events.html" class="nav-link">
+                            <i class="fas fa-ticket-alt nav-icon"></i>
+                            <span>Paid</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="qa-chatbot.html" class="nav-link">
+                            <i class="fas fa-comments nav-icon"></i>
+                            <span>Q/A chatbot</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="notifications.html" class="nav-link">
+                            <i class="fas fa-bell nav-icon"></i>
+                            <span>notification</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Header Controls -->
+            <div class="header-controls">
+               
+                <!-- Profile MP -->
+                <div class="dropdown">
+                    <div class="profile-mp dropdown-toggle" data-bs-toggle="dropdown" title="Mohanapriya R">
+                        MP
+                    </div>
+                    
+                    <!-- Profile Dropdown -->
+                    <div class="dropdown-menu dropdown-menu-end p-0">
+                        <div class="p-3 text-center border-bottom">
+                            <div class="profile-mp mx-auto mb-2" style="width: 60px; height: 60px; font-size: 1.2rem;">
+                                MP
+                            </div>
+                            <h6 class="mb-1" id="profileName">Mohanapriya R</h6>
+                            <small class="text-muted d-block" id="profileTier">Premium Member • Gold Tier</small>
+                            <div class="mt-2">
+                                <span class="badge bg-gradient-primary">Event Organizer</span>
+                                <span class="badge bg-gradient-success ms-1">VIP Access</span>
+                            </div>
+                        </div>
+                        <a class="dropdown-item" href="settings.html">
+                            <i class="fas fa-cog me-2"></i>Profile
+                        </a>
+                        <a class="dropdown-item" href="logout.html">
+                            <i class="fas fa-sign-out-alt me-2"></i>logout
+                        </a>
+                        <div class="dropdown-divider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <ul class="mobile-nav">
+                <li class="mobile-nav-item">
+                    <a href="user-dash.html" class="mobile-nav-link">
+                        <i class="fas fa-user-circle mobile-nav-icon"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="event-details.html" class="mobile-nav-link">
+                        <i class="fas fa-calendar-alt mobile-nav-icon"></i>
+                        <span>Event </span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="joint-event.html" class="mobile-nav-link active">
+                        <i class="fas fa-users mobile-nav-icon"></i>
+                        <span>Joint Events</span>
+                        <span class="joint-badge ms-auto">NEW</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="live-stream.html" class="mobile-nav-link">
+                        <i class="fas fa-video mobile-nav-icon"></i>
+                        <span>Live Streaming</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="ai-matchmaking.html" class="mobile-nav-link">
+                        <i class="fas fa-robot mobile-nav-icon"></i>
+                        <span>AI Matchmaking</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="free-events.html" class="mobile-nav-link">
+                        <i class="fas fa-gift mobile-nav-icon"></i>
+                        <span>Free Events</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="paid-events.html" class="mobile-nav-link">
+                        <i class="fas fa-credit-card mobile-nav-icon"></i>
+                        <span>Paid Events</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="chat.html" class="mobile-nav-link">
+                        <i class="fas fa-comments mobile-nav-icon"></i>
+                        <span>Community Chat</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="notifications.html" class="mobile-nav-link">
+                        <i class="fas fa-bell mobile-nav-icon"></i>
+                        <span>Notifications</span>
+                        <span class="badge bg-danger rounded-pill ms-auto">5</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="settings.html" class="mobile-nav-link">
+                        <i class="fas fa-cog mobile-nav-icon"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="#" class="mobile-nav-link text-danger" onclick="logout()">
+                        <i class="fas fa-sign-out-alt mobile-nav-icon"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Notification System -->
+    <div class="notification-system" id="notificationSystem"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-title">
+                <div class="page-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div>
+                    <h1>Joint Events</h1>
+                    <p class="page-subtitle">Collaborate, Learn & Network with Like-minded People in Interactive Group Events</p>
+                    <div class="d-flex align-items-center gap-3 mt-3 flex-wrap">
+                        <span class="badge bg-primary"><i class="fas fa-users me-1"></i>Active Joint Events: 24</span>
+                        <span class="badge bg-success"><i class="fas fa-user-check me-1"></i>You've Joined: 8 Events</span>
+                        <span class="badge bg-warning"><i class="fas fa-calendar me-1"></i>Upcoming: 12 Events</span>
+                        <span class="badge bg-info"><i class="fas fa-star me-1"></i>Featured: 5 Events</span>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex gap-3">
+                
+                <button class="btn btn-primary" onclick="inviteFriends()">
+                    <i class="fas fa-user-plus me-2"></i>Invite Friends
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card" style="--card-color: #7209b7; --card-color-dark: #b5179e;">
+                <div class="stat-header">
+                    <div class="stat-icon joint">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i> 24.3%
+                    </div>
+                </div>
+                <div class="stat-value">156</div>
+                <div class="stat-label">Active Joint Events</div>
+                <div class="mt-3">
+                    <small class="text-muted">Free: 98 | Paid: 58 | Featured: 12</small>
+                </div>
+            </div>
+            
+            <div class="stat-card" style="--card-color: #38b000; --card-color-dark: #2d9100;">
+                <div class="stat-header">
+                    <div class="stat-icon free">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i> 18.7%
+                    </div>
+                </div>
+                <div class="stat-value">98</div>
+                <div class="stat-label">Free Joint Events</div>
+                <div class="mt-3">
+                    <small class="text-muted">Community events open to all members</small>
+                </div>
+            </div>
+            
+            <div class="stat-card" style="--card-color: #f72585; --card-color-dark: #d9048c;">
+                <div class="stat-header">
+                    <div class="stat-icon paid">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i> 32.1%
+                    </div>
+                </div>
+                <div class="stat-value">58</div>
+                <div class="stat-label">Premium Joint Events</div>
+                <div class="mt-3">
+                    <small class="text-muted">Expert-led sessions with certification</small>
+                </div>
+            </div>
+            
+            <div class="stat-card" style="--card-color: #4361ee; --card-color-dark: #4cc9f0;">
+                <div class="stat-header">
+                    <div class="stat-icon active">
+                        <i class="fas fa-signal"></i>
+                    </div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i> 12.4%
+                    </div>
+                </div>
+                <div class="stat-value">42</div>
+                <div class="stat-label">Live Right Now</div>
+                <div class="mt-3">
+                    <small class="text-muted">Join ongoing collaborative sessions</small>
+                </div>
+            </div>
+            
+            <div class="stat-card" style="--card-color: #ff9e00; --card-color-dark: #ffd166;">
+                <div class="stat-header">
+                    <div class="stat-icon participants">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i> 28.9%
+                    </div>
+                </div>
+                <div class="stat-value">2,456</div>
+                <div class="stat-label">Active Participants</div>
+                <div class="mt-3">
+                    <small class="text-muted">Engaged members across all events</small>
+                </div>
+            </div>
+            
+            <div class="stat-card" style="--card-color: #20c997; --card-color-dark: #06d6a0;">
+                <div class="stat-header">
+                    <div class="stat-icon categories">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="stat-trend positive">
+                        <i class="fas fa-arrow-up"></i> 15.6%
+                    </div>
+                </div>
+                <div class="stat-value">24</div>
+                <div class="stat-label">Event Categories</div>
+                <div class="mt-3">
+                    <small class="text-muted">Diverse topics and interests covered</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Filters -->
+        <div class="event-filters">
+            <div class="filter-header">
+                <h3 class="filter-title">
+                    <i class="fas fa-filter"></i>
+                    Find Your Perfect Joint Event
+                </h3>
+                <button class="btn btn-outline-primary btn-sm" onclick="resetFilters()">
+                    <i class="fas fa-redo me-1"></i> Reset Filters
+                </button>
+            </div>
+            
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label class="filter-label">Event Type</label>
+                    <select class="filter-select" id="eventTypeFilter">
+                        <option value="all">All Event Types</option>
+                        <option value="free">Free Events Only</option>
+                        <option value="paid">Paid Events Only</option>
+                        <option value="featured">Featured Events</option>
+                        <option value="live">Live Now</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Category</label>
+                    <select class="filter-select" id="categoryFilter">
+                        <option value="all">All Categories</option>
+                        <option value="tech">Technology & AI</option>
+                        <option value="business">Business & Entrepreneurship</option>
+                        <option value="art">Art & Design</option>
+                        <option value="health">Health & Wellness</option>
+                        <option value="education">Education & Learning</option>
+                        <option value="entertainment">Entertainment</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Date Range</label>
+                    <select class="filter-select" id="dateFilter">
+                        <option value="upcoming">Upcoming Events</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="past">Past Events</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="filter-row mt-3">
+                <div class="filter-group">
+                    <label class="filter-label">Duration</label>
+                    <input type="range" class="filter-range" id="durationRange" min="0" max="8" step="0.5" value="4">
+                    <div class="range-labels">
+                        <span>Any</span>
+                        <span id="durationValue">Up to 4 hours</span>
+                        <span>8+ hours</span>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Participants</label>
+                    <input type="range" class="filter-range" id="participantsRange" min="1" max="100" value="50">
+                    <div class="range-labels">
+                        <span>1-10</span>
+                        <span id="participantsValue">Up to 50</span>
+                        <span>100+</span>
+                    </div>
+                </div>
+                <div class="filter-group" style="align-self: flex-end;">
+                    <button class="btn btn-primary w-100" onclick="applyFilters()">
+                        <i class="fas fa-search me-2"></i> Search Events
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Tabs -->
+        <div class="event-tabs-container">
+            <div class="event-tabs">
+                <a href="#" class="event-tab active" onclick="switchTab('all')">
+                    <i class="fas fa-th-large"></i>
+                    All Joint Events
+                    <span class="tab-badge">156</span>
+                </a>
+                <a href="#" class="event-tab" onclick="switchTab('joined')">
+                    <i class="fas fa-user-check"></i>
+                    Events I've Joined
+                    <span class="tab-badge">8</span>
+                </a>
+                <a href="#" class="event-tab" onclick="switchTab('free')">
+                    <i class="fas fa-gift"></i>
+                    Free Events
+                    <span class="tab-badge">98</span>
+                </a>
+                <a href="#" class="event-tab" onclick="switchTab('paid')">
+                    <i class="fas fa-credit-card"></i>
+                    Paid Events
+                    <span class="tab-badge">58</span>
+                </a>
+                <a href="#" class="event-tab" onclick="switchTab('featured')">
+                    <i class="fas fa-star"></i>
+                    Featured
+                    <span class="tab-badge">12</span>
+                </a>
+                <a href="#" class="event-tab" onclick="switchTab('live')">
+                    <i class="fas fa-broadcast-tower"></i>
+                    Live Now
+                    <span class="tab-badge">42</span>
+                </a>
+                <a href="#" class="event-tab" onclick="switchTab('upcoming')">
+                    <i class="fas fa-clock"></i>
+                    Upcoming
+                    <span class="tab-badge">65</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Event Categories -->
+        <div class="event-filters mb-4">
+            <div class="filter-header">
+                <h3 class="filter-title">
+                    <i class="fas fa-tags"></i>
+                    Popular Categories
+                </h3>
+                <span class="text-muted">Click to filter events</span>
+            </div>
+            <div class="event-categories">
+                <span class="category-tag active" onclick="filterByCategory('all')">All Categories</span>
+                <span class="category-tag" onclick="filterByCategory('tech')">
+                    <i class="fas fa-laptop-code me-1"></i>Technology & AI
+                </span>
+                <span class="category-tag" onclick="filterByCategory('business')">
+                    <i class="fas fa-briefcase me-1"></i>Business & Entrepreneurship
+                </span>
+                <span class="category-tag" onclick="filterByCategory('health')">
+                    <i class="fas fa-heartbeat me-1"></i>Health & Wellness
+                </span>
+                <span class="category-tag" onclick="filterByCategory('art')">
+                    <i class="fas fa-palette me-1"></i>Art & Design
+                </span>
+                <span class="category-tag" onclick="filterByCategory('education')">
+                    <i class="fas fa-graduation-cap me-1"></i>Education & Learning
+                </span>
+                <span class="category-tag" onclick="filterByCategory('entertainment')">
+                    <i class="fas fa-film me-1"></i>Entertainment
+                </span>
+                <span class="category-tag" onclick="filterByCategory('food')">
+                    <i class="fas fa-utensils me-1"></i>Food & Cooking
+                </span>
+                <span class="category-tag" onclick="filterByCategory('sports')">
+                    <i class="fas fa-running me-1"></i>Sports & Fitness
+                </span>
+            </div>
+        </div>
+
+        <!-- Event Grid -->
+        <div class="event-grid" id="eventGrid">
+            <!-- Event cards will be loaded dynamically -->
+            <div class="event-loading"></div>
+            <div class="event-loading"></div>
+            <div class="event-loading"></div>
+        </div>
+
+        <!-- Featured Events Section -->
+        <div class="featured-section">
+            <div class="section-header">
+                <h3 class="section-title">
+                    <div class="section-title-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    Featured Joint Events
+                </h3>
+                <button class="btn btn-outline-primary" onclick="viewAllFeatured()">
+                    <i class="fas fa-eye me-2"></i> View All Featured
+                </button>
+            </div>
+            
+            <div class="event-grid" id="featuredEvents">
+                <!-- Featured event cards will be loaded dynamically -->
+            </div>
+        </div>
+
+        <!-- Countdown to Next Event -->
+        <div class="event-filters">
+            <div class="filter-header">
+                <h3 class="filter-title">
+                    <i class="fas fa-hourglass-half"></i>
+                    Next Big Joint Event Starts In
+                </h3>
+                <span class="text-muted">"AI & Machine Learning Workshop"</span>
+            </div>
+            
+            <div class="countdown-timer" id="countdownTimer">
+                <!-- Countdown will be populated by JavaScript -->
+            </div>
+            
+            <div class="text-center mt-4">
+                <button class="btn btn-primary me-3" onclick="joinEvent('next')">
+                    <i class="fas fa-user-plus me-2"></i> Join This Event
+                </button>
+                <button class="btn btn-outline-primary" onclick="remindMe()">
+                    <i class="fas fa-bell me-2"></i> Set Reminder
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading More Events -->
+        <div class="text-center my-5" id="loadMoreContainer">
+            <button class="btn btn-primary" onclick="loadMoreEvents()" id="loadMoreBtn">
+                <i class="fas fa-sync-alt me-2"></i> Load More Events
+            </button>
+            <div class="progress-bar-animated w-100 mt-3" style="display: none;" id="loadingBar"></div>
+        </div>
+
+        <!-- Event Details Modal -->
+        <div class="event-modal" id="eventModal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeEventModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div id="eventModalContent">
+                    <!-- Event details will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer - Image Based -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-main">
+                    <!-- Brand Section -->
+                    <div class="footer-brand">
+                        <a href="index.html" class="footer-logo">
+                            <i class="fas fa-satellite-dish footer-logo-icon"></i>
+                            StreamConnect Events
+                        </a>
+
+                        <p class="footer-copyright">
+                            © 2025 Stream Connect Events. All rights reserved.
+                        </p>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div class="footer-links-section">
+                        <h4 class="footer-heading">Quick Links</h4>
+                        <ul class="footer-links">
+                            <li><a href="features.html"><i class="fas fa-chevron-right"></i> Features</a></li>
+                            <li><a href="how-it-works.html"><i class="fas fa-chevron-right"></i> How It Works</a></li>
+                            <li><a href="pricing.html"><i class="fas fa-chevron-right"></i> Pricing</a></li>
+                            <li><a href="categories.html"><i class="fas fa-chevron-right"></i> Event Categories</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Contact Us -->
+                    <div class="footer-contact-section">
+                        <h4 class="footer-heading">Contact Us</h4>
+                        <ul class="footer-contact">
+                            <li>
+                                <i class="fas fa-building footer-contact-icon"></i>
+                                <div>
+                                    <strong>Company Name:</strong><br>
+                                    AngamTech
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope footer-contact-icon"></i>
+                                <div>
+                                    <strong>Email:</strong><br>
+                                    support@streamconnectevents.com
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-phone footer-contact-icon"></i>
+                                <div>
+                                    <strong>Phone:</strong><br>
+                                    +91 8056484806
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-map-marker-alt footer-contact-icon"></i>
+                                <div>
+                                    <strong>Address:</strong><br>
+                                    Dharmapuri, TamilNadu, India
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Follow Us -->
+                    <div class="footer-social-section">
+                        <h4 class="footer-heading">Follow Us</h4>
+                        <div class="footer-social">
+                            <a href="#" class="social-link linkedin" title="LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="social-link" title="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-link" title="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="social-link" title="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin-bottom: 10px;">
+                                Connect with us on social media for updates
+                            </p>
+                            <div style="display: flex; align-items: center; gap: 10px; color: rgba(255, 255, 255, 0.8);">
+                                <i class="fab fa-linkedin"></i>
+                                <span>in</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>
+                        StreamConnect Events - Connecting the world through virtual events | 
+                        <a href="privacy.html">Privacy Policy</a> | 
+                        <a href="terms.html">Terms of Service</a> | 
+                        <a href="contact.html">Contact Support</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Enhanced Joint Event JavaScript -->
+    <script>
+        // Enhanced Sample Data for Joint Events
+        const jointEvents = [
+            {
+                id: 1,
+                title: "AI & Machine Learning Workshop for Beginners",
+                description: "Join this interactive workshop to learn the fundamentals of AI and Machine Learning. Perfect for beginners who want to understand how AI is shaping our future.",
+                type: "free",
+                category: "tech",
+                date: "2023-10-25",
+                time: "18:00",
+                duration: "2.5 hours",
+                members: 46,
+                capacity: 50,
+                joined: true,
+                host: "Dr. Sarah Johnson",
+                format: "Virtual (Zoom)",
+                featured: true,
+                price: 0,
+                image: "ai",
+                tags: ["AI", "Machine Learning", "Beginner Friendly", "Interactive"],
+                location: "Online",
+                language: "English",
+                certification: true,
+                level: "Beginner",
+                rating: 4.8,
+                reviews: 128
+            },
+            {
+                id: 2,
+                title: "Advanced Digital Marketing Masterclass",
+                description: "This intensive masterclass covers advanced digital marketing strategies used by top agencies. Learn SEO optimization, social media advertising, and analytics.",
+                type: "paid",
+                category: "business",
+                date: "2023-11-05",
+                time: "10:00",
+                duration: "4 hours",
+                members: 17,
+                capacity: 25,
+                joined: false,
+                host: "Michael Chen",
+                format: "Live Interactive Session",
+                featured: true,
+                price: 49,
+                image: "marketing",
+                tags: ["Digital Marketing", "SEO", "Social Media", "Certification"],
+                location: "Online",
+                language: "English",
+                certification: true,
+                level: "Advanced",
+                rating: 4.9,
+                reviews: 89
+            },
+            {
+                id: 3,
+                title: "Yoga & Meditation Wellness Session",
+                description: "Join our community for a relaxing yoga and meditation session. Perfect for reducing stress and improving mental clarity.",
+                type: "free",
+                category: "health",
+                date: "2023-10-20",
+                time: "08:00",
+                duration: "1.5 hours",
+                members: 142,
+                capacity: 200,
+                joined: true,
+                host: "Elena Rodriguez",
+                format: "Hybrid",
+                featured: false,
+                price: 0,
+                image: "yoga",
+                tags: ["Yoga", "Meditation", "Wellness", "Mindfulness"],
+                location: "Community Center & Online",
+                language: "English & Spanish",
+                certification: false,
+                level: "All Levels",
+                rating: 4.7,
+                reviews: 234
+            },
+            {
+                id: 4,
+                title: "Web Development Bootcamp - Full Stack",
+                description: "Intensive coding bootcamp covering HTML, CSS, JavaScript, React, Node.js, and MongoDB. Build real projects and portfolio.",
+                type: "paid",
+                category: "tech",
+                date: "2023-11-10",
+                time: "09:00",
+                duration: "8 hours",
+                members: 22,
+                capacity: 30,
+                joined: false,
+                host: "Alex Thompson",
+                format: "Virtual",
+                featured: true,
+                price: 99,
+                image: "webdev",
+                tags: ["Web Development", "Coding", "Full Stack", "Projects"],
+                location: "Online",
+                language: "English",
+                certification: true,
+                level: "Intermediate",
+                rating: 4.9,
+                reviews: 156
+            },
+            {
+                id: 5,
+                title: "Entrepreneurship & Startup Networking",
+                description: "Connect with fellow entrepreneurs, share business ideas, and network with investors. Pitch your startup idea.",
+                type: "free",
+                category: "business",
+                date: "2023-10-22",
+                time: "19:00",
+                duration: "3 hours",
+                members: 85,
+                capacity: 100,
+                joined: true,
+                host: "David Wilson",
+                format: "In-person",
+                featured: false,
+                price: 0,
+                image: "business",
+                tags: ["Entrepreneurship", "Networking", "Startup", "Pitching"],
+                location: "Innovation Hub, Downtown",
+                language: "English",
+                certification: false,
+                level: "All Levels",
+                rating: 4.6,
+                reviews: 67
+            },
+            {
+                id: 6,
+                title: "Professional Photography Masterclass",
+                description: "Learn professional photography techniques from award-winning photographers. Covers composition, lighting, and editing.",
+                type: "paid",
+                category: "art",
+                date: "2023-11-15",
+                time: "14:00",
+                duration: "3 hours",
+                members: 18,
+                capacity: 20,
+                joined: false,
+                host: "Sophia Martinez",
+                format: "Hybrid",
+                featured: false,
+                price: 79,
+                image: "photography",
+                tags: ["Photography", "Art", "Editing", "Creative"],
+                location: "Studio & Online",
+                language: "English",
+                certification: true,
+                level: "Intermediate",
+                rating: 4.8,
+                reviews: 42
+            },
+            {
+                id: 7,
+                title: "Blockchain & Cryptocurrency Fundamentals",
+                description: "Understand blockchain technology, cryptocurrency, NFTs, and their real-world applications. No prior knowledge required.",
+                type: "free",
+                category: "tech",
+                date: "2023-10-28",
+                time: "16:00",
+                duration: "2 hours",
+                members: 231,
+                capacity: 300,
+                joined: false,
+                host: "Robert Kim",
+                format: "Virtual",
+                featured: true,
+                price: 0,
+                image: "blockchain",
+                tags: ["Blockchain", "Crypto", "NFT", "Technology"],
+                location: "Online",
+                language: "English",
+                certification: true,
+                level: "Beginner",
+                rating: 4.7,
+                reviews: 189
+            },
+            {
+                id: 8,
+                title: "Italian Cooking Class with Chef Marco",
+                description: "Learn to cook authentic Italian dishes with a professional chef. Includes pasta making, sauces, and dessert.",
+                type: "paid",
+                category: "food",
+                date: "2023-11-08",
+                time: "18:30",
+                duration: "2.5 hours",
+                members: 24,
+                capacity: 25,
+                joined: true,
+                host: "Marco Bianchi",
+                format: "Virtual",
+                featured: false,
+                price: 65,
+                image: "cooking",
+                tags: ["Cooking", "Italian", "Food", "Chef"],
+                location: "Online",
+                language: "English",
+                certification: false,
+                level: "Beginner",
+                rating: 4.9,
+                reviews: 78
+            },
+            {
+                id: 9,
+                title: "Data Science & Analytics Workshop",
+                description: "Hands-on workshop covering data analysis, visualization, and machine learning with Python and R.",
+                type: "paid",
+                category: "tech",
+                date: "2023-11-12",
+                time: "11:00",
+                duration: "5 hours",
+                members: 14,
+                capacity: 20,
+                joined: false,
+                host: "Dr. Lisa Wang",
+                format: "Virtual",
+                featured: true,
+                price: 89,
+                image: "data",
+                tags: ["Data Science", "Python", "Analytics", "Machine Learning"],
+                location: "Online",
+                language: "English",
+                certification: true,
+                level: "Intermediate",
+                rating: 4.8,
+                reviews: 56
+            },
+            {
+                id: 10,
+                title: "Mindfulness & Stress Management",
+                description: "Learn practical techniques for managing stress and improving mental wellbeing through mindfulness practices.",
+                type: "free",
+                category: "health",
+                date: "2023-10-30",
+                time: "17:00",
+                duration: "1.5 hours",
+                members: 167,
+                capacity: 200,
+                joined: true,
+                host: "Dr. James Wilson",
+                format: "Virtual",
+                featured: false,
+                price: 0,
+                image: "mindfulness",
+                tags: ["Mindfulness", "Stress Relief", "Mental Health", "Wellbeing"],
+                location: "Online",
+                language: "English",
+                certification: false,
+                level: "All Levels",
+                rating: 4.7,
+                reviews: 123
+            }
+        ];
+
+        // Initialize the page with enhanced features
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            loadJointEvents();
+            loadFeaturedEvents();
+            setupCountdownTimer();
+            setupMobileMenu();
+            setupAnimations();
+            setupFilterListeners();
+            
+            // Check for saved preferences
+            if (localStorage.getItem('darkMode') === 'true') {
+                enableDarkMode();
+            }
+            
+            // Initialize all dropdowns
+            initDropdowns();
+            
+            // Show welcome notification
+            setTimeout(() => {
+                showNotification('Welcome to Joint Events!', 'Discover and join collaborative events with like-minded people.', 'success');
+            }, 1000);
+        });
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            mobileMenuToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('active');
+                const icon = mobileMenuToggle.querySelector('i');
+                if (mobileMenu.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Dark mode toggle
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener('click', toggleDarkMode);
+            }
+            
+            // Fullscreen toggle
+            const fullscreenToggle = document.getElementById('fullscreenToggle');
+            if (fullscreenToggle) {
+                fullscreenToggle.addEventListener('click', toggleFullscreen);
+            }
+            
+            // Search functionality
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+                
+                // Add live search
+                searchInput.addEventListener('input', function() {
+                    if (this.value.length >= 3) {
+                        performLiveSearch(this.value);
+                    }
+                });
+            }
+            
+            // Close modal when clicking outside
+            const eventModal = document.getElementById('eventModal');
+            eventModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeEventModal();
+                }
+            });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(event) {
+                // Escape key closes modal
+                if (event.key === 'Escape') {
+                    closeEventModal();
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    if (mobileMenu && mobileMenu.classList.contains('active')) {
+                        mobileMenu.classList.remove('active');
+                        const icon = document.getElementById('mobileMenuToggle').querySelector('i');
+                        if (icon) {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                        document.body.style.overflow = 'auto';
+                    }
+                }
+                
+                // Ctrl/Cmd + K for search
+                if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+                    event.preventDefault();
+                    const searchInput = document.querySelector('.search-input');
+                    if (searchInput) {
+                        searchInput.focus();
+                        searchInput.select();
+                    }
+                }
+                
+                // Ctrl/Cmd + D for dark mode
+                if ((event.ctrlKey || event.metaKey) && event.key === 'd') {
+                    event.preventDefault();
+                    toggleDarkMode();
+                }
+            });
+        }
+
+        // Set up animations
+        function setupAnimations() {
+            // Add animation classes to elements
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            
+            // Create intersection observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animated');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            });
+            
+            // Observe elements
+            animatedElements.forEach(element => {
+                observer.observe(element);
+            });
+        }
+
+        // Set up filter listeners
+        function setupFilterListeners() {
+            const durationRange = document.getElementById('durationRange');
+            const participantsRange = document.getElementById('participantsRange');
+            const durationValue = document.getElementById('durationValue');
+            const participantsValue = document.getElementById('participantsValue');
+            
+            if (durationRange) {
+                durationRange.addEventListener('input', function() {
+                    const value = this.value;
+                    durationValue.textContent = value === '0' ? 'Any' : `Up to ${value} hours`;
+                });
+            }
+            
+            if (participantsRange) {
+                participantsRange.addEventListener('input', function() {
+                    const value = this.value;
+                    participantsValue.textContent = `Up to ${value}`;
+                });
+            }
+        }
+
+        // Initialize mobile menu
+        function setupMobileMenu() {
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                const mobileMenu = document.getElementById('mobileMenu');
+                const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+                
+                if (mobileMenu && mobileMenu.classList.contains('active') && 
+                    !mobileMenu.contains(event.target) && 
+                    !mobileMenuToggle.contains(event.target)) {
+                    mobileMenu.classList.remove('active');
+                    const icon = mobileMenuToggle.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Close mobile menu when clicking a link
+            const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+                    if (mobileMenu) {
+                        mobileMenu.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    }
+                    const icon = mobileMenuToggle.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            });
+        }
+
+        // Initialize dropdowns
+        function initDropdowns() {
+            // Initialize Bootstrap dropdowns
+            const dropdowns = document.querySelectorAll('.dropdown-toggle');
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
+        }
+
+        // Load joint events into the grid
+        function loadJointEvents(filter = 'all', category = 'all') {
+            const eventGrid = document.getElementById('eventGrid');
+            if (!eventGrid) return;
+            
+            // Clear loading placeholders
+            eventGrid.innerHTML = '';
+            
+            // Filter events based on selected tab and category
+            let filteredEvents = jointEvents;
+            
+            if (filter === 'joined') {
+                filteredEvents = jointEvents.filter(event => event.joined);
+            } else if (filter === 'free') {
+                filteredEvents = jointEvents.filter(event => event.type === 'free');
+            } else if (filter === 'paid') {
+                filteredEvents = jointEvents.filter(event => event.type === 'paid');
+            } else if (filter === 'featured') {
+                filteredEvents = jointEvents.filter(event => event.featured);
+            } else if (filter === 'live') {
+                // Simulate live events (events happening today)
+                const today = new Date().toISOString().split('T')[0];
+                filteredEvents = jointEvents.filter(event => event.date === today);
+            } else if (filter === 'upcoming') {
+                filteredEvents = jointEvents.filter(event => new Date(event.date) > new Date());
+            }
+            
+            // Filter by category if specified
+            if (category !== 'all') {
+                filteredEvents = filteredEvents.filter(event => event.category === category);
+            }
+            
+            // Create event cards
+            if (filteredEvents.length === 0) {
+                eventGrid.innerHTML = `
+                    <div class="col-12 text-center py-5 animate-on-scroll">
+                        <i class="fas fa-calendar-times fa-4x text-muted mb-4"></i>
+                        <h3 class="mb-3">No Events Found</h3>
+                        <p class="text-muted mb-4">No joint events match your current filter criteria.</p>
+                        <button class="btn btn-primary" onclick="resetFilters()">
+                            <i class="fas fa-redo me-2"></i> Reset Filters
+                        </button>
+                    </div>
+                `;
+            } else {
+                filteredEvents.forEach(event => {
+                    const eventCard = createEventCard(event);
+                    eventGrid.appendChild(eventCard);
+                });
+            }
+            
+            // Add animation classes after a short delay
+            setTimeout(() => {
+                const cards = eventGrid.querySelectorAll('.event-card');
+                cards.forEach((card, index) => {
+                    card.style.animationDelay = `${index * 0.1}s`;
+                });
+            }, 100);
+        }
+
+        // Load featured events
+        function loadFeaturedEvents() {
+            const featuredGrid = document.getElementById('featuredEvents');
+            if (!featuredGrid) return;
+            
+            // Filter featured events
+            const featuredEvents = jointEvents.filter(event => event.featured);
+            
+            // Clear and add featured events
+            featuredGrid.innerHTML = '';
+            featuredEvents.forEach(event => {
+                const eventCard = createEventCard(event);
+                featuredGrid.appendChild(eventCard);
+            });
+        }
+
+        // Create an enhanced event card element
+        function createEventCard(event) {
+            const eventCard = document.createElement('div');
+            eventCard.className = `event-card animate-on-scroll ${event.featured ? 'featured' : ''}`;
+            eventCard.id = `event-${event.id}`;
+            
+            // Determine icon based on event category
+            let eventIcon = 'fa-users';
+            if (event.category === 'tech') eventIcon = 'fa-laptop-code';
+            if (event.category === 'business') eventIcon = 'fa-briefcase';
+            if (event.category === 'health') eventIcon = 'fa-heartbeat';
+            if (event.category === 'art') eventIcon = 'fa-palette';
+            if (event.category === 'food') eventIcon = 'fa-utensils';
+            if (event.category === 'education') eventIcon = 'fa-graduation-cap';
+            
+            // Determine color based on event type
+            let eventColor = 'linear-gradient(135deg, #7209b7, #b5179e)';
+            if (event.type === 'paid') eventColor = 'linear-gradient(135deg, #f72585, #d9048c)';
+            if (event.category === 'health') eventColor = 'linear-gradient(135deg, #38b000, #2d9100)';
+            if (event.category === 'art') eventColor = 'linear-gradient(135deg, #ff9e00, #ffd166)';
+            if (event.category === 'tech') eventColor = 'linear-gradient(135deg, #4361ee, #4cc9f0)';
+            
+            // Format date
+            const eventDate = new Date(event.date);
+            const formattedDate = eventDate.toLocaleDateString('en-US', { 
+                weekday: 'short',
+                month: 'short', 
+                day: 'numeric',
+                year: 'numeric'
+            });
+            
+            // Create member avatars
+            const memberAvatars = [];
+            const maxAvatars = 5;
+            const avatarCount = Math.min(maxAvatars, event.members);
+            
+            for (let i = 0; i < avatarCount; i++) {
+                const hue = (i * 60) % 360;
+                memberAvatars.push(`
+                    <div class="member-avatar" style="background: hsl(${hue}, 70%, 60%);" 
+                         title="Participant ${i+1}">
+                        ${String.fromCharCode(65 + i)}
+                    </div>
+                `);
+            }
+            
+            // Determine badge
+            let badgeClass = 'badge-free';
+            let badgeText = 'FREE';
+            if (event.type === 'paid') {
+                badgeClass = 'badge-paid';
+                badgeText = `$${event.price}`;
+            }
+            if (event.featured) {
+                badgeClass = 'badge-featured';
+                badgeText = 'FEATURED';
+            }
+            
+            // Check if user has joined
+            const joinButtonText = event.joined ? 'Joined' : (event.type === 'free' ? 'Join Free' : `Enroll - $${event.price}`);
+            const joinButtonClass = event.joined ? 'btn-success' : (event.type === 'free' ? 'btn-join' : 'btn-enroll');
+            const joinButtonIcon = event.joined ? 'fa-check' : (event.type === 'free' ? 'fa-user-plus' : 'fa-shopping-cart');
+            
+            eventCard.innerHTML = `
+                <div class="event-image" style="background: ${eventColor};">
+                    <i class="fas ${eventIcon}"></i>
+                    <span class="event-badge ${badgeClass}">${badgeText}</span>
+                </div>
+                <div class="event-content">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h3 class="event-title">${event.title}</h3>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-star text-warning me-1"></i>
+                            <small class="text-muted">${event.rating} (${event.reviews})</small>
+                        </div>
+                    </div>
+                    
+                    <div class="event-meta">
+                        <div class="event-meta-item" title="Date & Time">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>${formattedDate} • ${event.time}</span>
+                        </div>
+                        <div class="event-meta-item" title="Duration">
+                            <i class="fas fa-clock"></i>
+                            <span>${event.duration}</span>
+                        </div>
+                        <div class="event-meta-item" title="Format">
+                            <i class="fas fa-video"></i>
+                            <span>${event.format}</span>
+                        </div>
+                    </div>
+                    
+                    <p class="event-description">${event.description}</p>
+                    
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        ${event.tags.map(tag => `
+                            <span class="badge bg-light text-dark">${tag}</span>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="event-footer">
+                        <div class="event-members">
+                            <div class="member-avatars">
+                                ${memberAvatars.join('')}
+                                ${event.members > maxAvatars ? `
+                                    <div class="member-avatar" style="background: #6c757d;">
+                                        +${event.members - maxAvatars}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <span class="member-count">${event.members}/${event.capacity}</span>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm ${joinButtonClass}" onclick="toggleEventJoin(${event.id})">
+                                <i class="fas ${joinButtonIcon} me-1"></i> ${joinButtonText}
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary ms-2" onclick="viewEventDetails(${event.id})">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return eventCard;
+        }
+
+        // Set up countdown timer for next event
+        function setupCountdownTimer() {
+            const countdownTimer = document.getElementById('countdownTimer');
+            if (!countdownTimer) return;
+            
+            // Find the next upcoming event
+            const now = new Date();
+            const upcomingEvents = jointEvents.filter(event => new Date(event.date) > now);
+            
+            if (upcomingEvents.length === 0) {
+                countdownTimer.innerHTML = `
+                    <div class="col-12 text-center py-3">
+                        <i class="fas fa-calendar-check fa-2x text-success mb-2"></i>
+                        <p class="mb-0">No upcoming events scheduled</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort by date and get the next event
+            upcomingEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+            const nextEvent = upcomingEvents[0];
+            
+            // Set the event date and time
+            const eventDateTime = new Date(`${nextEvent.date}T${nextEvent.time}`);
+            
+            // Update countdown every second
+            updateCountdown(eventDateTime, countdownTimer);
+            setInterval(() => updateCountdown(eventDateTime, countdownTimer), 1000);
+        }
+
+        // Update countdown display
+        function updateCountdown(eventDate, countdownElement) {
+            const now = new Date().getTime();
+            const distance = eventDate.getTime() - now;
+            
+            // Calculate days, hours, minutes, seconds
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            // Display the countdown
+            countdownElement.innerHTML = `
+                <div class="countdown-item">
+                    <div class="countdown-value">${days.toString().padStart(2, '0')}</div>
+                    <div class="countdown-label">Days</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value">${hours.toString().padStart(2, '0')}</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value">${minutes.toString().padStart(2, '0')}</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value">${seconds.toString().padStart(2, '0')}</div>
+                    <div class="countdown-label">Seconds</div>
+                </div>
+            `;
+            
+            // If the countdown is finished
+            if (distance < 0) {
+                countdownElement.innerHTML = `
+                    <div class="col-12 text-center py-3">
+                        <i class="fas fa-hourglass-end fa-2x text-warning mb-2"></i>
+                        <p class="mb-0">Event has started! Join now</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Toggle join status for an event
+        function toggleEventJoin(eventId) {
+            const event = jointEvents.find(e => e.id === eventId);
+            if (!event) return;
+            
+            // Check if event is full
+            if (!event.joined && event.members >= event.capacity) {
+                showNotification('Event Full', 'This event has reached maximum capacity. Please try another event.', 'warning');
+                return;
+            }
+            
+            // Toggle join status
+            event.joined = !event.joined;
+            
+            // Update member count
+            if (event.joined) {
+                event.members++;
+                showNotification('Successfully Joined!', `You've joined "${event.title}". Check your email for joining instructions.`, 'success');
+                
+                // Animate the event card
+                const eventCard = document.getElementById(`event-${eventId}`);
+                if (eventCard) {
+                    eventCard.classList.add('joined');
+                    setTimeout(() => eventCard.classList.remove('joined'), 1000);
+                }
+            } else {
+                event.members--;
+                showNotification('Event Left', `You've left "${event.title}".`, 'info');
+            }
+            
+            // Update the event card
+            const eventCard = document.getElementById(`event-${eventId}`);
+            if (eventCard) {
+                // Re-render the event card with animation
+                eventCard.style.opacity = '0.5';
+                setTimeout(() => {
+                    loadJointEvents(getCurrentTab(), getCurrentCategory());
+                }, 300);
+            }
+        }
+
+        // View event details in modal
+        function viewEventDetails(eventId) {
+            const event = jointEvents.find(e => e.id === eventId);
+            if (!event) return;
+            
+            const modalContent = document.getElementById('eventModalContent');
+            const modal = document.getElementById('eventModal');
+            
+            // Create modal content
+            modalContent.innerHTML = createEventModalContent(event);
+            
+            // Show modal
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Create event modal content
+        function createEventModalContent(event) {
+            // Format date
+            const eventDate = new Date(event.date);
+            const formattedDate = eventDate.toLocaleDateString('en-US', { 
+                weekday: 'long',
+                month: 'long', 
+                day: 'numeric',
+                year: 'numeric'
+            });
+            
+            // Determine badge
+            let badgeClass = 'badge-free';
+            let badgeText = 'FREE';
+            if (event.type === 'paid') {
+                badgeClass = 'badge-paid';
+                badgeText = `PAID - $${event.price}`;
+            }
+            if (event.featured) {
+                badgeClass = 'badge-featured';
+                badgeText = 'FEATURED';
+            }
+            
+            // Create stars for rating
+            const stars = Array(5).fill(0).map((_, i) => 
+                i < Math.floor(event.rating) ? 'fas fa-star text-warning' : 'far fa-star text-warning'
+            );
+            
+            return `
+                <div class="p-4">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-start mb-4">
+                                <div class="flex-grow-1">
+                                    <h2 class="mb-2">${event.title}</h2>
+                                    <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
+                                        <span class="event-badge ${badgeClass}">${badgeText}</span>
+                                        <span class="badge bg-light text-dark">${event.category.toUpperCase()}</span>
+                                        <span class="badge bg-light text-dark">${event.level}</span>
+                                        ${event.certification ? '<span class="badge bg-success">CERTIFICATION</span>' : ''}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h5 class="mb-3"><i class="fas fa-info-circle me-2"></i>Description</h5>
+                                <p class="mb-0">${event.description}</p>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <h5 class="mb-3"><i class="fas fa-calendar-alt me-2"></i>Event Details</h5>
+                                    <div class="mb-2">
+                                        <strong>Date & Time:</strong> ${formattedDate} at ${event.time}
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Duration:</strong> ${event.duration}
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Format:</strong> ${event.format}
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Location:</strong> ${event.location}
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Language:</strong> ${event.language}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="mb-3"><i class="fas fa-chart-bar me-2"></i>Event Stats</h5>
+                                    <div class="mb-2">
+                                        <strong>Participants:</strong> ${event.members}/${event.capacity}
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Rating:</strong> 
+                                        ${stars.map(star => `<i class="${star}"></i>`).join('')}
+                                        <span class="ms-2">${event.rating} (${event.reviews} reviews)</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Host:</strong> ${event.host}
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Category:</strong> ${event.category.charAt(0).toUpperCase() + event.category.slice(1)}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h5 class="mb-3"><i class="fas fa-tags me-2"></i>Tags</h5>
+                                <div class="d-flex flex-wrap gap-2">
+                                    ${event.tags.map(tag => `
+                                        <span class="badge bg-light text-dark p-2">${tag}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="sticky-top" style="top: 20px;">
+                                <div class="card border-0 shadow-sm mb-4">
+                                    <div class="card-body text-center">
+                                        <h4 class="mb-3">Join This Event</h4>
+                                        <div class="mb-4">
+                                            <div class="display-4 fw-bold ${event.type === 'free' ? 'text-success' : 'text-danger'}">
+                                                ${event.type === 'free' ? 'FREE' : `$${event.price}`}
+                                            </div>
+                                            <small class="text-muted">${event.type === 'free' ? 'No payment required' : 'One-time payment'}</small>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <div class="progress" style="height: 10px;">
+                                                <div class="progress-bar bg-success" style="width: ${(event.members/event.capacity)*100}%;"></div>
+                                            </div>
+                                            <small class="text-muted">${event.capacity - event.members} spots remaining</small>
+                                        </div>
+                                        
+                                        <div class="d-grid gap-2">
+                                            <button class="btn ${event.joined ? 'btn-success' : (event.type === 'free' ? 'btn-join' : 'btn-enroll')} btn-lg" 
+                                                    onclick="toggleEventJoin(${event.id}); closeEventModal();">
+                                                <i class="fas ${event.joined ? 'fa-check' : (event.type === 'free' ? 'fa-user-plus' : 'fa-shopping-cart')} me-2"></i>
+                                                ${event.joined ? 'Already Joined' : (event.type === 'free' ? 'Join Free' : `Enroll Now - $${event.price}`)}
+                                            </button>
+                                            <button class="btn btn-outline-primary" onclick="shareEvent(${event.id})">
+                                                <i class="fas fa-share-alt me-2"></i> Share with Friends
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <h6 class="mb-3"><i class="fas fa-check-circle text-success me-2"></i>What's Included</h6>
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Live event access</li>
+                                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Interactive sessions</li>
+                                            ${event.certification ? '<li class="mb-2"><i class="fas fa-check text-success me-2"></i>Certificate of completion</li>' : ''}
+                                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Resource materials</li>
+                                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Networking opportunities</li>
+                                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Recording access (if available)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Close event modal
+        function closeEventModal() {
+            const modal = document.getElementById('eventModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Switch between event tabs
+        function switchTab(tabName) {
+            // Update active tab
+            const tabs = document.querySelectorAll('.event-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Find and activate the clicked tab
+            tabs.forEach(tab => {
+                if (tab.textContent.toLowerCase().includes(tabName.toLowerCase())) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // Update active category tags
+            const categoryTags = document.querySelectorAll('.category-tag');
+            categoryTags.forEach(tag => tag.classList.remove('active'));
+            categoryTags[0].classList.add('active'); // Reset to "All Categories"
+            
+            // Load events for the selected tab
+            loadJointEvents(tabName);
+            
+            // Store current tab
+            localStorage.setItem('currentJointTab', tabName);
+        }
+
+        // Get current active tab
+        function getCurrentTab() {
+            const activeTab = document.querySelector('.event-tab.active');
+            if (!activeTab) return 'all';
+            
+            const tabText = activeTab.textContent.toLowerCase();
+            if (tabText.includes('joined')) return 'joined';
+            if (tabText.includes('free')) return 'free';
+            if (tabText.includes('paid')) return 'paid';
+            if (tabText.includes('featured')) return 'featured';
+            if (tabText.includes('live')) return 'live';
+            if (tabText.includes('upcoming')) return 'upcoming';
+            return 'all';
+        }
+
+        // Get current active category
+        function getCurrentCategory() {
+            const activeCategory = document.querySelector('.category-tag.active');
+            if (!activeCategory) return 'all';
+            
+            const categoryText = activeCategory.textContent.toLowerCase();
+            if (categoryText.includes('technology')) return 'tech';
+            if (categoryText.includes('business')) return 'business';
+            if (categoryText.includes('health')) return 'health';
+            if (categoryText.includes('art')) return 'art';
+            if (categoryText.includes('education')) return 'education';
+            if (categoryText.includes('entertainment')) return 'entertainment';
+            if (categoryText.includes('food')) return 'food';
+            if (categoryText.includes('sports')) return 'sports';
+            return 'all';
+        }
+
+        // Apply filters to events
+        function applyFilters() {
+            const typeFilter = document.getElementById('eventTypeFilter').value;
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+            const durationFilter = parseFloat(document.getElementById('durationRange').value);
+            const participantsFilter = parseInt(document.getElementById('participantsRange').value);
+            
+            // Get current tab
+            const currentTab = getCurrentTab();
+            
+            // Filter events based on selected criteria
+            let filteredEvents = jointEvents;
+            
+            // Filter by tab
+            if (currentTab === 'joined') {
+                filteredEvents = filteredEvents.filter(event => event.joined);
+            } else if (currentTab === 'free') {
+                filteredEvents = filteredEvents.filter(event => event.type === 'free');
+            } else if (currentTab === 'paid') {
+                filteredEvents = filteredEvents.filter(event => event.type === 'paid');
+            } else if (currentTab === 'featured') {
+                filteredEvents = filteredEvents.filter(event => event.featured);
+            } else if (currentTab === 'live') {
+                const today = new Date().toISOString().split('T')[0];
+                filteredEvents = filteredEvents.filter(event => event.date === today);
+            } else if (currentTab === 'upcoming') {
+                filteredEvents = filteredEvents.filter(event => new Date(event.date) > new Date());
+            }
+            
+            // Filter by type
+            if (typeFilter !== 'all') {
+                filteredEvents = filteredEvents.filter(event => {
+                    if (typeFilter === 'free') return event.type === 'free';
+                    if (typeFilter === 'paid') return event.type === 'paid';
+                    if (typeFilter === 'featured') return event.featured;
+                    if (typeFilter === 'live') {
+                        const today = new Date().toISOString().split('T')[0];
+                        return event.date === today;
+                    }
+                    return true;
+                });
+            }
+            
+            // Filter by category
+            if (categoryFilter !== 'all') {
+                filteredEvents = filteredEvents.filter(event => event.category === categoryFilter);
+            }
+            
+            // Filter by date
+            const now = new Date();
+            if (dateFilter === 'today') {
+                const today = now.toISOString().split('T')[0];
+                filteredEvents = filteredEvents.filter(event => event.date === today);
+            } else if (dateFilter === 'week') {
+                const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+                filteredEvents = filteredEvents.filter(event => {
+                    const eventDate = new Date(event.date);
+                    return eventDate >= now && eventDate <= nextWeek;
+                });
+            } else if (dateFilter === 'month') {
+                const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
+                filteredEvents = filteredEvents.filter(event => {
+                    const eventDate = new Date(event.date);
+                    return eventDate >= now && eventDate <= nextMonth;
+                });
+            } else if (dateFilter === 'past') {
+                filteredEvents = filteredEvents.filter(event => new Date(event.date) < now);
+            }
+            
+            // Filter by duration
+            if (durationFilter > 0) {
+                filteredEvents = filteredEvents.filter(event => {
+                    const duration = parseFloat(event.duration);
+                    return duration <= durationFilter;
+                });
+            }
+            
+            // Filter by participants
+            filteredEvents = filteredEvents.filter(event => event.members <= participantsFilter);
+            
+            // Display filtered events
+            displayFilteredEvents(filteredEvents);
+            
+            showNotification('Filters Applied', `Found ${filteredEvents.length} events matching your criteria.`, 'success');
+        }
+
+        // Display filtered events
+        function displayFilteredEvents(events) {
+            const eventGrid = document.getElementById('eventGrid');
+            if (!eventGrid) return;
+            
+            // Clear existing events
+            eventGrid.innerHTML = '';
+            
+            // Create event cards
+            if (events.length === 0) {
+                eventGrid.innerHTML = `
+                    <div class="col-12 text-center py-5 animate-on-scroll">
+                        <i class="fas fa-search fa-4x text-muted mb-4"></i>
+                        <h3 class="mb-3">No Matching Events</h3>
+                        <p class="text-muted mb-4">Try adjusting your filters to find more joint events.</p>
+                        <button class="btn btn-primary" onclick="resetFilters()">
+                            <i class="fas fa-redo me-2"></i> Reset Filters
+                        </button>
+                    </div>
+                `;
+            } else {
+                events.forEach(event => {
+                    const eventCard = createEventCard(event);
+                    eventGrid.appendChild(eventCard);
+                });
+            }
+        }
+
+        // Reset all filters
+        function resetFilters() {
+            // Reset form elements
+            document.getElementById('eventTypeFilter').value = 'all';
+            document.getElementById('categoryFilter').value = 'all';
+            document.getElementById('dateFilter').value = 'upcoming';
+            document.getElementById('durationRange').value = '4';
+            document.getElementById('durationValue').textContent = 'Up to 4 hours';
+            document.getElementById('participantsRange').value = '50';
+            document.getElementById('participantsValue').textContent = 'Up to 50';
+            
+            // Reset category tags
+            const categoryTags = document.querySelectorAll('.category-tag');
+            categoryTags.forEach(tag => tag.classList.remove('active'));
+            categoryTags[0].classList.add('active');
+            
+            // Reset event tabs
+            const tabs = document.querySelectorAll('.event-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabs[0].classList.add('active');
+            
+            // Load all events
+            loadJointEvents('all', 'all');
+            
+            showNotification('Filters Reset', 'All filters have been reset to default.', 'info');
+        }
+
+        // Filter events by category
+        function filterByCategory(category) {
+            // Update active category tags
+            const categoryTags = document.querySelectorAll('.category-tag');
+            categoryTags.forEach(tag => tag.classList.remove('active'));
+            
+            // Find and activate the clicked category
+            categoryTags.forEach(tag => {
+                if (category === 'all') {
+                    if (tag.textContent.toLowerCase().includes('all categories')) {
+                        tag.classList.add('active');
+                    }
+                } else if (tag.textContent.toLowerCase().includes(category)) {
+                    tag.classList.add('active');
+                }
+            });
+            
+            // Load events for the selected category
+            loadJointEvents(getCurrentTab(), category);
+        }
+
+        // Perform search
+        function performSearch() {
+            const searchInput = document.querySelector('.search-input');
+            const query = searchInput.value.trim();
+            
+            if (query === '') {
+                showNotification('Search Empty', 'Please enter a search term.', 'warning');
+                return;
+            }
+            
+            showNotification('Searching...', `Looking for events matching "${query}"`, 'info');
+            
+            // Filter events based on search query
+            const filteredEvents = jointEvents.filter(event => 
+                event.title.toLowerCase().includes(query.toLowerCase()) || 
+                event.description.toLowerCase().includes(query.toLowerCase()) ||
+                event.host.toLowerCase().includes(query.toLowerCase()) ||
+                event.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
+            );
+            
+            displayFilteredEvents(filteredEvents);
+        }
+
+        // Perform live search
+        function performLiveSearch(query) {
+            if (query.length < 3) return;
+            
+            // Filter events based on search query
+            const filteredEvents = jointEvents.filter(event => 
+                event.title.toLowerCase().includes(query.toLowerCase()) || 
+                event.description.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            displayFilteredEvents(filteredEvents);
+        }
+
+        // Load more events (for pagination)
+        function loadMoreEvents() {
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            const loadingBar = document.getElementById('loadingBar');
+            
+            if (!loadMoreBtn || !loadingBar) return;
+            
+            // Show loading state
+            loadMoreBtn.disabled = true;
+            loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Loading...';
+            loadingBar.style.display = 'block';
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                // In a real application, this would load more events from the server
+                showNotification('Events Loaded', 'More events have been loaded successfully.', 'success');
+                
+                // Reset button state
+                loadMoreBtn.disabled = false;
+                loadMoreBtn.innerHTML = '<i class="fas fa-sync-alt me-2"></i> Load More Events';
+                loadingBar.style.display = 'none';
+            }, 1500);
+        }
+
+        // Join next event
+        function joinEvent(type) {
+            if (type === 'next') {
+                // Find the next upcoming event
+                const now = new Date();
+                const upcomingEvents = jointEvents.filter(event => new Date(event.date) > now);
+                
+                if (upcomingEvents.length > 0) {
+                    upcomingEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    const nextEvent = upcomingEvents[0];
+                    
+                    toggleEventJoin(nextEvent.id);
+                }
+            }
+        }
+
+        // Set reminder for next event
+        function remindMe() {
+            showNotification('Reminder Set', 'You will be notified 1 hour before the event starts.', 'success');
+        }
+
+        // View all featured events
+        function viewAllFeatured() {
+            switchTab('featured');
+        }
+
+        // Create a new joint event
+        function createJointEvent() {
+            showNotification('Coming Soon', 'Event creation feature will be available soon.', 'info');
+            // In a real application, this would navigate to event creation page
+            // window.location.href = 'create-event.html';
+        }
+
+        // Invite friends to joint events
+        function inviteFriends() {
+            showNotification('Invite Friends', 'Share event links with your friends to join together.', 'info');
+        }
+
+        // Share event
+        function shareEvent(eventId) {
+            const event = jointEvents.find(e => e.id === eventId);
+            if (!event) return;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: event.title,
+                    text: `Check out this joint event: ${event.title}`,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                navigator.clipboard.writeText(window.location.href);
+                showNotification('Link Copied', 'Event link has been copied to clipboard!', 'success');
+            }
+        }
+
+        // Show notification
+        function showNotification(title, message, type) {
+            const notificationSystem = document.getElementById('notificationSystem');
+            if (!notificationSystem) return;
+            
+            // Determine icon and color
+            let icon, color;
+            switch(type) {
+                case 'success':
+                    icon = 'fa-check-circle';
+                    color = '#38b000';
+                    break;
+                case 'warning':
+                    icon = 'fa-exclamation-triangle';
+                    color = '#ff9e00';
+                    break;
+                case 'danger':
+                    icon = 'fa-times-circle';
+                    color = '#ff4d4d';
+                    break;
+                case 'info':
+                default:
+                    icon = 'fa-info-circle';
+                    color = '#4361ee';
+                    break;
+            }
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.style.setProperty('--notification-color', color);
+            notification.innerHTML = `
+                <div class="notification-icon">
+                    <i class="fas ${icon}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+                <button class="notification-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            // Add to notification system
+            notificationSystem.appendChild(notification);
+            
+            // Show notification with animation
+            setTimeout(() => notification.classList.add('show'), 10);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }
+            }, 5000);
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            
+            if (isDarkMode) {
+                document.body.classList.remove('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('darkMode', 'false');
+                showNotification('Light Mode', 'Light mode has been activated.', 'info');
+            } else {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('darkMode', 'true');
+                showNotification('Dark Mode', 'Dark mode has been activated.', 'info');
+            }
+        }
+
+        function enableDarkMode() {
+            document.body.classList.add('dark-mode');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            const fullscreenToggle = document.getElementById('fullscreenToggle');
+            
+            if (!document.fullscreenElement) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                }
+                fullscreenToggle.innerHTML = '<i class="fas fa-compress"></i>';
+                showNotification('Fullscreen', 'Fullscreen mode activated.', 'info');
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+                fullscreenToggle.innerHTML = '<i class="fas fa-expand"></i>';
+                showNotification('Fullscreen', 'Fullscreen mode exited.', 'info');
+            }
+        }
+
+        // Handle fullscreen change events
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        
+        function handleFullscreenChange() {
+            const fullscreenToggle = document.getElementById('fullscreenToggle');
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                fullscreenToggle.innerHTML = '<i class="fas fa-expand"></i>';
+            }
+        }
+
+        // Handle notification clicks
+        function openNotification(type) {
+            switch(type) {
+                case 'joint-invite':
+                    showNotification('Opening Invitation', 'Loading event invitation...', 'info');
+                    break;
+                case 'joint-starting':
+                    showNotification('Event Starting', 'Preparing event details...', 'info');
+                    break;
+                case 'new-joint-member':
+                    showNotification('New Member', 'Loading member information...', 'info');
+                    break;
+                default:
+                    window.location.href = 'notifications.html';
+            }
+        }
+
+        // Logout function
+        function logout() {
+            const confirmLogout = confirm('Are you sure you want to logout from Stream Connect?');
+            if (confirmLogout) {
+                showNotification('Logging Out', 'You are being logged out...', 'info');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+            }
+        }
+
+        // Handle window resize
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                // Close mobile menu on resize if window is large
+                if (window.innerWidth >= 992) {
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+                    if (mobileMenu && mobileMenu.classList.contains('active')) {
+                        mobileMenu.classList.remove('active');
+                        const icon = mobileMenuToggle.querySelector('i');
+                        if (icon) {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                        document.body.style.overflow = 'auto';
+                    }
+                }
+            }, 250);
+        });
+
+        // Add custom styles for badges
+        const style = document.createElement('style');
+        style.textContent = `
+            .bg-joint { background: linear-gradient(135deg, #7209b7, #b5179e) !important; }
+            .text-joint { color: #7209b7 !important; }
+            .bg-gradient-joint { background: linear-gradient(135deg, #7209b7, #b5179e) !important; }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Process - Stream Connect</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --dark-color: #1e1e2d;
+            --light-color: #f8f9fa;
+            --success-color: #4bb543;
+            --danger-color: #ff4d4d;
+            --warning-color: #ffc107;
+            --gray-color: #6c757d;
+            --light-gray: #f8f9fa;
+            --border-color: #e9ecef;
+            --purple-color: #7209b7;
+            --pink-color: #f72585;
+            --orange-color: #ff9e00;
+            --teal-color: #20c997;
+            --cyan-color: #06d6a0;
+            --gold-color: #ffd700;
+            --silver-color: #c0c0c0;
+            --bronze-color: #cd7f32;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: #333;
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        body.dark-mode {
+            background-color: #121826;
+            color: #e0e0e0;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            height: 65px;
+            border-bottom: 1px solid #e9ecef;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0 15px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode .header {
+            background-color: var(--dark-color);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Logo */
+        .logo {
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .logo-icon {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+
+        .dark-mode .logo {
+            color: var(--accent-color);
+        }
+
+        /* Progress Steps */
+        .payment-progress {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 100px auto 40px;
+            max-width: 900px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .dark-mode .payment-progress {
+            background: #1e1e2d;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 50px;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #e9ecef;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .dark-mode .progress-steps::before {
+            background: #2d2d42;
+        }
+
+        .progress-step {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--gray-color);
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s;
+        }
+
+        .progress-step.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .progress-step.completed {
+            background: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+
+        .progress-step-text {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--gray-color);
+        }
+
+        .progress-step.active .progress-step-text {
+            color: var(--primary-color);
+        }
+
+        .dark-mode .progress-step-text {
+            color: #b0b7c3;
+        }
+
+        /* Payment Container */
+        .payment-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .payment-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Payment Form */
+        .payment-form-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .dark-mode .payment-form-container {
+            background: #1e1e2d;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .form-section h4 {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .payment-options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .payment-option-card {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .payment-option-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+        }
+
+        .payment-option-card.selected {
+            border-color: var(--primary-color);
+            background: rgba(67, 97, 238, 0.05);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.1);
+        }
+
+        .payment-option-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 15px;
+            color: white;
+        }
+
+        .payment-option-card.credit .payment-option-icon {
+            background: linear-gradient(135deg, #4361ee, #4cc9f0);
+        }
+
+        .payment-option-card.paypal .payment-option-icon {
+            background: linear-gradient(135deg, #003087, #009cde);
+        }
+
+        .payment-option-card.crypto .payment-option-icon {
+            background: linear-gradient(135deg, #f7931a, #ff9e00);
+        }
+
+        .payment-option-card.bank .payment-option-icon {
+            background: linear-gradient(135deg, #20c997, #38b000);
+        }
+
+        /* Order Summary */
+        .order-summary {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 100px;
+        }
+
+        .dark-mode .order-summary {
+            background: #1e1e2d;
+        }
+
+        .order-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(67, 97, 238, 0.1);
+        }
+
+        .order-header h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .event-details {
+            background: rgba(67, 97, 238, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .event-image {
+            width: 100%;
+            height: 180px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #4361ee, #4cc9f0);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .price-breakdown {
+            margin-bottom: 25px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode .price-row {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .price-row.total {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            border-bottom: none;
+            margin-top: 10px;
+            padding-top: 15px;
+            border-top: 2px solid rgba(67, 97, 238, 0.1);
+        }
+
+        .dark-mode .price-row.total {
+            color: var(--accent-color);
+        }
+
+        /* Security Badge */
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(75, 181, 67, 0.1);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .security-badge i {
+            font-size: 1.5rem;
+            color: var(--success-color);
+        }
+
+        /* Form Elements */
+        .form-floating {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 16px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .dark-mode .form-control {
+            background: #25253d;
+            border-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .dark-mode .form-control:focus {
+            background: #1e1e2d;
+        }
+
+        .card-expiry-cvv {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Payment Button */
+        .payment-btn-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .payment-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(67, 97, 238, 0.3);
+        }
+
+        .payment-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .payment-btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent);
+            animation: loadingShimmer 1.5s infinite;
+        }
+
+        @keyframes loadingShimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Toggle Switch */
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .form-check-input {
+            width: 50px;
+            height: 26px;
+            border-radius: 13px;
+            border: 2px solid #dee2e6;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        /* Updated Footer Styles */
+        .footer {
+            background: #f8f9fa;
+            padding: 60px 0 30px;
+            border-top: 1px solid #e9ecef;
+            margin-top: 50px;
+        }
+
+        .dark-mode .footer {
+            background: #1e1e2d;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand h2 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .dark-mode .footer-brand h2 {
+            color: var(--accent-color);
+        }
+
+        .footer-brand p {
+            color: var(--gray-color);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .dark-mode .footer-brand p {
+            color: #b0b7c3;
+        }
+
+        .footer-copyright {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .footer-copyright {
+            color: #b0b7c3;
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-section h4 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .dark-mode .footer-section h4 {
+            color: var(--accent-color);
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-section ul li a {
+            color: var(--gray-color);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .footer-section ul li a {
+            color: #b0b7c3;
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--primary-color);
+            padding-left: 5px;
+        }
+
+        .dark-mode .footer-section ul li a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-divider {
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                var(--primary-color), 
+                transparent);
+            margin: 30px 0;
+            opacity: 0.2;
+        }
+
+        .contact-info li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .contact-info li strong {
+            min-width: 120px;
+            color: var(--primary-color);
+        }
+
+        .dark-mode .contact-info li strong {
+            color: var(--accent-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            background: var(--secondary-color);
+        }
+
+        .social-icon.linkedin {
+            background: #0077b5;
+        }
+
+        .social-icon.linkedin:hover {
+            background: #005582;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .payment-progress {
+                margin: 80px 20px 30px;
+                padding: 20px;
+            }
+            
+            .payment-form-container,
+            .order-summary {
+                padding: 25px;
+            }
+            
+            .progress-step-text {
+                font-size: 0.75rem;
+            }
+            
+            .footer {
+                padding: 40px 0 20px;
+            }
+            
+            .footer-grid {
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .payment-progress {
+                margin: 70px 15px 20px;
+            }
+            
+            .progress-steps {
+                margin-bottom: 40px;
+            }
+            
+            .progress-step {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .progress-step-text {
+                top: 50px;
+                font-size: 0.7rem;
+            }
+            
+            .payment-options-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .payment-progress {
+                margin: 60px 10px 15px;
+                padding: 15px;
+            }
+            
+            .payment-form-container,
+            .order-summary {
+                padding: 20px;
+            }
+            
+            .progress-step-text {
+                display: none;
+            }
+            
+            .payment-options-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-expiry-cvv {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-info li {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .contact-info li strong {
+                min-width: auto;
+            }
+        }
+
+        /* Custom Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Dark Mode Controls */
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .mode-toggle-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .mode-toggle-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Loading Spinner */
+        .spinner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .spinner-overlay.active {
+            display: flex;
+        }
+
+        .payment-spinner {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle">
+        <button class="mode-toggle-btn" id="darkModeToggle">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <!-- Back Button -->
+    <div class="back-btn">
+        <a href="paid-events.html" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Events
+        </a>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="spinner-overlay" id="loadingSpinner">
+        <div class="payment-spinner"></div>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="payment-progress animate-fade-in">
+        <div class="progress-steps">
+            <div class="progress-step active">
+                1
+                <span class="progress-step-text">Payment Details</span>
+            </div>
+            <div class="progress-step">
+                2
+                <span class="progress-step-text">Review & Confirm</span>
+            </div>
+            <div class="progress-step">
+                3
+                <span class="progress-step-text">Processing</span>
+            </div>
+            <div class="progress-step">
+                4
+                <span class="progress-step-text">Complete</span>
+            </div>
+        </div>
+
+        <div class="payment-container">
+            <!-- Payment Form -->
+            <div class="payment-form-container">
+                <h3 class="mb-4">
+                    <i class="fas fa-credit-card me-2"></i>
+                    Payment Details
+                </h3>
+
+                <!-- Payment Method Selection -->
+                <div class="form-section">
+                    <h4>
+                        <i class="fas fa-wallet"></i>
+                        Select Payment Method
+                    </h4>
+                    <div class="payment-options-grid">
+                        <div class="payment-option-card credit selected" onclick="selectPaymentMethod('credit')">
+                            <div class="payment-option-icon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <h6>Credit Card</h6>
+                            <small class="text-muted">Visa, Mastercard</small>
+                        </div>
+                        
+                        <div class="payment-option-card paypal" onclick="selectPaymentMethod('paypal')">
+                            <div class="payment-option-icon">
+                                <i class="fab fa-paypal"></i>
+                            </div>
+                            <h6>PayPal</h6>
+                            <small class="text-muted">Fast & Secure</small>
+                        </div>
+                        
+                        <div class="payment-option-card crypto" onclick="selectPaymentMethod('crypto')">
+                            <div class="payment-option-icon">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <h6>Crypto</h6>
+                            <small class="text-muted">BTC, ETH, USDT</small>
+                        </div>
+                        
+                        <div class="payment-option-card bank" onclick="selectPaymentMethod('bank')">
+                            <div class="payment-option-icon">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <h6>Bank Transfer</h6>
+                            <small class="text-muted">1-2 Business Days</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credit Card Form -->
+                <div id="creditCardForm">
+                    <div class="form-section">
+                        <h4>
+                            <i class="fas fa-credit-card"></i>
+                            Card Information
+                        </h4>
+                        
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="cardNumber" placeholder=" " maxlength="19">
+                            <label for="cardNumber">Card Number</label>
+                            <div class="card-icons mt-2">
+                                <i class="fab fa-cc-visa text-primary me-2"></i>
+                                <i class="fab fa-cc-mastercard text-danger me-2"></i>
+                                <i class="fab fa-cc-amex text-info me-2"></i>
+                                <i class="fab fa-cc-discover text-warning"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="cardHolder" placeholder=" ">
+                                    <label for="cardHolder">Cardholder Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-expiry-cvv">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="expiryDate" placeholder=" " maxlength="5">
+                                        <label for="expiryDate">MM/YY</label>
+                                    </div>
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="cvv" placeholder=" " maxlength="3">
+                                        <label for="cvv">CVV</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4>
+                            <i class="fas fa-map-marker-alt"></i>
+                            Billing Address
+                        </h4>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="firstName" placeholder=" ">
+                                    <label for="firstName">First Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="lastName" placeholder=" ">
+                                    <label for="lastName">Last Name</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="address" placeholder=" ">
+                            <label for="address">Street Address</label>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="city" placeholder=" ">
+                                    <label for="city">City</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="state" placeholder=" ">
+                                    <label for="state">State</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="zipCode" placeholder=" ">
+                                    <label for="zipCode">ZIP Code</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="country">
+                                <option value="US">United States</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="CA">Canada</option>
+                                <option value="AU">Australia</option>
+                                <option value="IN">India</option>
+                            </select>
+                            <label for="country">Country</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PayPal Form (Hidden by Default) -->
+                <div id="paypalForm" style="display: none;">
+                    <div class="form-section">
+                        <h4>
+                            <i class="fab fa-paypal"></i>
+                            PayPal Payment
+                        </h4>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            You will be redirected to PayPal to complete your payment securely.
+                        </div>
+                        <div class="text-center my-4">
+                            <i class="fab fa-paypal fa-4x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crypto Form (Hidden by Default) -->
+                <div id="cryptoForm" style="display: none;">
+                    <div class="form-section">
+                        <h4>
+                            <i class="fas fa-coins"></i>
+                            Cryptocurrency Payment
+                        </h4>
+                        
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Cryptocurrency payments are final and cannot be refunded.
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="cryptoCurrency">
+                                <option value="BTC">Bitcoin (BTC)</option>
+                                <option value="ETH">Ethereum (ETH)</option>
+                                <option value="USDT">Tether (USDT)</option>
+                                <option value="USDC">USD Coin (USDC)</option>
+                            </select>
+                            <label for="cryptoCurrency">Select Cryptocurrency</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="cryptoAmount" placeholder=" " readonly>
+                            <label for="cryptoAmount">Amount Due</label>
+                        </div>
+                        
+                        <div class="text-center my-4">
+                            <div class="crypto-qr-code">
+                                <div style="width: 200px; height: 200px; background: #f8f9fa; margin: 0 auto; border-radius: 10px;"></div>
+                                <small class="text-muted mt-2 d-block">Scan QR code to send payment</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bank Transfer Form (Hidden by Default) -->
+                <div id="bankForm" style="display: none;">
+                    <div class="form-section">
+                        <h4>
+                            <i class="fas fa-university"></i>
+                            Bank Transfer Details
+                        </h4>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Use the details below to make a bank transfer. Your registration will be confirmed once payment is received.
+                        </div>
+                        
+                        <div class="bank-details p-4 bg-light rounded">
+                            <div class="mb-3">
+                                <strong>Bank Name:</strong> Stream Connect Bank
+                            </div>
+                            <div class="mb-3">
+                                <strong>Account Name:</strong> Stream Connect Events
+                            </div>
+                            <div class="mb-3">
+                                <strong>Account Number:</strong> 1234567890
+                            </div>
+                            <div class="mb-3">
+                                <strong>Routing Number:</strong> 021000021
+                            </div>
+                            <div class="mb-3">
+                                <strong>SWIFT/BIC:</strong> SCBKUS33
+                            </div>
+                            <div class="mb-3">
+                                <strong>Reference:</strong> <span id="bankReference">EVT-2023-AI-001</span>
+                            </div>
+                            <div>
+                                <strong>Amount:</strong> <span class="text-primary fw-bold">$299.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="form-section">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="termsCheck">
+                        <label class="form-check-label" for="termsCheck">
+                            I agree to the <a href="#" class="text-primary">Terms & Conditions</a> and <a href="#" class="text-primary">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="saveCardCheck">
+                        <label class="form-check-label" for="saveCardCheck">
+                            Save card details for future payments
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Payment Button -->
+                <div class="payment-btn-container">
+                    <button class="payment-btn" id="payNowBtn" onclick="processPayment()">
+                        <i class="fas fa-lock me-2"></i>
+                        PAY $299.00 NOW
+                    </button>
+                    
+                    <p class="text-muted mt-3 small">
+                        <i class="fas fa-shield-alt me-1"></i>
+                        Your payment is secured with 256-bit SSL encryption
+                    </p>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <div class="order-header">
+                    <h3>Order Summary</h3>
+                    <p class="text-muted">AI Masterclass 2023</p>
+                </div>
+                
+                <div class="event-details">
+                    <div class="event-image">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    
+                    <h5>AI Masterclass 2023</h5>
+                    <p class="text-muted mb-2">Advanced AI & Machine Learning Workshop</p>
+                    <p class="mb-0">
+                        <i class="far fa-calendar me-2"></i>
+                        Oct 20-22, 2023
+                    </p>
+                    <p class="mb-0">
+                        <i class="far fa-clock me-2"></i>
+                        3 Days (9:00 AM - 5:00 PM)
+                    </p>
+                    <p class="mb-0">
+                        <i class="fas fa-users me-2"></i>
+                        Max 50 attendees
+                    </p>
+                </div>
+                
+                <div class="price-breakdown">
+                    <h5 class="mb-3">Price Details</h5>
+                    
+                    <div class="price-row">
+                        <span>Event Ticket</span>
+                        <span>$299.00</span>
+                    </div>
+                    
+                    <div class="price-row">
+                        <span>Platform Fee</span>
+                        <span>$14.95</span>
+                    </div>
+                    
+                    <div class="price-row">
+                        <span>Processing Fee</span>
+                        <span>$5.00</span>
+                    </div>
+                    
+                    <div class="price-row">
+                        <span>Tax (8.5%)</span>
+                        <span>$25.42</span>
+                    </div>
+                    
+                    <div class="price-row total">
+                        <span>Total Amount</span>
+                        <span>$344.37</span>
+                    </div>
+                </div>
+                
+                <div class="security-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <strong>Secure Payment</strong>
+                        <p class="mb-0 small">256-bit SSL encryption</p>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <h6>What's Included:</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Full 3-day workshop access
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Workshop materials & resources
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Certificate of completion
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Lifetime community access
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Post-event support (30 days)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Updated Footer Section (Based on Image Content) -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                
+                
+                <!-- Quick Links Section -->
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Event Categories</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Us Section -->
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <ul class="contact-info">
+                        <li>
+                            <strong>Company Name:</strong>
+                            <span>AngamTech</span>
+                        </li>
+                        <li>
+                            <strong>Email:</strong>
+                            <span>support@streamconnectevents</span>
+                        </li>
+                        <li>
+                            <strong>Phone:</strong>
+                            <span>+91 8056484806</span>
+                        </li>
+                        <li>
+                            <strong>Address:</strong>
+                            <span>Dharmapuri, TamilNadu, India</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Follow Us Section -->
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-icon linkedin" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="text-center">
+                <small class="text-muted">
+                    <i class="fas fa-lock me-1"></i>SSL Secured • 
+                    <i class="fas fa-shield-alt ms-2 me-1"></i>PCI DSS Compliant • 
+                    <i class="fas fa-user-shield ms-2 me-1"></i>Privacy Protected
+                </small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            updateCryptoAmount();
+            formatCardInputs();
+            
+            // Check for saved preferences
+            if (localStorage.getItem('darkMode') === 'true') {
+                enableDarkMode();
+            }
+            
+            // Load saved card details if available
+            loadSavedCardDetails();
+        });
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Dark mode toggle
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+            
+            // Card number formatting
+            const cardNumberInput = document.getElementById('cardNumber');
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', formatCardNumber);
+            }
+            
+            // Expiry date formatting
+            const expiryInput = document.getElementById('expiryDate');
+            if (expiryInput) {
+                expiryInput.addEventListener('input', formatExpiryDate);
+            }
+            
+            // CVV validation
+            const cvvInput = document.getElementById('cvv');
+            if (cvvInput) {
+                cvvInput.addEventListener('input', validateCVV);
+            }
+            
+            // Form validation
+            setupFormValidation();
+        }
+        
+        // Toggle dark mode
+        function toggleDarkMode() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            
+            if (isDarkMode) {
+                document.body.classList.remove('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('darkMode', 'false');
+                showNotification('Light mode activated', 'info');
+            } else {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('darkMode', 'true');
+                showNotification('Dark mode activated', 'info');
+            }
+        }
+        
+        function enableDarkMode() {
+            document.body.classList.add('dark-mode');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        
+        // Select payment method
+        function selectPaymentMethod(method) {
+            // Remove selected class from all options
+            document.querySelectorAll('.payment-option-card').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to chosen option
+            const selectedOption = document.querySelector(`.payment-option-card.${method}`);
+            if (selectedOption) {
+                selectedOption.classList.add('selected');
+            }
+            
+            // Show corresponding form
+            const forms = ['creditCardForm', 'paypalForm', 'cryptoForm', 'bankForm'];
+            forms.forEach(formId => {
+                const form = document.getElementById(formId);
+                if (form) {
+                    form.style.display = 'none';
+                }
+            });
+            
+            const selectedForm = document.getElementById(method + 'Form');
+            if (selectedForm) {
+                selectedForm.style.display = 'block';
+            }
+            
+            // Update payment button text
+            const payBtn = document.getElementById('payNowBtn');
+            if (payBtn) {
+                let methodText = '';
+                switch(method) {
+                    case 'credit': methodText = 'Credit Card'; break;
+                    case 'paypal': methodText = 'PayPal'; break;
+                    case 'crypto': methodText = 'Cryptocurrency'; break;
+                    case 'bank': methodText = 'Bank Transfer'; break;
+                }
+                payBtn.innerHTML = `<i class="fas fa-lock me-2"></i>PAY $299.00 WITH ${methodText.toUpperCase()}`;
+            }
+            
+            showNotification(`${methodText || method} payment method selected`, 'info');
+        }
+        
+        // Format card number
+        function formatCardNumber(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{4})/g, '$1 ').trim();
+            e.target.value = value.substring(0, 19);
+        }
+        
+        // Format expiry date
+        function formatExpiryDate(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value.substring(0, 5);
+        }
+        
+        // Validate CVV
+        function validateCVV(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            e.target.value = value.substring(0, 3);
+        }
+        
+        // Format all card inputs
+        function formatCardInputs() {
+            const cardInputs = document.querySelectorAll('input[type="text"]');
+            cardInputs.forEach(input => {
+                if (input.id === 'cardNumber') {
+                    input.addEventListener('input', formatCardNumber);
+                } else if (input.id === 'expiryDate') {
+                    input.addEventListener('input', formatExpiryDate);
+                } else if (input.id === 'cvv') {
+                    input.addEventListener('input', validateCVV);
+                }
+            });
+        }
+        
+        // Update crypto amount based on selected currency
+        function updateCryptoAmount() {
+            const cryptoSelect = document.getElementById('cryptoCurrency');
+            const cryptoAmount = document.getElementById('cryptoAmount');
+            
+            if (cryptoSelect && cryptoAmount) {
+                const rates = {
+                    'BTC': '0.0085 BTC',
+                    'ETH': '0.15 ETH',
+                    'USDT': '299 USDT',
+                    'USDC': '299 USDC'
+                };
+                
+                cryptoSelect.addEventListener('change', function() {
+                    cryptoAmount.value = rates[this.value] || '';
+                });
+                
+                // Set initial value
+                cryptoAmount.value = rates[cryptoSelect.value];
+            }
+        }
+        
+        // Setup form validation
+        function setupFormValidation() {
+            const form = document.querySelector('.payment-form-container');
+            const inputs = form.querySelectorAll('input[required], select[required]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+                
+                input.addEventListener('input', function() {
+                    this.classList.remove('is-invalid');
+                });
+            });
+        }
+        
+        // Validate individual field
+        function validateField(field) {
+            let isValid = true;
+            let errorMessage = '';
+            
+            switch(field.id) {
+                case 'cardNumber':
+                    const cardNumber = field.value.replace(/\s/g, '');
+                    isValid = /^\d{16}$/.test(cardNumber);
+                    errorMessage = 'Please enter a valid 16-digit card number';
+                    break;
+                    
+                case 'expiryDate':
+                    const expiry = field.value.split('/');
+                    if (expiry.length === 2) {
+                        const month = parseInt(expiry[0]);
+                        const year = parseInt(expiry[1]);
+                        const currentYear = new Date().getFullYear() % 100;
+                        const currentMonth = new Date().getMonth() + 1;
+                        
+                        isValid = month >= 1 && month <= 12 && 
+                                 (year > currentYear || (year === currentYear && month >= currentMonth));
+                    } else {
+                        isValid = false;
+                    }
+                    errorMessage = 'Please enter a valid expiry date (MM/YY)';
+                    break;
+                    
+                case 'cvv':
+                    isValid = /^\d{3,4}$/.test(field.value);
+                    errorMessage = 'Please enter a valid 3 or 4-digit CVV';
+                    break;
+                    
+                case 'cardHolder':
+                    isValid = field.value.trim().length >= 3;
+                    errorMessage = 'Please enter cardholder name';
+                    break;
+                    
+                case 'email':
+                    isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value);
+                    errorMessage = 'Please enter a valid email address';
+                    break;
+            }
+            
+            if (!isValid && field.value.trim() !== '') {
+                field.classList.add('is-invalid');
+                showNotification(errorMessage, 'warning');
+            } else {
+                field.classList.remove('is-invalid');
+            }
+            
+            return isValid;
+        }
+        
+        // Validate entire form
+        function validateForm() {
+            const requiredFields = document.querySelectorAll('input[required], select[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (field.value.trim() === '') {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else if (!validateField(field)) {
+                    isValid = false;
+                }
+            });
+            
+            const termsCheck = document.getElementById('termsCheck');
+            if (!termsCheck.checked) {
+                showNotification('Please agree to the Terms & Conditions', 'warning');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        // Load saved card details
+        function loadSavedCardDetails() {
+            const savedCard = localStorage.getItem('savedCard');
+            if (savedCard) {
+                try {
+                    const card = JSON.parse(savedCard);
+                    document.getElementById('cardNumber').value = card.number || '';
+                    document.getElementById('cardHolder').value = card.holder || '';
+                    document.getElementById('expiryDate').value = card.expiry || '';
+                    document.getElementById('saveCardCheck').checked = true;
+                } catch (e) {
+                    console.log('No saved card found');
+                }
+            }
+        }
+        
+        // Save card details
+        function saveCardDetails() {
+            const saveCardCheck = document.getElementById('saveCardCheck');
+            if (saveCardCheck.checked) {
+                const cardDetails = {
+                    number: document.getElementById('cardNumber').value,
+                    holder: document.getElementById('cardHolder').value,
+                    expiry: document.getElementById('expiryDate').value
+                };
+                localStorage.setItem('savedCard', JSON.stringify(cardDetails));
+            }
+        }
+        
+        // Process payment
+        function processPayment() {
+            // Validate form
+            if (!validateForm()) {
+                showNotification('Please fill in all required fields correctly', 'warning');
+                return;
+            }
+            
+            // Show loading spinner
+            const spinner = document.getElementById('loadingSpinner');
+            spinner.classList.add('active');
+            
+            // Disable pay button
+            const payBtn = document.getElementById('payNowBtn');
+            payBtn.disabled = true;
+            payBtn.classList.add('loading');
+            
+            // Update progress steps
+            updateProgressSteps(2);
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                updateProgressSteps(3);
+                
+                // Simulate processing time
+                setTimeout(() => {
+                    spinner.classList.remove('active');
+                    payBtn.disabled = false;
+                    payBtn.classList.remove('loading');
+                    
+                    // Randomly determine success (80% success rate)
+                    const isSuccess = Math.random() > 0.2;
+                    
+                    if (isSuccess) {
+                        // Save card details if checkbox is checked
+                        saveCardDetails();
+                        
+                        // Update progress to completed
+                        updateProgressSteps(4);
+                        
+                        // Show success and redirect
+                        showNotification('🎉 Payment successful! Redirecting...', 'success');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'payment-successful.html?amount=299&event=AI+Masterclass+2023';
+                        }, 2000);
+                    } else {
+                        // Show failure
+                        updateProgressSteps(2); // Go back to step 2
+                        showNotification('Payment failed. Please check your details and try again.', 'danger');
+                        
+                        setTimeout(() => {
+                            window.location.href = 'payment-unsuccessful.html';
+                        }, 1500);
+                    }
+                }, 3000);
+            }, 1000);
+        }
+        
+        // Update progress steps
+        function updateProgressSteps(stepNumber) {
+            const steps = document.querySelectorAll('.progress-step');
+            
+            steps.forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                
+                if (index + 1 < stepNumber) {
+                    step.classList.add('completed');
+                } else if (index + 1 === stepNumber) {
+                    step.classList.add('active');
+                }
+            });
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            // Remove any existing notifications
+            const existingAlerts = document.querySelectorAll('.alert-notification');
+            existingAlerts.forEach(alert => alert.remove());
+            
+            // Determine icon and color
+            let icon, colorClass;
+            switch(type) {
+                case 'success':
+                    icon = 'fa-check-circle';
+                    colorClass = 'alert-success';
+                    break;
+                case 'warning':
+                    icon = 'fa-exclamation-triangle';
+                    colorClass = 'alert-warning';
+                    break;
+                case 'danger':
+                    icon = 'fa-times-circle';
+                    colorClass = 'alert-danger';
+                    break;
+                case 'info':
+                default:
+                    icon = 'fa-info-circle';
+                    colorClass = 'alert-info';
+                    break;
+            }
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert ${colorClass} alert-notification alert-dismissible fade show`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                min-width: 300px;
+                max-width: 350px;
+                animation: slideInRight 0.3s ease, fadeOut 0.3s ease 4.7s forwards;
+            `;
+            
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 me-3">
+                        <i class="fas ${icon} fa-lg"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+            `;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            // Ctrl/Cmd + Enter to submit
+            if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+                event.preventDefault();
+                processPayment();
+            }
+            
+            // Esc to close notifications
+            if (event.key === 'Escape') {
+                const notifications = document.querySelectorAll('.alert-notification');
+                notifications.forEach(notification => notification.remove());
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Connect - Go Live & Watch Streams</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- YouTube Player API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --dark-color: #1e1e2d;
+            --light-color: #f8f9fa;
+            --success-color: #4bb543;
+            --danger-color: #ff4d4d;
+            --warning-color: #ffc107;
+            --gray-color: #6c757d;
+            --light-gray: #f8f9fa;
+            --border-color: #e9ecef;
+            --purple-color: #7209b7;
+            --pink-color: #f72585;
+            --orange-color: #ff9e00;
+            --teal-color: #20c997;
+            --cyan-color: #06d6a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: #333;
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.dark-mode {
+            background-color: #121826;
+            color: #e0e0e0;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            height: 65px;
+            border-bottom: 1px solid #e9ecef;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0 15px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode .header {
+            background-color: var(--dark-color);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Logo Section */
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 180px;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .logo-icon {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+
+        .dark-mode .logo {
+            color: var(--accent-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 85px;
+            padding: 20px;
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
+            flex: 1;
+            width: 100%;
+        }
+
+        .dark-mode .main-content {
+            background-color: #121826;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #4361ee, #4cc9f0, #7209b7);
+        }
+
+        .dark-mode .page-header {
+            background: #1e1e2d;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #4361ee, #3f37c9);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .page-title h1 {
+            font-weight: 700;
+            font-size: 1.9rem;
+            margin: 0;
+            background: linear-gradient(135deg, #4361ee, #4cc9f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dark-mode .page-title h1 {
+            background: linear-gradient(135deg, #4cc9f0, #4361ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 992px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Video Player Section */
+        .video-player-section {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .video-player-section {
+            background: #1e1e2d;
+        }
+
+        .player-container {
+            position: relative;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: #000;
+        }
+
+        #youtube-player, .custom-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .custom-player {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .custom-player i {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        /* Video Controls */
+        .video-controls {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .dark-mode .video-controls {
+            background: #25253d;
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-control {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .btn-control:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Go Live Setup Section */
+        .go-live-setup {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .dark-mode .go-live-setup {
+            background: #1e1e2d;
+        }
+
+        .setup-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dark-mode .setup-header {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .setup-steps {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .setup-step {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .setup-step.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .setup-step:hover:not(.active) {
+            background: rgba(67, 97, 238, 0.2);
+        }
+
+        .setup-content {
+            display: none;
+        }
+
+        .setup-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-control, .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--light-gray);
+            transition: all 0.3s;
+        }
+
+        .dark-mode .form-control,
+        .dark-mode .form-select {
+            background: #25253d;
+            border-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        /* Device Test Section */
+        .device-test {
+            background: rgba(67, 97, 238, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .dark-mode .device-test {
+            background: rgba(76, 201, 240, 0.05);
+        }
+
+        .preview-container {
+            width: 100%;
+            height: 150px;
+            background: #000;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        /* Live Streams Grid */
+        .live-streams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .live-streams-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Stream Card */
+        .stream-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .stream-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .dark-mode .stream-card {
+            background: #1e1e2d;
+        }
+
+        .stream-card-thumbnail {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .stream-card-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .stream-card:hover .stream-card-thumbnail img {
+            transform: scale(1.1);
+        }
+
+        .stream-card-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--danger-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stream-card-content {
+            padding: 15px;
+        }
+
+        .stream-card-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .stream-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+
+        /* Right Sidebar */
+        .right-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Chat Section */
+        .chat-section {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+        }
+
+        .dark-mode .chat-section {
+            background: #1e1e2d;
+        }
+
+        .chat-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #4361ee, #3f37c9);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            background: rgba(67, 97, 238, 0.1);
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 80%;
+        }
+
+        .dark-mode .message-content {
+            background: rgba(76, 201, 240, 0.1);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .message-sender {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .dark-mode .message-sender {
+            color: var(--accent-color);
+        }
+
+        .chat-input {
+            padding: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .chat-input {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* YouTube URL Section */
+        .youtube-url-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .youtube-url-section {
+            background: #1e1e2d;
+        }
+
+        .url-input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .url-input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--light-gray);
+        }
+
+        .dark-mode .url-input {
+            background: #25253d;
+            border-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* Live Viewers */
+        .live-viewers-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .live-viewers-section {
+            background: #1e1e2d;
+        }
+
+        .viewers-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .viewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid white;
+        }
+
+        .dark-mode .viewer-avatar {
+            border-color: var(--dark-color);
+        }
+
+        /* Upcoming Streams */
+        .upcoming-streams {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .dark-mode .upcoming-streams {
+            background: #1e1e2d;
+        }
+
+        /* Live Badge */
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #ff4d4d, #ff6b6b);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            animation: livePulse 2s infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: rgba(0, 0, 0, 0.1);
+            height: 6px;
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .dark-mode .progress-container {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4361ee, #4cc9f0);
+            border-radius: 3px;
+        }
+
+        /* Viewer Count */
+        .viewer-count {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .dark-mode .notification {
+            background: #25253d;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Tabs */
+        .stream-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .stream-tab {
+            padding: 10px 20px;
+            background: rgba(67, 97, 238, 0.1);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            color: var(--primary-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .stream-tab.active, .stream-tab:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .dark-mode .stream-tab {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(67, 97, 238, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: linear-gradient(135deg, #1e1e2d, #2d2d44);
+            color: #f8f9fa;
+            padding: 60px 0 30px;
+            margin-top: auto;
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .dark-mode .footer {
+            background: linear-gradient(135deg, #0a0a14, #121826);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .footer-brand {
+            flex: 1;
+        }
+
+        .footer-brand h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4cc9f0, #4361ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        .footer-brand p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .footer-copyright {
+            text-align: right;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .footer-middle {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-links h4,
+        .footer-contact h4 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: white;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-links h4::after,
+        .footer-contact h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #4361ee, #4cc9f0);
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+            padding-left: 5px;
+        }
+
+        .footer-contact ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-contact li {
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .footer-contact strong {
+            color: white;
+            font-weight: 600;
+            display: inline-block;
+            min-width: 120px;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-social h4 {
+            display: inline-block;
+            margin-right: 20px;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: #0077b5;
+            color: white;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: #005582;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 119, 181, 0.3);
+        }
+
+        /* Divider */
+        .footer-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 20px 0;
+        }
+
+        /* Quick Links Grid */
+        .quick-links-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        /* Mobile Responsive for Footer */
+        @media (max-width: 768px) {
+            .footer-top {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .footer-brand {
+                text-align: center;
+            }
+            
+            .footer-copyright {
+                text-align: center;
+            }
+            
+            .footer-middle {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .footer-contact strong {
+                min-width: 100px;
+            }
+            
+            .footer-brand h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 15px;
+                margin-top: 70px;
+            }
+            
+            .page-header {
+                padding: 20px;
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .page-title {
+                flex-direction: column;
+            }
+            
+            .control-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .control-buttons {
+                justify-content: center;
+            }
+            
+            .url-input-group {
+                flex-direction: column;
+            }
+            
+            .setup-steps {
+                flex-direction: column;
+            }
+            
+            .chat-section {
+                height: 400px;
+            }
+            
+            .video-player-section {
+                order: -1;
+            }
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #4361ee, #3f37c9);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff4d4d, #ff6b6b);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 77, 77, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #25253d;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4361ee;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f37c9;
+        }
+
+        /* Stream Quality */
+        .quality-selector {
+            position: relative;
+        }
+
+        .quality-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            min-width: 120px;
+            display: none;
+            z-index: 100;
+        }
+
+        .dark-mode .quality-dropdown {
+            background: #25253d;
+        }
+
+        .quality-dropdown.show {
+            display: block;
+        }
+
+        .quality-option {
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quality-option:hover {
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        /* Schedule Time */
+        .schedule-time {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        /* Stream Status */
+        .stream-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .status-live {
+            background: rgba(255, 77, 77, 0.1);
+            color: #ff4d4d;
+        }
+
+        .status-preparing {
+            background: rgba(255, 158, 0, 0.1);
+            color: #ff9e00;
+        }
+
+        .status-ready {
+            background: rgba(75, 181, 67, 0.1);
+            color: #4bb543;
+        }
+
+        /* Action Buttons Container */
+        .action-buttons-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .dark-mode .action-buttons-container {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Countdown */
+        .countdown {
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Fullscreen Styles */
+        .fullscreen-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+            background: #000;
+            display: none;
+        }
+
+        .fullscreen-player {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* Category Tags */
+        .category-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .category-tag {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .dark-mode .category-tag {
+            background: rgba(76, 201, 240, 0.1);
+            color: var(--accent-color);
+        }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .section-header h3 {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .dark-mode .section-header h3 {
+            color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="fas fa-satellite-dish logo-icon"></i>
+                    <span>Stream Connect</span>
+                </div>
+            </div>
+
+            <!-- Live Status -->
+            <div class="d-flex align-items-center gap-3">
+                <span class="live-badge" id="globalLiveBadge">
+                    <i class="fas fa-circle"></i>
+                    <span id="liveCount">24</span> LIVE
+                </span>
+                <div class="viewer-count" id="globalViewerCount">
+                    <i class="fas fa-users"></i>
+                    <span>45.2K</span>
+                </div>
+            </div>
+
+            <!-- Header Controls -->
+            <div class="header-controls">
+                <div class="control-buttons">
+                    <button class="btn-control" id="goLiveBtn" onclick="startGoLive()">
+                        <i class="fas fa-broadcast-tower"></i>
+                        <span>Go Live</span>
+                    </button>
+                    <button class="btn-control" onclick="toggleFullscreen()">
+                        <i class="fas fa-expand"></i>
+                        <span>Fullscreen</span>
+                    </button>
+                    <button class="btn-control" onclick="shareStream()">
+                        <i class="fas fa-share-alt"></i>
+                        <span>Share</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-title">
+                <div class="page-icon">
+                    <i class="fas fa-broadcast-tower"></i>
+                </div>
+                <div>
+                    <h1>Go Live & Watch Streams</h1>
+                    <p class="text-muted mt-2">Start your own live stream or watch others in real-time</p>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-danger" id="startStreamBtn" onclick="startLiveStream()">
+                    <i class="fas fa-broadcast-tower me-2"></i>Start Live Stream
+                </button>
+            </div>
+        </div>
+
+        <!-- Stream Tabs -->
+        <div class="stream-tabs">
+            <div class="stream-tab active" onclick="showTab('watch')">
+                <i class="fas fa-tv me-2"></i>Watch Streams
+            </div>
+            <div class="stream-tab" onclick="showTab('goLive')">
+                <i class="fas fa-video me-2"></i>Go Live
+            </div>
+            <div class="stream-tab" onclick="showTab('youtube')">
+                <i class="fab fa-youtube me-2"></i>YouTube Live
+            </div>
+            <div class="stream-tab" onclick="showTab('upcoming')">
+                <i class="fas fa-calendar me-2"></i>Upcoming
+            </div>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Left Column -->
+            <div class="left-column">
+                <!-- Video Player (Watch Mode) -->
+                <div class="video-player-section" id="watchMode">
+                    <div class="player-container">
+                        <div id="youtube-player"></div>
+                        <div class="custom-player" id="customPlayer">
+                            <i class="fas fa-broadcast-tower"></i>
+                            <h3 class="mt-3">Live Stream Player</h3>
+                            <p>Select a stream to start watching or start your own live stream</p>
+                            <div class="loading-spinner" id="playerLoading"></div>
+                        </div>
+                        <div class="viewer-count" id="playerViewerCount">
+                            <i class="fas fa-users"></i>
+                            <span>0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="video-controls">
+                        <div class="control-row">
+                            <div class="control-buttons">
+                                <button class="btn-control" id="playBtn" onclick="togglePlay()">
+                                    <i class="fas fa-play"></i>
+                                    <span>Play</span>
+                                </button>
+                                <button class="btn-control" id="volumeBtn" onclick="toggleMute()">
+                                    <i class="fas fa-volume-up"></i>
+                                    <span>Volume</span>
+                                </button>
+                                <div class="quality-selector">
+                                    <button class="btn-control" onclick="toggleQuality()">
+                                        <i class="fas fa-hd"></i>
+                                        <span>Quality</span>
+                                    </button>
+                                    <div class="quality-dropdown" id="qualityDropdown">
+                                        <div class="quality-option" onclick="setQuality('2160p')">4K (2160p)</div>
+                                        <div class="quality-option" onclick="setQuality('1440p')">2K (1440p)</div>
+                                        <div class="quality-option" onclick="setQuality('1080p')">Full HD (1080p)</div>
+                                        <div class="quality-option" onclick="setQuality('720p')">HD (720p)</div>
+                                        <div class="quality-option" onclick="setQuality('480p')">SD (480p)</div>
+                                    </div>
+                                </div>
+                                <button class="btn-control" onclick="toggleChat()">
+                                    <i class="fas fa-comments"></i>
+                                    <span>Chat</span>
+                                </button>
+                            </div>
+                            <div>
+                                <span class="text-muted" id="currentTime">00:00:00</span> / 
+                                <span class="text-muted" id="totalTime">00:00:00</span>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progressBar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Go Live Setup (Hidden by default) -->
+                <div class="go-live-setup" id="goLiveMode">
+                    <div class="setup-header">
+                        <h3>Start Your Live Stream</h3>
+                        <span class="live-badge">SETUP</span>
+                    </div>
+
+                    <!-- Setup Steps -->
+                    <div class="setup-steps">
+                        <div class="setup-step active" onclick="setSetupStep(1)">
+                            <i class="fas fa-info-circle"></i>
+                            <div>Basic Info</div>
+                        </div>
+                        <div class="setup-step" onclick="setSetupStep(2)">
+                            <i class="fas fa-cog"></i>
+                            <div>Settings</div>
+                        </div>
+                        <div class="setup-step" onclick="setSetupStep(3)">
+                            <i class="fas fa-play-circle"></i>
+                            <div>Go Live</div>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Basic Info -->
+                    <div class="setup-content active" id="setupStep1">
+                        <div class="form-group">
+                            <label class="form-label">Stream Title</label>
+                            <input type="text" class="form-control" id="streamTitle" 
+                                   placeholder="Enter your stream title" 
+                                   value="My Live Stream">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="streamDescription" rows="3" 
+                                      placeholder="Describe your stream...">Join me for an amazing live session!</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" id="streamCategory">
+                                <option value="gaming">Gaming</option>
+                                <option value="education" selected>Education</option>
+                                <option value="entertainment">Entertainment</option>
+                                <option value="music">Music</option>
+                                <option value="business">Business</option>
+                                <option value="creative">Creative</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Stream Type</label>
+                            <select class="form-select" id="streamType">
+                                <option value="public">Public (Anyone can join)</option>
+                                <option value="private">Private (Invite only)</option>
+                                <option value="paid">Paid Event</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Thumbnail</label>
+                            <div class="preview-container">
+                                <div id="thumbnailPreview" class="text-center">
+                                    <i class="fas fa-image fa-3x text-muted"></i>
+                                    <p class="mt-2">Stream Thumbnail</p>
+                                </div>
+                            </div>
+                            <input type="file" class="form-control mt-2" id="thumbnailUpload" 
+                                   accept="image/*" onchange="previewThumbnail(event)">
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Settings -->
+                    <div class="setup-content" id="setupStep2">
+                        <div class="form-group">
+                            <label class="form-label">Video Quality</label>
+                            <select class="form-select" id="videoQuality">
+                                <option value="720p">720p HD</option>
+                                <option value="1080p" selected>1080p Full HD</option>
+                                <option value="1440p">1440p 2K</option>
+                                <option value="2160p">2160p 4K</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Frame Rate</label>
+                            <select class="form-select" id="frameRate">
+                                <option value="30">30 FPS</option>
+                                <option value="60" selected>60 FPS</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Bitrate</label>
+                            <select class="form-select" id="bitrate">
+                                <option value="2500">2500 kbps (720p)</option>
+                                <option value="4500" selected>4500 kbps (1080p)</option>
+                                <option value="8000">8000 kbps (2K)</option>
+                                <option value="15000">15000 kbps (4K)</option>
+                            </select>
+                        </div>
+
+                        <!-- Device Test -->
+                        <div class="device-test">
+                            <h5>Device Test</h5>
+                            <div class="form-group">
+                                <label class="form-label">Camera</label>
+                                <select class="form-select" id="cameraSelect">
+                                    <option value="">Select Camera</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Microphone</label>
+                                <select class="form-select" id="microphoneSelect">
+                                    <option value="">Select Microphone</option>
+                                </select>
+                            </div>
+                            <div class="mt-3">
+                                <button class="btn btn-sm btn-primary" onclick="testDevices()">
+                                    <i class="fas fa-play me-2"></i>Test Devices
+                                </button>
+                                <button class="btn btn-sm btn-secondary" onclick="stopTest()">
+                                    <i class="fas fa-stop me-2"></i>Stop Test
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="recordStream" checked>
+                            <label class="form-check-label" for="recordStream">
+                                Record Stream
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Go Live -->
+                    <div class="setup-content" id="setupStep3">
+                        <div class="stream-status status-preparing">
+                            <i class="fas fa-sync fa-spin"></i>
+                            <div>
+                                <h6 class="mb-1">Ready to Go Live</h6>
+                                <p class="mb-0">Configure your stream settings and start broadcasting</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Stream Schedule</label>
+                            <div class="schedule-time">
+                                <div>
+                                    <label>Start Time</label>
+                                    <input type="time" class="form-control" id="startTime" value="14:00">
+                                </div>
+                                <div>
+                                    <label>Duration</label>
+                                    <select class="form-select" id="streamDuration">
+                                        <option value="30">30 minutes</option>
+                                        <option value="60" selected>1 hour</option>
+                                        <option value="120">2 hours</option>
+                                        <option value="180">3 hours</option>
+                                        <option value="0">Unlimited</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Stream URL</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="streamUrl" 
+                                       value="https://stream.connect.com/live/stream123" readonly>
+                                <button class="btn btn-outline-primary" onclick="copyStreamUrl()">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Stream Key</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="streamKey" 
+                                       value="sk_live_1234567890abcdef" readonly>
+                                <button class="btn btn-outline-primary" onclick="toggleStreamKey()">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-primary" onclick="copyStreamKey()">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <small class="text-muted">Use this key in OBS, Streamlabs, or other broadcasting software</small>
+                        </div>
+
+                        <div class="countdown" id="countdown" style="display: none;">
+                            3
+                        </div>
+
+                        <div class="action-buttons-container">
+                            <button class="btn btn-secondary" onclick="setSetupStep(2)">
+                                <i class="fas fa-arrow-left me-2"></i>Back
+                            </button>
+                            <button class="btn btn-danger" onclick="startBroadcasting()" id="broadcastBtn">
+                                <i class="fas fa-broadcast-tower me-2"></i>Start Broadcasting
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- YouTube URL Section -->
+                <div class="youtube-url-section" id="youtubeMode" style="display: none;">
+                    <h4 class="mb-3">Watch YouTube Live Streams</h4>
+                    <p class="text-muted mb-3">Enter a YouTube live stream URL to watch it here</p>
+                    <div class="url-input-group">
+                        <input type="url" class="url-input" id="youtubeUrl" 
+                               placeholder="https://www.youtube.com/watch?v=..." 
+                               value="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                        <button class="btn btn-primary" onclick="loadYouTubeVideo()">
+                            <i class="fas fa-play me-2"></i>Load Stream
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearYouTubeVideo()">
+                            <i class="fas fa-times me-2"></i>Clear
+                        </button>
+                    </div>
+                    <div class="mt-4">
+                        <h5>Popular Live Categories</h5>
+                        <div class="category-tags">
+                            <span class="category-tag" onclick="loadYouTubeCategory('gaming')">Gaming</span>
+                            <span class="category-tag" onclick="loadYouTubeCategory('music')">Music</span>
+                            <span class="category-tag" onclick="loadYouTubeCategory('sports')">Sports</span>
+                            <span class="category-tag" onclick="loadYouTubeCategory('news')">News</span>
+                            <span class="category-tag" onclick="loadYouTubeCategory('education')">Education</span>
+                            <span class="category-tag" onclick="loadYouTubeCategory('entertainment')">Entertainment</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-sidebar">
+                <!-- Live Chat -->
+                <div class="chat-section">
+                    <div class="chat-header">
+                        <h4><i class="fas fa-comments me-2"></i>Live Chat</h4>
+                        <span class="badge bg-light text-dark" id="chatOnlineCount">245 online</span>
+                    </div>
+                    <div class="chat-body" id="chatMessages">
+                        <!-- Chat messages will be loaded here -->
+                    </div>
+                    <div class="chat-input">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="chatInput" 
+                                   placeholder="Type your message...">
+                            <button class="btn btn-primary" onclick="sendChatMessage()">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Viewers -->
+                <div class="live-viewers-section">
+                    <h5 class="mb-3">Live Viewers</h5>
+                    <div class="viewers-list" id="viewersList">
+                        <!-- Viewers will be loaded here -->
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-sm btn-outline-primary" onclick="inviteViewers()">
+                            <i class="fas fa-user-plus me-2"></i>Invite Viewers
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stream Info -->
+                <div class="youtube-url-section" id="streamInfo">
+                    <h5 class="mb-3">Stream Information</h5>
+                    <div class="mb-2">
+                        <strong>Status:</strong>
+                        <span class="badge bg-danger ms-2" id="streamStatusBadge">Not Live</span>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Viewers:</strong>
+                        <span id="streamViewerCount">0</span>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Duration:</strong>
+                        <span id="streamDurationInfo">00:00:00</span>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Quality:</strong>
+                        <span id="streamQuality">1080p HD</span>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-sm btn-primary w-100" onclick="shareStream()">
+                            <i class="fas fa-share-alt me-2"></i>Share Stream
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Streams Grid -->
+        <div class="section-header mb-4">
+            <h3>Live Streams Now</h3>
+            <span class="badge bg-danger" id="liveStreamsCount">24 LIVE</span>
+        </div>
+
+        <div class="live-streams-grid" id="liveStreamsGrid">
+            <!-- Live streams will be loaded here -->
+        </div>
+
+        <!-- Upcoming Streams -->
+        <div class="upcoming-streams" id="upcomingMode" style="display: none;">
+            <div class="section-header mb-4">
+                <h3>Upcoming Streams</h3>
+                <span class="badge bg-warning">12 SCHEDULED</span>
+            </div>
+            <div class="live-streams-grid" id="upcomingStreamsGrid">
+                <!-- Upcoming streams will be loaded here -->
+            </div>
+        </div>
+
+        <!-- YouTube Recommendations -->
+        <div class="upcoming-streams">
+            <div class="section-header mb-4">
+                <h3>YouTube Live Recommendations</h3>
+                <span class="badge bg-danger">TRENDING</span>
+            </div>
+            <div class="live-streams-grid" id="youtubeRecommendations">
+                <!-- YouTube recommendations will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <h2>StreamConnect Events</h2>
+                    
+                </div>
+                <div class="footer-copyright">
+                    <p>© 2025 Stream Connect Events. All rights reserved.</p>
+                </div>
+            </div>
+
+            <div class="footer-divider"></div>
+
+            <div class="footer-middle">
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#categories">Event Categories</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact Us</h4>
+                    <ul>
+                        <li><strong>Company Name:</strong> AngamTech</li>
+                        <li><strong>Email:</strong> support@streamconnectevents</li>
+                        <li><strong>Phone:</strong> +91 8056484806</li>
+                        <li><strong>Address:</strong> Dharmapuri, TamilNadu, India</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-divider"></div>
+
+            <div class="footer-bottom">
+                <div class="footer-social">
+                    <h4>Follow Us</h4>
+                    <a href="https://linkedin.com" class="social-link" target="_blank">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
+                <div class="footer-copyright">
+                    <p>© 2025 Stream Connect Events. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        let player;
+        let chatInterval;
+        let durationInterval;
+        let currentDuration = 0;
+        let isPlaying = false;
+        let isMuted = false;
+        let viewerCount = 0;
+        let setupStep = 1;
+        let isBroadcasting = false;
+        let currentTab = 'watch';
+        let liveStreams = [];
+        let upcomingStreams = [];
+        let youtubeStreams = [];
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initYouTubePlayer();
+            loadLiveStreams();
+            loadUpcomingStreams();
+            loadYouTubeRecommendations();
+            loadChatMessages();
+            loadViewers();
+            updateStreamInfo();
+            
+            // Update URL based on tab
+            updateURL();
+            
+            // Load devices for go live setup
+            loadDevices();
+            
+            // Update live count every minute
+            setInterval(updateLiveCount, 60000);
+            
+            // Update viewer count every 30 seconds
+            setInterval(updateViewerCount, 30000);
+        });
+
+        // Initialize YouTube Player
+        function initYouTubePlayer() {
+            // YouTube player will be initialized when a video is loaded
+        }
+
+        // Load Live Streams
+        function loadLiveStreams() {
+            // Sample live streams data
+            liveStreams = [
+                {
+                    id: 1,
+                    title: "Tech Innovators Summit 2024",
+                    host: "Dr. Sarah Johnson",
+                    viewers: 12456,
+                    thumbnail: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    category: "Business",
+                    duration: "2:45:18",
+                    isLive: true
+                },
+                {
+                    id: 2,
+                    title: "Gaming Tournament Finals",
+                    host: "ProGamerX",
+                    viewers: 89234,
+                    thumbnail: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    category: "Gaming",
+                    duration: "4:12:38",
+                    isLive: true
+                },
+                {
+                    id: 3,
+                    title: "Live Music Concert",
+                    host: "MusicLive",
+                    viewers: 34567,
+                    thumbnail: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    category: "Music",
+                    duration: "1:58:22",
+                    isLive: true
+                },
+                {
+                    id: 4,
+                    title: "Python Programming Workshop",
+                    host: "CodeMaster",
+                    viewers: 8923,
+                    thumbnail: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    category: "Education",
+                    duration: "3:15:44",
+                    isLive: true
+                },
+                {
+                    id: 5,
+                    title: "Yoga & Meditation Live",
+                    host: "ZenMaster",
+                    viewers: 4567,
+                    thumbnail: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    category: "Lifestyle",
+                    duration: "1:12:18",
+                    isLive: true
+                },
+                {
+                    id: 6,
+                    title: "Digital Art Creation",
+                    host: "ArtPro",
+                    viewers: 6789,
+                    thumbnail: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    category: "Creative",
+                    duration: "2:33:47",
+                    isLive: true
+                }
+            ];
+
+            const grid = document.getElementById('liveStreamsGrid');
+            grid.innerHTML = '';
+
+            liveStreams.forEach(stream => {
+                const card = createStreamCard(stream);
+                grid.appendChild(card);
+            });
+
+            updateLiveCount();
+        }
+
+        // Load Upcoming Streams
+        function loadUpcomingStreams() {
+            upcomingStreams = [
+                {
+                    id: 7,
+                    title: "Stand-up Comedy Night",
+                    host: "ComedyCentral",
+                    viewers: 0,
+                    thumbnail: "https://images.unsplash.com/photo-1549576490-b0b4831ef60a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    category: "Entertainment",
+                    startTime: "Tomorrow, 8:00 PM",
+                    isLive: false
+                },
+                {
+                    id: 8,
+                    title: "Photography Workshop",
+                    host: "PhotoPro",
+                    viewers: 0,
+                    thumbnail: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    category: "Creative",
+                    startTime: "Saturday, 2:00 PM",
+                    isLive: false
+                }
+            ];
+
+            const grid = document.getElementById('upcomingStreamsGrid');
+            grid.innerHTML = '';
+
+            upcomingStreams.forEach(stream => {
+                const card = createStreamCard(stream, true);
+                grid.appendChild(card);
+            });
+        }
+
+        // Load YouTube Recommendations
+        function loadYouTubeRecommendations() {
+            youtubeStreams = [
+                {
+                    id: 9,
+                    title: "Tech News Live - Latest Updates",
+                    host: "TechToday",
+                    viewers: 23456,
+                    thumbnail: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    category: "Technology",
+                    duration: "1:15:30",
+                    youtubeId: "dQw4w9WgXcQ",
+                    isLive: true
+                },
+                {
+                    id: 10,
+                    title: "Gaming Livestream - New Game Release",
+                    host: "GameStreamer",
+                    viewers: 56789,
+                    thumbnail: "https://images.unsplash.com/photo-1531816458010-fb768453ea86?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                    category: "Gaming",
+                    duration: "3:45:12",
+                    youtubeId: "9bZkp7q19f0",
+                    isLive: true
+                }
+            ];
+
+            const grid = document.getElementById('youtubeRecommendations');
+            grid.innerHTML = '';
+
+            youtubeStreams.forEach(stream => {
+                const card = createYouTubeCard(stream);
+                grid.appendChild(card);
+            });
+        }
+
+        // Create Stream Card
+        function createStreamCard(stream, isUpcoming = false) {
+            const card = document.createElement('div');
+            card.className = 'stream-card';
+            card.onclick = () => selectStream(stream);
+
+            card.innerHTML = `
+                <div class="stream-card-thumbnail">
+                    <img src="${stream.thumbnail}" alt="${stream.title}">
+                    ${stream.isLive ? `
+                        <div class="stream-card-badge">
+                            <i class="fas fa-circle"></i> LIVE
+                        </div>
+                        <div class="viewer-count">
+                            <i class="fas fa-users"></i> ${formatViewers(stream.viewers)}
+                        </div>
+                    ` : `
+                        <div class="stream-card-badge" style="background: var(--warning-color);">
+                            <i class="fas fa-clock"></i> UPCOMING
+                        </div>
+                    `}
+                </div>
+                <div class="stream-card-content">
+                    <h5 class="stream-card-title">${stream.title}</h5>
+                    <p class="text-muted mb-2">Host: ${stream.host}</p>
+                    <div class="stream-card-meta">
+                        <span><i class="fas fa-tag"></i> ${stream.category}</span>
+                        ${stream.isLive ? `
+                            <span><i class="fas fa-clock"></i> ${stream.duration}</span>
+                        ` : `
+                            <span><i class="fas fa-calendar"></i> ${stream.startTime}</span>
+                        `}
+                    </div>
+                    <div class="mt-2">
+                        <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); selectStream(${stream.id})">
+                            <i class="fas fa-play me-1"></i> Watch Now
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Create YouTube Card
+        function createYouTubeCard(stream) {
+            const card = document.createElement('div');
+            card.className = 'stream-card';
+            card.onclick = () => loadYouTubeStream(stream.youtubeId, stream.title);
+
+            card.innerHTML = `
+                <div class="stream-card-thumbnail">
+                    <img src="${stream.thumbnail}" alt="${stream.title}">
+                    <div class="stream-card-badge" style="background: #ff0000;">
+                        <i class="fab fa-youtube"></i> YOUTUBE
+                    </div>
+                    <div class="viewer-count">
+                        <i class="fas fa-users"></i> ${formatViewers(stream.viewers)}
+                    </div>
+                </div>
+                <div class="stream-card-content">
+                    <h5 class="stream-card-title">${stream.title}</h5>
+                    <p class="text-muted mb-2">Channel: ${stream.host}</p>
+                    <div class="stream-card-meta">
+                        <span><i class="fas fa-tag"></i> ${stream.category}</span>
+                        <span><i class="fas fa-clock"></i> ${stream.duration}</span>
+                    </div>
+                    <div class="mt-2">
+                        <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); loadYouTubeStream('${stream.youtubeId}', '${stream.title}')">
+                            <i class="fab fa-youtube me-1"></i> Watch on YouTube
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Format Viewers Count
+        function formatViewers(count) {
+            if (count >= 1000) {
+                return (count / 1000).toFixed(1) + 'K';
+            }
+            return count.toString();
+        }
+
+        // Select Stream to Watch
+        function selectStream(streamId) {
+            let stream;
+            if (typeof streamId === 'object') {
+                stream = streamId;
+            } else {
+                stream = [...liveStreams, ...upcomingStreams].find(s => s.id === streamId);
+            }
+
+            if (!stream) return;
+
+            // Switch to watch tab
+            showTab('watch');
+
+            // Update player
+            const playerElement = document.getElementById('customPlayer');
+            playerElement.innerHTML = `
+                <i class="fas fa-broadcast-tower"></i>
+                <h3 class="mt-3">${stream.title}</h3>
+                <p>Hosted by ${stream.host}</p>
+                <div class="loading-spinner" id="playerLoading"></div>
+                <div class="mt-3">
+                    <button class="btn btn-primary" onclick="playStream()">
+                        <i class="fas fa-play me-2"></i>Play Stream
+                    </button>
+                </div>
+            `;
+
+            // Update viewer count
+            viewerCount = stream.viewers;
+            updateViewerDisplay();
+
+            showNotification(`Selected: ${stream.title}`, 'info');
+        }
+
+        // Play Stream
+        function playStream() {
+            const playerElement = document.getElementById('customPlayer');
+            playerElement.innerHTML = `
+                <div class="text-center">
+                    <i class="fas fa-broadcast-tower fa-3x text-primary"></i>
+                    <h4 class="mt-3">Now Playing Live Stream</h4>
+                    <p>Stream is playing in high quality</p>
+                    <div class="progress-container mt-3">
+                        <div class="progress-bar" style="width: 65%"></div>
+                    </div>
+                </div>
+            `;
+
+            isPlaying = true;
+            document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i><span>Pause</span>';
+
+            // Start duration timer
+            startDurationTimer();
+
+            showNotification('Stream started playing', 'success');
+        }
+
+        // Load YouTube Stream
+        function loadYouTubeStream(videoId, title) {
+            showTab('watch');
+            
+            if (player) {
+                player.loadVideoById(videoId);
+                player.playVideo();
+            } else {
+                // Initialize YouTube player
+                player = new YT.Player('youtube-player', {
+                    height: '100%',
+                    width: '100%',
+                    videoId: videoId,
+                    playerVars: {
+                        'autoplay': 1,
+                        'controls': 0,
+                        'modestbranding': 1,
+                        'rel': 0,
+                        'showinfo': 0
+                    },
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange
+                    }
+                });
+            }
+
+            document.getElementById('customPlayer').style.display = 'none';
+            document.getElementById('youtube-player').style.display = 'block';
+            
+            showNotification(`Loading YouTube stream: ${title}`, 'info');
+        }
+
+        // YouTube Player Ready
+        function onPlayerReady(event) {
+            event.target.playVideo();
+            isPlaying = true;
+            document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i><span>Pause</span>';
+            startDurationTimer();
+        }
+
+        // YouTube Player State Change
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING) {
+                isPlaying = true;
+                document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i><span>Pause</span>';
+            } else if (event.data == YT.PlayerState.PAUSED) {
+                isPlaying = false;
+                document.getElementById('playBtn').innerHTML = '<i class="fas fa-play"></i><span>Play</span>';
+            } else if (event.data == YT.PlayerState.ENDED) {
+                isPlaying = false;
+                document.getElementById('playBtn').innerHTML = '<i class="fas fa-play"></i><span>Play</span>';
+            }
+        }
+
+        // Toggle Play/Pause
+        function togglePlay() {
+            if (player) {
+                if (isPlaying) {
+                    player.pauseVideo();
+                } else {
+                    player.playVideo();
+                }
+            } else {
+                if (isPlaying) {
+                    isPlaying = false;
+                    document.getElementById('playBtn').innerHTML = '<i class="fas fa-play"></i><span>Play</span>';
+                } else {
+                    isPlaying = true;
+                    document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i><span>Pause</span>';
+                    playStream();
+                }
+            }
+        }
+
+        // Toggle Mute
+        function toggleMute() {
+            if (player) {
+                if (isMuted) {
+                    player.unMute();
+                    isMuted = false;
+                    document.getElementById('volumeBtn').innerHTML = '<i class="fas fa-volume-up"></i><span>Volume</span>';
+                } else {
+                    player.mute();
+                    isMuted = true;
+                    document.getElementById('volumeBtn').innerHTML = '<i class="fas fa-volume-mute"></i><span>Unmute</span>';
+                }
+            } else {
+                isMuted = !isMuted;
+                if (isMuted) {
+                    document.getElementById('volumeBtn').innerHTML = '<i class="fas fa-volume-mute"></i><span>Unmute</span>';
+                } else {
+                    document.getElementById('volumeBtn').innerHTML = '<i class="fas fa-volume-up"></i><span>Volume</span>';
+                }
+            }
+        }
+
+        // Start Duration Timer
+        function startDurationTimer() {
+            if (durationInterval) clearInterval(durationInterval);
+            
+            currentDuration = 0;
+            durationInterval = setInterval(() => {
+                currentDuration++;
+                updateDurationDisplay();
+            }, 1000);
+        }
+
+        // Update Duration Display
+        function updateDurationDisplay() {
+            const hours = Math.floor(currentDuration / 3600);
+            const minutes = Math.floor((currentDuration % 3600) / 60);
+            const seconds = currentDuration % 60;
+            
+            const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('currentTime').textContent = timeString;
+            document.getElementById('streamDurationInfo').textContent = timeString;
+            
+            // Update progress bar
+            const progress = (currentDuration % 300) / 300 * 100; // 5-minute segments
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        // Update Viewer Display
+        function updateViewerDisplay() {
+            const formattedViewers = formatViewers(viewerCount);
+            document.getElementById('playerViewerCount').innerHTML = `<i class="fas fa-users"></i><span>${formattedViewers}</span>`;
+            document.getElementById('streamViewerCount').textContent = formattedViewers;
+        }
+
+        // Update Live Count
+        function updateLiveCount() {
+            const liveCount = liveStreams.filter(s => s.isLive).length;
+            document.getElementById('liveCount').textContent = liveCount;
+            document.getElementById('liveStreamsCount').textContent = `${liveCount} LIVE`;
+            
+            // Randomly update viewer counts
+            liveStreams.forEach(stream => {
+                if (stream.isLive) {
+                    const change = Math.floor(Math.random() * 100) - 30;
+                    stream.viewers = Math.max(100, stream.viewers + change);
+                }
+            });
+            
+            // Reload grid with updated counts
+            loadLiveStreams();
+        }
+
+        // Update Viewer Count
+        function updateViewerCount() {
+            // Random fluctuation
+            const change = Math.floor(Math.random() * 50) - 15;
+            viewerCount = Math.max(0, viewerCount + change);
+            updateViewerDisplay();
+        }
+
+        // Show Tab
+        function showTab(tabName) {
+            currentTab = tabName;
+            
+            // Hide all content
+            document.getElementById('watchMode').style.display = 'none';
+            document.getElementById('goLiveMode').style.display = 'none';
+            document.getElementById('youtubeMode').style.display = 'none';
+            document.getElementById('upcomingMode').style.display = 'none';
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.stream-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected content
+            if (tabName === 'watch') {
+                document.getElementById('watchMode').style.display = 'block';
+                document.querySelector('.stream-tab:nth-child(1)').classList.add('active');
+            } else if (tabName === 'goLive') {
+                document.getElementById('goLiveMode').style.display = 'block';
+                document.querySelector('.stream-tab:nth-child(2)').classList.add('active');
+            } else if (tabName === 'youtube') {
+                document.getElementById('youtubeMode').style.display = 'block';
+                document.querySelector('.stream-tab:nth-child(3)').classList.add('active');
+            } else if (tabName === 'upcoming') {
+                document.getElementById('upcomingMode').style.display = 'block';
+                document.querySelector('.stream-tab:nth-child(4)').classList.add('active');
+            }
+            
+            // Update URL
+            updateURL();
+        }
+
+        // Start Go Live
+        function startGoLive() {
+            showTab('goLive');
+            setSetupStep(1);
+            showNotification('Go Live setup started', 'info');
+        }
+
+        // Set Setup Step
+        function setSetupStep(step) {
+            setupStep = step;
+            
+            // Hide all steps
+            document.querySelectorAll('.setup-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all steps
+            document.querySelectorAll('.setup-step').forEach(stepEl => {
+                stepEl.classList.remove('active');
+            });
+            
+            // Show selected step
+            document.getElementById(`setupStep${step}`).classList.add('active');
+            document.querySelectorAll('.setup-step')[step - 1].classList.add('active');
+        }
+
+        // Load Devices
+        function loadDevices() {
+            // In a real app, this would enumerate actual devices
+            const cameras = ['Webcam', 'External Camera', 'iPhone Camera'];
+            const microphones = ['Built-in Microphone', 'USB Microphone', 'Headset Mic'];
+            
+            const cameraSelect = document.getElementById('cameraSelect');
+            const microphoneSelect = document.getElementById('microphoneSelect');
+            
+            cameras.forEach(camera => {
+                const option = document.createElement('option');
+                option.value = camera;
+                option.text = camera;
+                cameraSelect.appendChild(option);
+            });
+            
+            microphones.forEach(mic => {
+                const option = document.createElement('option');
+                option.value = mic;
+                option.text = mic;
+                microphoneSelect.appendChild(option);
+            });
+        }
+
+        // Test Devices
+        function testDevices() {
+            const preview = document.getElementById('thumbnailPreview');
+            preview.innerHTML = `
+                <i class="fas fa-video fa-3x text-primary"></i>
+                <p class="mt-2">Testing Camera & Microphone</p>
+                <div class="progress-container mt-2">
+                    <div class="progress-bar" style="width: 75%; background: var(--primary-color);"></div>
+                </div>
+            `;
+            
+            showNotification('Testing camera and microphone...', 'info');
+        }
+
+        // Stop Test
+        function stopTest() {
+            const preview = document.getElementById('thumbnailPreview');
+            preview.innerHTML = `
+                <i class="fas fa-image fa-3x text-muted"></i>
+                <p class="mt-2">Stream Thumbnail</p>
+            `;
+        }
+
+        // Preview Thumbnail
+        function previewThumbnail(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('thumbnailPreview');
+                preview.innerHTML = `
+                    <img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;">
+                `;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Start Live Stream
+        function startLiveStream() {
+            startGoLive();
+            showNotification('Starting live stream setup...', 'info');
+        }
+
+        // Start Broadcasting
+        function startBroadcasting() {
+            const title = document.getElementById('streamTitle').value;
+            const description = document.getElementById('streamDescription').value;
+            
+            if (!title.trim()) {
+                showNotification('Please enter a stream title', 'error');
+                return;
+            }
+            
+            // Show countdown
+            const countdownElement = document.getElementById('countdown');
+            const broadcastBtn = document.getElementById('broadcastBtn');
+            countdownElement.style.display = 'block';
+            broadcastBtn.disabled = true;
+            broadcastBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Starting...';
+            
+            let countdown = 3;
+            countdownElement.textContent = countdown;
+            
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = countdown;
+                
+                if (countdown === 0) {
+                    clearInterval(countdownInterval);
+                    countdownElement.style.display = 'none';
+                    
+                    // Start broadcasting
+                    isBroadcasting = true;
+                    document.getElementById('streamStatusBadge').className = 'badge bg-success';
+                    document.getElementById('streamStatusBadge').textContent = 'LIVE';
+                    
+                    // Add to live streams
+                    const newStream = {
+                        id: liveStreams.length + 1,
+                        title: title,
+                        host: 'You (MP)',
+                        viewers: 1,
+                        thumbnail: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                        category: document.getElementById('streamCategory').value,
+                        duration: '00:00:01',
+                        isLive: true
+                    };
+                    
+                    liveStreams.unshift(newStream);
+                    loadLiveStreams();
+                    
+                    // Switch to watch mode
+                    showTab('watch');
+                    selectStream(newStream);
+                    
+                    // Start playing
+                    playStream();
+                    
+                    // Update URL
+                    updateURL(`?stream=${newStream.id}&live=true`);
+                    
+                    showNotification('You are now LIVE!', 'success');
+                    
+                    // Reset broadcast button
+                    setTimeout(() => {
+                        broadcastBtn.disabled = false;
+                        broadcastBtn.innerHTML = '<i class="fas fa-broadcast-tower me-2"></i>Start Broadcasting';
+                    }, 1000);
+                }
+            }, 1000);
+        }
+
+        // Load YouTube Video from URL
+        function loadYouTubeVideo() {
+            const url = document.getElementById('youtubeUrl').value;
+            const videoId = extractYouTubeId(url);
+            
+            if (!videoId) {
+                showNotification('Please enter a valid YouTube URL', 'error');
+                return;
+            }
+            
+            loadYouTubeStream(videoId, 'YouTube Live Stream');
+        }
+
+        // Extract YouTube ID from URL
+        function extractYouTubeId(url) {
+            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[7].length == 11) ? match[7] : false;
+        }
+
+        // Clear YouTube Video
+        function clearYouTubeVideo() {
+            document.getElementById('youtubeUrl').value = '';
+            if (player) {
+                player.stopVideo();
+            }
+            document.getElementById('customPlayer').style.display = 'flex';
+            document.getElementById('youtube-player').style.display = 'none';
+        }
+
+        // Load YouTube Category
+        function loadYouTubeCategory(category) {
+            showTab('youtube');
+            document.getElementById('youtubeUrl').value = `https://www.youtube.com/results?search_query=${category}+live`;
+            showNotification(`Loading ${category} live streams...`, 'info');
+        }
+
+        // Load Chat Messages
+        function loadChatMessages() {
+            const chatMessages = [
+                {name: "Alex Johnson", message: "Welcome to the stream!", time: "10:30"},
+                {name: "Sarah Miller", message: "Great content!", time: "10:32"},
+                {name: "Mike Chen", message: "Can we get a Q&A session?", time: "10:35"},
+                {name: "Emma Wilson", message: "Love the stream quality!", time: "10:38"},
+                {name: "David Brown", message: "When is the next stream?", time: "10:40"}
+            ];
+            
+            const chatBody = document.getElementById('chatMessages');
+            chatBody.innerHTML = '';
+            
+            chatMessages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'chat-message';
+                messageDiv.innerHTML = `
+                    <div class="chat-avatar">
+                        <img src="https://randomuser.me/api/portraits/${Math.random() > 0.5 ? 'men' : 'women'}/${Math.floor(Math.random() * 50) + 1}.jpg" alt="${msg.name}">
+                    </div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-sender">${msg.name}</span>
+                            <span class="message-time">${msg.time}</span>
+                        </div>
+                        <div class="message-text">${msg.message}</div>
+                    </div>
+                `;
+                chatBody.appendChild(messageDiv);
+            });
+            
+            scrollChatToBottom();
+        }
+
+        // Send Chat Message
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            const chatBody = document.getElementById('chatMessages');
+            const now = new Date();
+            const timeString = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message';
+            messageDiv.innerHTML = `
+                <div class="chat-avatar">
+                    <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="You">
+                </div>
+                <div class="message-content" style="background: rgba(76, 201, 240, 0.2);">
+                    <div class="message-header">
+                        <span class="message-sender">You (MP)</span>
+                        <span class="message-time">${timeString}</span>
+                    </div>
+                    <div class="message-text">${message}</div>
+                </div>
+            `;
+            
+            chatBody.appendChild(messageDiv);
+            input.value = '';
+            scrollChatToBottom();
+            
+            // Simulate response
+            setTimeout(() => {
+                const responses = ["Great point!", "Thanks for watching!", "Awesome!", "Good question!"];
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                const randomUser = Math.floor(Math.random() * 50) + 1;
+                
+                const responseDiv = document.createElement('div');
+                responseDiv.className = 'chat-message';
+                responseDiv.innerHTML = `
+                    <div class="chat-avatar">
+                        <img src="https://randomuser.me/api/portraits/${Math.random() > 0.5 ? 'men' : 'women'}/${randomUser}.jpg" alt="User">
+                    </div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-sender">User${randomUser}</span>
+                            <span class="message-time">${timeString}</span>
+                        </div>
+                        <div class="message-text">${randomResponse}</div>
+                    </div>
+                `;
+                
+                chatBody.appendChild(responseDiv);
+                scrollChatToBottom();
+            }, 1000);
+        }
+
+        // Scroll Chat to Bottom
+        function scrollChatToBottom() {
+            const chatBody = document.getElementById('chatMessages');
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        // Load Viewers
+        function loadViewers() {
+            const viewersList = document.getElementById('viewersList');
+            viewersList.innerHTML = '';
+            
+            for (let i = 1; i <= 12; i++) {
+                const viewerDiv = document.createElement('div');
+                viewerDiv.className = 'viewer-avatar';
+                viewerDiv.innerHTML = `
+                    <img src="https://randomuser.me/api/portraits/${i % 2 === 0 ? 'women' : 'men'}/${i}.jpg" alt="Viewer">
+                `;
+                viewersList.appendChild(viewerDiv);
+            }
+        }
+
+        // Update Stream Info
+        function updateStreamInfo() {
+            // Update online count
+            const onlineCount = Math.floor(Math.random() * 500) + 100;
+            document.getElementById('chatOnlineCount').textContent = `${onlineCount} online`;
+            
+            // Update stream quality
+            const quality = document.getElementById('videoQuality')?.value || '1080p';
+            document.getElementById('streamQuality').textContent = `${quality} HD`;
+        }
+
+        // Update URL
+        function updateURL(params = '') {
+            const baseUrl = window.location.origin + window.location.pathname;
+            const newUrl = baseUrl + (params ? params : `?tab=${currentTab}`);
+            
+            if (window.history.pushState) {
+                window.history.pushState({path: newUrl}, '', newUrl);
+            }
+        }
+
+        // Toggle Quality Dropdown
+        function toggleQuality() {
+            const dropdown = document.getElementById('qualityDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Set Quality
+        function setQuality(quality) {
+            document.getElementById('qualityDropdown').classList.remove('show');
+            document.getElementById('streamQuality').textContent = `${quality} HD`;
+            showNotification(`Stream quality set to ${quality}`, 'success');
+        }
+
+        // Toggle Chat
+        function toggleChat() {
+            const chatSection = document.querySelector('.chat-section');
+            if (chatSection.style.display === 'none') {
+                chatSection.style.display = 'flex';
+                showNotification('Chat shown', 'info');
+            } else {
+                chatSection.style.display = 'none';
+                showNotification('Chat hidden', 'info');
+            }
+        }
+
+        // Share Stream
+        function shareStream() {
+            const streamUrl = window.location.href;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Live Stream on Stream Connect',
+                    text: 'Check out this amazing live stream!',
+                    url: streamUrl
+                });
+            } else {
+                navigator.clipboard.writeText(streamUrl);
+                showNotification('Stream link copied to clipboard!', 'success');
+            }
+        }
+
+        // Invite Viewers
+        function inviteViewers() {
+            showNotification('Invite link copied to clipboard!', 'success');
+            // In real app, this would copy an invite link
+        }
+
+        // Copy Stream URL
+        function copyStreamUrl() {
+            const url = document.getElementById('streamUrl').value;
+            navigator.clipboard.writeText(url);
+            showNotification('Stream URL copied!', 'success');
+        }
+
+        // Copy Stream Key
+        function copyStreamKey() {
+            const key = document.getElementById('streamKey').value;
+            navigator.clipboard.writeText(key);
+            showNotification('Stream key copied!', 'success');
+        }
+
+        // Toggle Stream Key Visibility
+        function toggleStreamKey() {
+            const keyInput = document.getElementById('streamKey');
+            if (keyInput.type === 'password') {
+                keyInput.type = 'text';
+                showNotification('Stream key revealed', 'info');
+            } else {
+                keyInput.type = 'password';
+                showNotification('Stream key hidden', 'info');
+            }
+        }
+
+        // Toggle Fullscreen
+        function toggleFullscreen() {
+            const fullscreenMode = document.getElementById('fullscreenMode');
+            if (fullscreenMode.style.display === 'none' || !fullscreenMode.style.display) {
+                fullscreenMode.style.display = 'block';
+                if (player) {
+                    player.getIframe().style.width = '100%';
+                    player.getIframe().style.height = '100%';
+                }
+                showNotification('Fullscreen mode enabled', 'info');
+            } else {
+                exitFullscreen();
+            }
+        }
+
+        // Exit Fullscreen
+        function exitFullscreen() {
+            document.getElementById('fullscreenMode').style.display = 'none';
+            showNotification('Fullscreen mode disabled', 'info');
+        }
+
+        // Show Notification
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            notification.style.background = type === 'error' ? '#ff4d4d' : 
+                                           type === 'info' ? '#4361ee' : 
+                                           type === 'success' ? '#4bb543' : '#4361ee';
+            notification.style.color = 'white';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.quality-selector')) {
+                document.getElementById('qualityDropdown').classList.remove('show');
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            // Space to play/pause
+            if (event.code === 'Space' && !event.target.matches('input, textarea')) {
+                event.preventDefault();
+                togglePlay();
+            }
+            // M to mute/unmute
+            if (event.code === 'KeyM' && !event.target.matches('input, textarea')) {
+                event.preventDefault();
+                toggleMute();
+            }
+            // F for fullscreen
+            if (event.code === 'KeyF' && !event.target.matches('input, textarea')) {
+                event.preventDefault();
+                toggleFullscreen();
+            }
+            // 1-4 for tabs
+            if (event.code >= 'Digit1' && event.code <= 'Digit4' && !event.target.matches('input, textarea')) {
+                const tabs = ['watch', 'goLive', 'youtube', 'upcoming'];
+                const tabIndex = parseInt(event.code[5]) - 1;
+                if (tabs[tabIndex]) {
+                    event.preventDefault();
+                    showTab(tabs[tabIndex]);
+                }
+            }
+            // G for go live
+            if (event.code === 'KeyG' && (event.ctrlKey || event.metaKey)) {
+                event.preventDefault();
+                startGoLive();
+            }
+        });
+
+        // Handle URL parameters on page load
+        function handleURLParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tab = urlParams.get('tab');
+            const streamId = urlParams.get('stream');
+            
+            if (tab) {
+                showTab(tab);
+            }
+            
+            if (streamId) {
+                selectStream(parseInt(streamId));
+            }
+        }
+
+        // Initialize URL handling
+        handleURLParams();
+    </script>
+</body>
+</html>

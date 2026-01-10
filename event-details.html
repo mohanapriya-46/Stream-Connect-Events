@@ -1,0 +1,3245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Innovators Summit 2023 - Stream Connect</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6C63FF;
+            --secondary-color: #4A44C6;
+            --accent-color: #36D1DC;
+            --dark-color: #121826;
+            --light-color: #f8f9fa;
+            --success-color: #2ED47A;
+            --danger-color: #FF4D4D;
+            --warning-color: #FFB946;
+            --info-color: #109CF1;
+            --gray-color: #6C757D;
+            --light-gray: #F5F7FB;
+            --border-color: #E8EAF1;
+            --purple-color: #8A2BE2;
+            --pink-color: #FF6B8B;
+            --orange-color: #FF9F43;
+            --teal-color: #20C997;
+            --cyan-color: #06D6A0;
+            --card-bg: #ffffff;
+            --section-spacing: 60px;
+            --card-spacing: 30px;
+            --element-spacing: 20px;
+            --mobile-spacing: 15px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: #333;
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        body.dark-mode {
+            background-color: #0F111A;
+            color: #e0e0e0;
+            --card-bg: #1A1D28;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --light-gray: #121826;
+        }
+
+        /* ====== IMPROVED SPACING & PADDINGS ====== */
+        .section-spacing {
+            margin-bottom: var(--section-spacing);
+        }
+
+        .card-spacing {
+            padding: var(--card-spacing);
+        }
+
+        .element-spacing {
+            margin-bottom: var(--element-spacing);
+        }
+
+        .compact-spacing {
+            margin-bottom: 15px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: var(--card-bg);
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0 20px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .dark-mode .header {
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+            background: rgba(26, 29, 40, 0.9);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Logo Section */
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 180px;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .logo-icon {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+
+        .dark-mode .logo {
+            color: var(--accent-color);
+        }
+
+        /* Search Bar */
+        .search-section {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 15px;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: #f8f9fa;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+        }
+
+        .dark-mode .search-input {
+            background: #25253d;
+            color: white;
+        }
+
+        .dark-mode .search-input:focus {
+            background: #1e1e2d;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+        }
+
+        /* Navigation Menu */
+        .nav-section {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 2px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--gray-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 10px 12px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-color);
+            background: rgba(108, 99, 255, 0.1);
+        }
+
+        .dark-mode .nav-link {
+            color: #b0b7c3;
+        }
+
+        .dark-mode .nav-link:hover,
+        .dark-mode .nav-link.active {
+            color: var(--accent-color);
+            background: rgba(54, 209, 220, 0.1);
+        }
+
+        .nav-icon {
+            font-size: 0.9rem;
+        }
+
+        /* Notification Badge */
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--danger-color);
+            color: white;
+            font-size: 10px;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            border: 2px solid white;
+            font-weight: 600;
+            transform: translate(30%, -30%);
+        }
+
+        .dark-mode .notification-badge {
+            border-color: var(--dark-color);
+        }
+
+        /* Header Controls */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 5px;
+        }
+
+        .control-btn {
+            background: rgba(108, 99, 255, 0.1);
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .control-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .dark-mode .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+        }
+
+        /* Profile Dropdown */
+        .profile-mp {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6C63FF, #36D1DC);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: 2px solid white;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .profile-mp {
+            border-color: var(--dark-color);
+        }
+
+        .profile-mp:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        /* Dropdown Styles */
+        .dropdown-menu {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 10px 0;
+            min-width: 240px;
+            animation: dropdownFade 0.2s ease;
+        }
+
+        @keyframes dropdownFade {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            color: #333;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            margin: 2px 10px;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .dark-mode .dropdown-menu {
+            background: var(--dark-color);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dark-mode .dropdown-item {
+            color: #e0e0e0;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 90px;
+            padding: 0;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: calc(100vh - 90px);
+        }
+
+        .dark-mode .main-content {
+            background-color: #0F111A;
+        }
+
+        /* ====== NEW EVENT HERO SECTION ====== */
+        .new-hero-section {
+            position: relative;
+            min-height: 650px;
+            display: flex;
+            align-items: center;
+            padding: 60px 0;
+            margin-bottom: var(--section-spacing);
+            overflow: hidden;
+        }
+
+        .new-hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1) 0%, rgba(54, 209, 220, 0.05) 100%);
+            z-index: -2;
+        }
+
+        .new-hero-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(var(--primary-color) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .new-hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        .new-hero-content {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        @media (max-width: 992px) {
+            .new-hero-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        /* Hero Left Content */
+        .hero-left {
+            padding-right: 20px;
+        }
+
+        .event-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .event-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary-color);
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 1px solid rgba(108, 99, 255, 0.2);
+        }
+
+        .event-badge.premium {
+            background: linear-gradient(135deg, rgba(255, 107, 139, 0.1), rgba(255, 159, 67, 0.1));
+            color: var(--pink-color);
+            border-color: rgba(255, 107, 139, 0.2);
+        }
+
+        .event-badge.trending {
+            background: linear-gradient(135deg, rgba(255, 185, 70, 0.1), rgba(255, 159, 67, 0.1));
+            color: var(--warning-color);
+            border-color: rgba(255, 185, 70, 0.2);
+        }
+
+        .event-badge.certified {
+            background: linear-gradient(135deg, rgba(46, 212, 122, 0.1), rgba(6, 214, 160, 0.1));
+            color: var(--success-color);
+            border-color: rgba(46, 212, 122, 0.2);
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--gray-color);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .dark-mode .hero-subtitle {
+            color: #a0a8c3;
+        }
+
+        .hero-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 35px;
+        }
+
+        .hero-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+
+        .dark-mode .hero-stat-number {
+            color: var(--accent-color);
+        }
+
+        .hero-stat-label {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            margin-top: 5px;
+        }
+
+        /* Hero Right Content */
+        .hero-right {
+            position: relative;
+        }
+
+        .hero-image-container {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            position: relative;
+            height: 400px;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .hero-image-container:hover .hero-image {
+            transform: scale(1.05);
+        }
+
+        .hero-image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            color: white;
+        }
+
+        .date-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        /* Countdown Timer */
+        .countdown-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .countdown-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .countdown-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+
+        .dark-mode .countdown-value {
+            color: var(--accent-color);
+        }
+
+        .countdown-label {
+            font-size: 0.8rem;
+            color: var(--gray-color);
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ====== ACTION BUTTONS CONTAINER ====== */
+        .action-buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 30px 0;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .action-btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .action-btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(108, 99, 255, 0.4);
+        }
+
+        .action-btn-secondary {
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary-color);
+            border: 1px solid rgba(108, 99, 255, 0.2);
+        }
+
+        .action-btn-secondary:hover {
+            background: rgba(108, 99, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .action-btn-success {
+            background: linear-gradient(135deg, var(--success-color), var(--teal-color));
+            color: white;
+            box-shadow: 0 5px 15px rgba(46, 212, 122, 0.3);
+        }
+
+        .action-btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(46, 212, 122, 0.4);
+        }
+
+        .action-btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), var(--orange-color));
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 185, 70, 0.3);
+        }
+
+        .action-btn-warning:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 185, 70, 0.4);
+        }
+
+        .action-btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), var(--pink-color));
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+        }
+
+        .action-btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 77, 77, 0.4);
+        }
+
+        /* ====== UPCOMING EVENTS SECTION ====== */
+        .upcoming-events-section {
+            margin: 40px 0;
+        }
+
+        .upcoming-events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .upcoming-event-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .upcoming-event-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .upcoming-event-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .upcoming-event-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary-color);
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .upcoming-event-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 15px 0 10px;
+            color: var(--dark-color);
+        }
+
+        .dark-mode .upcoming-event-title {
+            color: #e0e0e0;
+        }
+
+        .upcoming-event-location {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upcoming-event-body {
+            padding: 20px;
+        }
+
+        .upcoming-event-description {
+            color: var(--gray-color);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .upcoming-event-footer {
+            padding: 15px 20px;
+            background: rgba(108, 99, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ====== UNIQUE CONTENT SECTIONS ====== */
+        .content-section {
+            max-width: 1200px;
+            margin: 0 auto 80px;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        .dark-mode .section-title {
+            color: #e0e0e0;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray-color);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Feature Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .feature-icon.workshop {
+            background: linear-gradient(135deg, var(--pink-color), var(--orange-color));
+        }
+
+        .feature-icon.networking {
+            background: linear-gradient(135deg, var(--teal-color), var(--cyan-color));
+        }
+
+        .feature-icon.innovation {
+            background: linear-gradient(135deg, var(--purple-color), var(--primary-color));
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        .dark-mode .feature-title {
+            color: #e0e0e0;
+        }
+
+        .feature-description {
+            color: var(--gray-color);
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        /* Interactive Schedule Timeline */
+        .interactive-timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline-day {
+            margin-bottom: 50px;
+        }
+
+        .timeline-day-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: inline-block;
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.2);
+        }
+
+        .timeline-items {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline-items:before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .timeline-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 30px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            border: 4px solid var(--light-gray);
+        }
+
+        .dark-mode .timeline-item:before {
+            border-color: var(--dark-color);
+        }
+
+        .timeline-time {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary-color);
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+
+        .dark-mode .timeline-title {
+            color: #e0e0e0;
+        }
+
+        .timeline-speaker {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timeline-location {
+            color: var(--gray-color);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Speakers Showcase */
+        .speakers-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .speaker-showcase-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .speaker-showcase-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .speaker-showcase-header {
+            padding: 30px 30px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .speaker-avatar-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+        }
+
+        .speaker-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-color);
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.2);
+        }
+
+        .speaker-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            border: 2px solid white;
+        }
+
+        .dark-mode .speaker-badge {
+            border-color: var(--dark-color);
+        }
+
+        .speaker-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+
+        .dark-mode .speaker-name {
+            color: #e0e0e0;
+        }
+
+        .speaker-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .speaker-company {
+            color: var(--gray-color);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+
+        .speaker-expertise {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .expertise-tag {
+            padding: 5px 12px;
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary-color);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Venue Map */
+        .venue-map-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            margin-top: 30px;
+        }
+
+        .map-placeholder {
+            height: 400px;
+            background: linear-gradient(135deg, #6C63FF, #36D1DC);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-placeholder:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none"/><circle cx="50" cy="50" r="3" fill="white" opacity="0.6"/><circle cx="30" cy="30" r="2" fill="white" opacity="0.4"/><circle cx="70" cy="70" r="2" fill="white" opacity="0.4"/><circle cx="20" cy="60" r="2" fill="white" opacity="0.4"/><circle cx="80" cy="40" r="2" fill="white" opacity="0.4"/></svg>');
+            background-size: 100px 100px;
+        }
+
+        .venue-details-sidebar {
+            padding: 30px;
+            background: rgba(108, 99, 255, 0.05);
+        }
+
+        /* Ticket Card Redesign */
+        .ticket-card-redesign {
+            background: linear-gradient(135deg, var(--dark-color), #1A1D28);
+            border-radius: 20px;
+            padding: 35px;
+            color: white;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 100px;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .ticket-card-redesign:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color), var(--pink-color));
+        }
+
+        .ticket-header-redesign {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .ticket-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .ticket-price-redesign {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            line-height: 1;
+            background: linear-gradient(135deg, white, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .ticket-price-redesign span {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .ticket-type-redesign {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .ticket-features-redesign {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .ticket-features-redesign li {
+            padding: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ticket-features-redesign li:last-child {
+            border-bottom: none;
+        }
+
+        .ticket-features-redesign li i {
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            width: 24px;
+        }
+
+        .ticket-actions-redesign {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn-ticket-redesign {
+            padding: 18px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-ticket-primary-redesign {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            box-shadow: 0 10px 25px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-ticket-primary-redesign:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(108, 99, 255, 0.4);
+        }
+
+        .btn-ticket-secondary-redesign {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-ticket-secondary-redesign:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        /* ====== TWO COLUMN LAYOUT ====== */
+        .two-column-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+            margin-bottom: var(--section-spacing);
+        }
+
+        @media (max-width: 992px) {
+            .two-column-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ====== SPONSORS SHOWCASE ====== */
+        .sponsors-showcase {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .sponsor-logo-card {
+            width: 150px;
+            height: 100px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .sponsor-logo-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .sponsor-logo-card img {
+            max-width: 100%;
+            max-height: 60px;
+            filter: grayscale(100%);
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+
+        .sponsor-logo-card:hover img {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+
+        /* ====== TESTIMONIALS ====== */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .testimonial-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .testimonial-card:before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 5rem;
+            color: rgba(108, 99, 255, 0.1);
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .testimonial-content {
+            font-size: 1.05rem;
+            color: var(--gray-color);
+            margin-bottom: 25px;
+            line-height: 1.7;
+            position: relative;
+            z-index: 2;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .testimonial-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .testimonial-author-info h5 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+
+        .dark-mode .testimonial-author-info h5 {
+            color: #e0e0e0;
+        }
+
+        .testimonial-author-info p {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+
+        /* ====== NEW FOOTER SECTION ====== */
+        .image-based-footer {
+            background: linear-gradient(135deg, var(--dark-color), #0a0e1a);
+            color: white;
+            padding: 60px 0 40px;
+            margin-top: 80px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-logo {
+            font-weight: 800;
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 15px;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-copyright {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section {
+            margin-bottom: 30px;
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--accent-color);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+            padding-left: 5px;
+        }
+
+        .contact-info {
+            list-style: none;
+            padding: 0;
+        }
+
+        .contact-info li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .contact-info i {
+            color: var(--accent-color);
+            font-size: 1rem;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        .contact-info strong {
+            color: white;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .social-section {
+            margin-top: 30px;
+        }
+
+        .social-text {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-icon:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-legal {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+        }
+
+        .back-to-top {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        /* ====== MOBILE MENU ====== */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            display: none;
+            max-height: calc(100vh - 70px);
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        /* ====== RESPONSIVE DESIGN ====== */
+        @media (max-width: 1200px) {
+            .new-hero-section {
+                min-height: 600px;
+            }
+            
+            .hero-title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .search-section {
+                display: none;
+            }
+            
+            .new-hero-section {
+                min-height: auto;
+                padding: 40px 0;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .two-column-layout {
+                gap: 30px;
+            }
+            
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .hero-stats {
+                gap: 20px;
+            }
+            
+            .hero-stat-number {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .ticket-price-redesign {
+                font-size: 3.5rem;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .header {
+                padding: 0 15px;
+                height: 65px;
+            }
+            
+            .main-content {
+                margin-top: 75px;
+            }
+            
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .event-badges {
+                gap: 8px;
+            }
+            
+            .event-badge {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .countdown-value {
+                font-size: 1.5rem;
+            }
+            
+            .feature-card {
+                padding: 20px;
+            }
+            
+            .live-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .footer-logo {
+                font-size: 2rem;
+            }
+        }
+
+        /* ====== UTILITY CLASSES ====== */
+        .mb-30 { margin-bottom: 30px !important; }
+        .mb-25 { margin-bottom: 25px !important; }
+        .mb-20 { margin-bottom: 20px !important; }
+        .mb-15 { margin-bottom: 15px !important; }
+        .mb-10 { margin-bottom: 10px !important; }
+        
+        .mt-30 { margin-top: 30px !important; }
+        .mt-25 { margin-top: 25px !important; }
+        .mt-20 { margin-top: 20px !important; }
+        .mt-15 { margin-top: 15px !important; }
+        
+        .pt-30 { padding-top: 30px !important; }
+        .pt-25 { padding-top: 25px !important; }
+        .pt-20 { padding-top: 20px !important; }
+        
+        .pb-30 { padding-bottom: 30px !important; }
+        .pb-25 { padding-bottom: 25px !important; }
+        .pb-20 { padding-bottom: 20px !important; }
+
+        /* ====== ANIMATIONS ====== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* ====== CUSTOM SCROLLBAR ====== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #25253d;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="fas fa-satellite-dish logo-icon"></i>
+                    <span>Stream Connect</span>
+                </div>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+
+
+            <!-- Navigation Menu -->
+            <div class="nav-section">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="user-dash.html" class="nav-link">
+                            <i class="fas fa-user-circle nav-icon"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-calendar-alt nav-icon"></i>
+                            <span>Events</span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item active" href="event-details.html"><i class="fas fa-info-circle me-2"></i>Event Details</a>
+                            <a class="dropdown-item" href="#" onclick="openTrackEvent()"><i class="fas fa-map-marked-alt me-2"></i>Track Event</a>
+                            <a class="dropdown-item" href="#" onclick="openJoinEvent()"><i class="fas fa-door-open me-2"></i>Join Event</a>
+        
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="live-stream.html" class="nav-link">
+                            <i class="fas fa-video nav-icon"></i>
+                            <span>Live</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="ai-matchmaking.html" class="nav-link">
+                            <i class="fas fa-robot nav-icon"></i>
+                            <span>AI Match</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="paid-events.html" class="nav-link">
+                            <i class="fas fa-ticket-alt nav-icon"></i>
+                            <span>Paid</span>
+                        </a>
+                    </li>
+                     <li class="nav-item">
+                        <a href="qa-chatbot.html" class="nav-link">
+                            <i class="fas fa-comments nav-icon"></i>
+                            <span>Q/A Chatbot</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="openNotifications()" class="nav-link">
+                            <i class="fas fa-bell nav-icon"></i>
+                            <span>Notifications</span>
+                            
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" onclick="checkAuthorizedAccess()" class="nav-link">
+                            <i class="fas fa-shield-alt nav-icon"></i>
+                            <span>Authorized Access</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Header Controls -->
+            <div class="header-controls">
+                
+                
+                <!-- Profile -->
+                <div class="dropdown">
+                    <div class="profile-mp dropdown-toggle" data-bs-toggle="dropdown" title="Mohanapriya R">
+                        MP
+                    </div>
+                    
+                    <!-- Profile Dropdown -->
+                    <div class="dropdown-menu dropdown-menu-end p-0">
+                        <div class="p-3 text-center border-bottom">
+                            <div class="profile-mp mx-auto mb-2" style="width: 60px; height: 60px; font-size: 1.2rem;">
+                                MP
+                            </div>
+                            <h6 class="mb-1" id="profileName">Mohanapriya R</h6>
+                            <small class="text-muted d-block" id="profileTier">Premium Member • Gold Tier</small>
+                            <div class="mt-2">
+                                <span class="badge bg-gradient-primary">Event Organizer</span>
+                                <span class="badge bg-gradient-success ms-1">VIP Access</span>
+                            </div>
+                        </div>
+                        <a class="dropdown-item" href="#" onclick="checkAuthorizedAccess()">
+                            <i class="fas fa-shield-alt me-2"></i>Authorized Access
+                        </a>
+                        <a class="dropdown-item" href="settings.html">
+                            <i class="fas fa-cog me-2"></i>Settings
+                        </a>
+                        <a class="dropdown-item" href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <ul class="mobile-nav">
+                <li class="mobile-nav-item">
+                    <a href="user-dash.html" class="mobile-nav-link">
+                        <i class="fas fa-user-circle mobile-nav-icon"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="event-details.html" class="mobile-nav-link active">
+                        <i class="fas fa-calendar-alt mobile-nav-icon"></i>
+                        <span>Event Details</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="#" onclick="openTrackEvent()" class="mobile-nav-link">
+                        <i class="fas fa-map-marked-alt mobile-nav-icon"></i>
+                        <span>Track Event</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="#" onclick="openJoinEvent()" class="mobile-nav-link">
+                        <i class="fas fa-door-open mobile-nav-icon"></i>
+                        <span>Join Event</span>
+                    </a>
+                </li>
+               
+                <li class="mobile-nav-item">
+                    <a href="live-stream.html" class="mobile-nav-link">
+                        <i class="fas fa-video mobile-nav-icon"></i>
+                        <span>Live Streaming</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="ai-matchmaking.html" class="mobile-nav-link">
+                        <i class="fas fa-robot mobile-nav-icon"></i>
+                        <span>AI Matchmaking</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="paid-events.html" class="mobile-nav-link">
+                        <i class="fas fa-ticket-alt mobile-nav-icon"></i>
+                        <span>Paid Events</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="#" onclick="openNotifications()" class="mobile-nav-link">
+                        <i class="fas fa-bell mobile-nav-icon"></i>
+                        <span>Notifications</span>
+                        <span class="badge bg-danger ms-2">3</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="#" onclick="checkAuthorizedAccess()" class="mobile-nav-link">
+                        <i class="fas fa-shield-alt mobile-nav-icon"></i>
+                        <span>Authorized Access</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="settings.html" class="mobile-nav-link">
+                        <i class="fas fa-cog mobile-nav-icon"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="#" class="mobile-nav-link text-danger" onclick="logout()">
+                        <i class="fas fa-sign-out-alt mobile-nav-icon"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- New Hero Section -->
+        <section class="new-hero-section fade-in-up">
+            <div class="new-hero-bg"></div>
+            <div class="new-hero-pattern"></div>
+            
+            <div class="new-hero-container">
+                <div class="new-hero-content">
+                    <div class="hero-left">
+                        <div class="event-badges">
+                            <span class="event-badge premium">
+                                <i class="fas fa-crown me-1"></i> Premium Event
+                            </span>
+                            <span class="event-badge certified">
+                                <i class="fas fa-check-circle me-1"></i> Certified
+                            </span>
+                            <span class="event-badge trending">
+                                <i class="fas fa-bolt me-1"></i> Trending
+                            </span>
+                            <span class="event-badge">
+                                <i class="fas fa-globe me-1"></i> Global
+                            </span>
+                        </div>
+                        
+                        <h1 class="hero-title">Tech Innovators Summit 2023</h1>
+                        <p class="hero-subtitle mb-30">Join the most anticipated technology conference of the year. Connect with industry leaders, explore groundbreaking innovations, and shape the future of technology alongside 2,500+ visionaries from around the world.</p>
+                        
+                        <div class="hero-stats mb-30">
+                            <div class="hero-stat">
+                                <span class="hero-stat-number">2,500+</span>
+                                <span class="hero-stat-label">Attendees</span>
+                            </div>
+                            <div class="hero-stat">
+                                <span class="hero-stat-number">48</span>
+                                <span class="hero-stat-label">Speakers</span>
+                            </div>
+                            <div class="hero-stat">
+                                <span class="hero-stat-number">24</span>
+                                <span class="hero-stat-label">Sessions</span>
+                            </div>
+                            <div class="hero-stat">
+                                <span class="hero-stat-number">15+</span>
+                                <span class="hero-stat-label">Countries</span>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex flex-wrap gap-15 mb-30">
+                            <button class="btn btn-outline-primary btn-lg" onclick="addToCalendar()">
+                                <i class="fas fa-calendar-plus me-2"></i>Add to Calendar
+                            </button>
+                            <button class="btn btn-success btn-lg" onclick="openJoinEvent()">
+                                <i class="fas fa-door-open me-2"></i>Join Event Now
+                            </button>
+                            <button class="btn btn-warning btn-lg" onclick="openTrackEvent()">
+                                <i class="fas fa-map-marked-alt me-2"></i>Track Event
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-right">
+                        <div class="hero-image-container float-animation">
+                            <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                                 alt="Tech Innovators Summit" class="hero-image">
+                            <div class="hero-image-overlay">
+                                <div class="date-badge">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    October 15-16, 2023
+                                </div>
+                                <h5 class="text-white mb-0">Moscone Center • San Francisco, CA</h5>
+                            </div>
+                        </div>
+                        
+                        <div class="countdown-container">
+                            <h5 class="countdown-title">Early Bird Discount Ends In</h5>
+                            <div class="countdown-timer">
+                                <div class="countdown-item">
+                                    <span class="countdown-value" id="countdown-days">07</span>
+                                    <span class="countdown-label">Days</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span class="countdown-value" id="countdown-hours">12</span>
+                                    <span class="countdown-label">Hours</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span class="countdown-value" id="countdown-minutes">45</span>
+                                    <span class="countdown-label">Minutes</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span class="countdown-value" id="countdown-seconds">30</span>
+                                    <span class="countdown-label">Seconds</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Buttons Section -->
+        <section class="content-section">
+            <div class="action-buttons-container">
+                <button class="action-btn action-btn-primary" onclick="openJoinEvent()">
+                    <i class="fas fa-door-open"></i>
+                    Join Event Now
+                </button>
+                
+                <button class="action-btn action-btn-secondary" onclick="openTrackEvent()">
+                    <i class="fas fa-map-marked-alt"></i>
+                    Track Event
+                </button>
+                
+                <button class="action-btn action-btn-success" onclick="viewUpcomingEvents()">
+                    <i class="fas fa-calendar"></i>
+                    Upcoming Events
+                </button>
+                
+                <button class="action-btn action-btn-warning" onclick="openNotifications()">
+                    <i class="fas fa-bell"></i>
+                    Notifications
+                </button>
+                
+                <button class="action-btn action-btn-danger" onclick="checkAuthorizedAccess()">
+                    <i class="fas fa-shield-alt"></i>
+                    Authorized Access
+                </button>
+            </div>
+        </section>
+
+        <!-- Upcoming Events Section -->
+        <section class="content-section upcoming-events-section">
+            <div class="section-header">
+                <h2 class="section-title">Upcoming Events</h2>
+                <p class="section-subtitle">Don't miss these exciting technology events coming up soon</p>
+            </div>
+            
+            <div class="upcoming-events-grid">
+                <!-- Event 1 -->
+                <div class="upcoming-event-card">
+                    <div class="upcoming-event-header">
+                        <span class="upcoming-event-date">
+                            <i class="fas fa-calendar-day"></i>
+                            Nov 15-16, 2023
+                        </span>
+                        <h4 class="upcoming-event-title">AI Revolution Conference</h4>
+                        <p class="upcoming-event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Virtual Event
+                        </p>
+                    </div>
+                    <div class="upcoming-event-body">
+                        <p class="upcoming-event-description">Explore the latest advancements in artificial intelligence and machine learning with industry pioneers.</p>
+                        <div class="d-flex gap-2 mb-3">
+                            <span class="badge bg-primary">AI</span>
+                            <span class="badge bg-success">ML</span>
+                            <span class="badge bg-warning">Deep Learning</span>
+                        </div>
+                    </div>
+                    <div class="upcoming-event-footer">
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewEventDetails(1)">
+                            <i class="fas fa-info-circle me-2"></i>Details
+                        </button>
+                        <button class="btn btn-sm btn-primary" onclick="registerForEvent(1)">
+                            <i class="fas fa-ticket-alt me-2"></i>Register
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Event 2 -->
+                <div class="upcoming-event-card">
+                    <div class="upcoming-event-header">
+                        <span class="upcoming-event-date">
+                            <i class="fas fa-calendar-day"></i>
+                            Dec 5-7, 2023
+                        </span>
+                        <h4 class="upcoming-event-title">Cloud Computing Summit</h4>
+                        <p class="upcoming-event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Austin, Texas
+                        </p>
+                    </div>
+                    <div class="upcoming-event-body">
+                        <p class="upcoming-event-description">Learn about cloud infrastructure, serverless architectures, and DevOps practices from experts.</p>
+                        <div class="d-flex gap-2 mb-3">
+                            <span class="badge bg-info">Cloud</span>
+                            <span class="badge bg-danger">DevOps</span>
+                            <span class="badge bg-secondary">AWS/Azure</span>
+                        </div>
+                    </div>
+                    <div class="upcoming-event-footer">
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewEventDetails(2)">
+                            <i class="fas fa-info-circle me-2"></i>Details
+                        </button>
+                        <button class="btn btn-sm btn-primary" onclick="registerForEvent(2)">
+                            <i class="fas fa-ticket-alt me-2"></i>Register
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Event 3 -->
+                <div class="upcoming-event-card">
+                    <div class="upcoming-event-header">
+                        <span class="upcoming-event-date">
+                            <i class="fas fa-calendar-day"></i>
+                            Jan 20-22, 2024
+                        </span>
+                        <h4 class="upcoming-event-title">Web3 & Blockchain Expo</h4>
+                        <p class="upcoming-event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Miami, Florida
+                        </p>
+                    </div>
+                    <div class="upcoming-event-body">
+                        <p class="upcoming-event-description">Discover the future of decentralized technologies, NFTs, and smart contracts.</p>
+                        <div class="d-flex gap-2 mb-3">
+                            <span class="badge bg-dark">Blockchain</span>
+                            <span class="badge bg-purple">Web3</span>
+                            <span class="badge bg-pink">NFT</span>
+                        </div>
+                    </div>
+                    <div class="upcoming-event-footer">
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewEventDetails(3)">
+                            <i class="fas fa-info-circle me-2"></i>Details
+                        </button>
+                        <button class="btn btn-sm btn-primary" onclick="registerForEvent(3)">
+                            <i class="fas fa-ticket-alt me-2"></i>Register
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-30">
+                <button class="btn btn-outline-primary btn-lg" onclick="viewAllUpcomingEvents()">
+                    <i class="fas fa-calendar-alt me-2"></i>View All Upcoming Events
+                </button>
+            </div>
+        </section>
+
+        <!-- Event Highlights Section -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Why You Should Attend</h2>
+                <p class="section-subtitle">Discover what makes the Tech Innovators Summit the premier technology event of the year</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="feature-title">Innovation Showcase</h3>
+                    <p class="feature-description">Experience live demonstrations of cutting-edge technologies from leading companies and startups. Get hands-on with the tools shaping tomorrow's industries.</p>
+                    <div class="mt-auto">
+                        <span class="badge bg-primary">50+ Exhibitors</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon workshop">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3 class="feature-title">Hands-on Workshops</h3>
+                    <p class="feature-description">Participate in interactive workshops led by industry experts. Gain practical skills in AI, cloud computing, cybersecurity, and more with real-world applications.</p>
+                    <div class="mt-auto">
+                        <span class="badge bg-warning">12 Workshops</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon networking">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3 class="feature-title">Elite Networking</h3>
+                    <p class="feature-description">Connect with CTOs, founders, engineers, and investors from top tech companies. Build valuable relationships through curated networking sessions.</p>
+                    <div class="mt-auto">
+                        <span class="badge bg-success">2,500+ Professionals</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon innovation">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="feature-title">Startup Pitch Competition</h3>
+                    <p class="feature-description">Witness groundbreaking startups pitch to top venture capitalists. $500K in funding available for the most promising innovations.</p>
+                    <div class="mt-auto">
+                        <span class="badge bg-danger">$500K Prize Pool</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Layout -->
+        <div class="content-section">
+            <div class="two-column-layout">
+                <!-- Left Column: Main Content -->
+                <div class="left-column">
+                    <!-- Interactive Schedule -->
+                    <div class="mb-60">
+                        <div class="section-header" style="text-align: left; margin-bottom: 30px;">
+                            <h2 class="section-title">Event Schedule</h2>
+                            <p class="section-subtitle" style="margin: 0; text-align: left;">Two days of inspiring sessions, workshops, and networking</p>
+                        </div>
+                        
+                        <div class="interactive-timeline">
+                            <!-- Day 1 -->
+                            <div class="timeline-day">
+                                <div class="timeline-day-header">
+                                    <i class="fas fa-calendar-day me-2"></i> Day 1 • October 15, 2023
+                                </div>
+                                
+                                <div class="timeline-items">
+                                    <div class="timeline-item" onclick="openSessionDetails(1)">
+                                        <span class="timeline-time">9:00 AM - 10:30 AM</span>
+                                        <h4 class="timeline-title">Registration & Welcome Breakfast</h4>
+                                        <div class="timeline-speaker">
+                                            <i class="fas fa-user-circle"></i>
+                                            Networking & Check-in
+                                        </div>
+                                        <div class="timeline-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            Main Hall Lobby
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted">Start your day with coffee, pastries, and networking with fellow attendees. Collect your event badge and materials.</p>
+                                    </div>
+                                    
+                                    <div class="timeline-item" onclick="openSessionDetails(2)">
+                                        <span class="timeline-time">10:30 AM - 12:00 PM</span>
+                                        <h4 class="timeline-title">Opening Keynote: The Future of AI in Business</h4>
+                                        <div class="timeline-speaker">
+                                            <i class="fas fa-user-circle"></i>
+                                            Dr. Sarah Johnson, AI Research Director at TechCorp
+                                        </div>
+                                        <div class="timeline-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            Grand Ballroom
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted">Explore how artificial intelligence is transforming business operations, customer experiences, and innovation strategies across industries.</p>
+                                    </div>
+                                    
+                                    <div class="timeline-item" onclick="openSessionDetails(3)">
+                                        <span class="timeline-time">1:30 PM - 3:00 PM</span>
+                                        <h4 class="timeline-title">Workshop: Building Scalable Cloud Infrastructure</h4>
+                                        <div class="timeline-speaker">
+                                            <i class="fas fa-user-circle"></i>
+                                            Michael Chen, CTO at InnovateLabs
+                                        </div>
+                                        <div class="timeline-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            Workshop Room A
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted">Hands-on session on designing and implementing scalable cloud architectures for high-traffic applications.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Day 2 -->
+                            <div class="timeline-day">
+                                <div class="timeline-day-header">
+                                    <i class="fas fa-calendar-day me-2"></i> Day 2 • October 16, 2023
+                                </div>
+                                
+                                <div class="timeline-items">
+                                    <div class="timeline-item" onclick="openSessionDetails(4)">
+                                        <span class="timeline-time">9:00 AM - 10:30 AM</span>
+                                        <h4 class="timeline-title">Panel Discussion: Ethics in Modern Technology</h4>
+                                        <div class="timeline-speaker">
+                                            <i class="fas fa-user-circle"></i>
+                                            Moderated by Dr. Elena Rodriguez, Stanford University
+                                        </div>
+                                        <div class="timeline-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            Panel Room 1
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted">Industry leaders discuss ethical considerations in AI development, data privacy, and responsible innovation.</p>
+                                    </div>
+                                    
+                                    <div class="timeline-item" onclick="openSessionDetails(5)">
+                                        <span class="timeline-time">11:00 AM - 12:30 PM</span>
+                                        <h4 class="timeline-title">Startup Pitch Competition Finals</h4>
+                                        <div class="timeline-speaker">
+                                            <i class="fas fa-user-circle"></i>
+                                            Top 10 Startups • Investor Jury
+                                        </div>
+                                        <div class="timeline-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            Innovation Stage
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted">Watch the most promising startups pitch to a panel of venture capitalists and industry experts for funding opportunities.</p>
+                                    </div>
+                                    
+                                    <div class="timeline-item" onclick="openSessionDetails(6)">
+                                        <span class="timeline-time">2:00 PM - 3:30 PM</span>
+                                        <h4 class="timeline-title">Closing Keynote: The Next Decade of Innovation</h4>
+                                        <div class="timeline-speaker">
+                                            <i class="fas fa-user-circle"></i>
+                                            David Park, Head of Cloud at GlobalTech
+                                        </div>
+                                        <div class="timeline-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            Grand Ballroom
+                                        </div>
+                                        <p class="mt-3 mb-0 text-muted">Closing session exploring emerging technologies and trends that will shape the next decade of technological innovation.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-30">
+                            <button class="btn btn-outline-primary" onclick="downloadFullSchedule()">
+                                <i class="fas fa-download me-2"></i>Download Full Schedule
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column: Sidebar -->
+                <div class="right-column">
+                    <!-- Ticket Card -->
+                    <div class="ticket-card-redesign mb-30">
+                        <div class="ticket-header-redesign">
+                            <span class="ticket-badge">Early Bird • 30% Off</span>
+                            <div class="ticket-price-redesign">$249<span>.99</span></div>
+                            <p class="ticket-type-redesign">Premium Access Pass</p>
+                            <p class="text-white-80 mb-0">All-access 2-day conference pass</p>
+                        </div>
+                        
+                        <ul class="ticket-features-redesign">
+                            <li><i class="fas fa-check-circle"></i> Full 2-day conference access</li>
+                            <li><i class="fas fa-check-circle"></i> All workshop materials</li>
+                            <li><i class="fas fa-check-circle"></i> Networking events & reception</li>
+                            <li><i class="fas fa-check-circle"></i> Lunch & refreshments included</li>
+                            <li><i class="fas fa-check-circle"></i> Professional certificate</li>
+                            <li><i class="fas fa-check-circle"></i> Event mobile app access</li>
+                            <li><i class="fas fa-check-circle"></i> Session recordings (90 days)</li>
+                            <li><i class="fas fa-check-circle"></i> Priority seating & check-in</li>
+                        </ul>
+                        
+                        <div class="ticket-actions-redesign">
+                            <button class="btn-ticket-redesign btn-ticket-primary-redesign" onclick="openBookingModal()">
+                                <i class="fas fa-ticket-alt"></i>
+                                Book Your Ticket Now
+                            </button>
+                            <button class="btn-ticket-redesign btn-ticket-secondary-redesign" onclick="openJoinEvent()">
+                                <i class="fas fa-door-open"></i>
+                                Join Event Now
+                            </button>
+                        </div>
+                        
+                        <!-- Ticket Availability -->
+                        <div class="mt-25 pt-20 border-top border-white-10">
+                            <div class="d-flex justify-content-between mb-10">
+                                <span class="text-white-80">Tickets Available</span>
+                                <span class="fw-bold text-white">658 of 2,500</span>
+                            </div>
+                            <div class="progress" style="height: 8px; background: rgba(255,255,255,0.2);">
+                                <div class="progress-bar bg-warning" style="width: 73.7%"></div>
+                            </div>
+                            <small class="text-white-80 d-block mt-10">Limited availability. Book soon to secure your spot.</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions Card -->
+                    <div class="detail-card mb-30">
+                        <h5 class="mb-15"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary" onclick="openJoinEvent()">
+                                <i class="fas fa-door-open me-2"></i>Join Event
+                            </button>
+                            <button class="btn btn-outline-success" onclick="openTrackEvent()">
+                                <i class="fas fa-map-marked-alt me-2"></i>Track Event
+                            </button>
+                            <button class="btn btn-outline-warning" onclick="openNotifications()">
+                                <i class="fas fa-bell me-2"></i>Notifications
+                            </button>
+                            <button class="btn btn-outline-danger" onclick="checkAuthorizedAccess()">
+                                <i class="fas fa-shield-alt me-2"></i>Authorized Access
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Share Event -->
+                    <div class="detail-card mb-30">
+                        <h5 class="mb-15"><i class="fas fa-share-alt me-2"></i>Share This Event</h5>
+                        <div class="d-flex gap-10 mb-20">
+                            <button class="btn btn-sm btn-primary flex-fill" onclick="shareEvent('facebook')">
+                                <i class="fab fa-facebook-f me-2"></i>Facebook
+                            </button>
+                            <button class="btn btn-sm btn-info flex-fill" onclick="shareEvent('twitter')">
+                                <i class="fab fa-twitter me-2"></i>Twitter
+                            </button>
+                            <button class="btn btn-sm btn-primary flex-fill" onclick="shareEvent('linkedin')">
+                                <i class="fab fa-linkedin-in me-2"></i>LinkedIn
+                            </button>
+                        </div>
+                        
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="https://streamconnect.com/events/tech-innovators-2023" readonly id="eventLink">
+                            <button class="btn btn-outline-secondary" type="button" onclick="copyEventLink()">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <section class="content-section">
+            <div class="cta-section" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 20px; padding: 60px 40px; text-align: center; color: white; margin-top: 40px; position: relative; overflow: hidden;">
+                <div class="cta-content">
+                    <h2 class="cta-title" style="font-size: 2.5rem; font-weight: 800; margin-bottom: 20px;">Ready to Join the Innovation Revolution?</h2>
+                    <p class="cta-subtitle" style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">Don't miss this opportunity to learn from industry leaders, network with peers, and gain insights that will transform your career and business.</p>
+                    
+                    <div class="cta-buttons" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 30px;">
+                        <button class="btn-cta btn-cta-primary" style="padding: 16px 32px; border-radius: 12px; font-weight: 700; font-size: 1.1rem; border: none; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 10px; background: white; color: var(--primary-color);" onclick="openJoinEvent()">
+                            <i class="fas fa-door-open"></i>
+                            Join Event Now
+                        </button>
+                        <button class="btn-cta btn-cta-secondary" style="padding: 16px 32px; border-radius: 12px; font-weight: 700; font-size: 1.1rem; border: none; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.1); color: white; border: 2px solid rgba(255, 255, 255, 0.3);" onclick="downloadBrochure()">
+                            <i class="fas fa-download"></i>
+                            Download Event Brochure
+                        </button>
+                    </div>
+                    
+                    <div class="mt-25 pt-20 border-top border-white-20">
+                        <p class="mb-0">
+                            <i class="fas fa-clock me-2"></i>
+                            Early bird pricing ends in <span id="countdown-text" class="fw-bold">7 days, 12 hours, 45 minutes</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Image-Based Footer -->
+    <footer class="image-based-footer">
+        <div class="footer-container">
+            <!-- Footer Header -->
+            <div class="footer-header">
+                <div class="footer-logo">StreamConnect Events</div>
+                <p class="footer-copyright">© 2025 Stream Connect Events. All rights reserved.</p>
+            </div>
+            
+            <!-- Footer Grid -->
+            <div class="footer-grid">
+                <!-- Quick Links Section -->
+                <div class="footer-section">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-chevron-right"></i>
+                                Features
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-chevron-right"></i>
+                                How it Works
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-chevron-right"></i>
+                                Pricing
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-chevron-right"></i>
+                                Event Categories
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Us Section -->
+                <div class="footer-section">
+                    <h3 class="footer-title">Contact Us</h3>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-building"></i>
+                            <div>
+                                <strong>Company Name:</strong>
+                                <span>AngamTech</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <strong>Email:</strong>
+                                <span>support@streamconnectevents.com</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <strong>Phone:</strong>
+                                <span>+91 8056484806</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <strong>Address:</strong>
+                                <span>Dharmapuri, TamilNadu, India</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Follow Us Section -->
+                <div class="footer-section">
+                    <h3 class="footer-title">Follow Us</h3>
+                    <p class="social-text">Connect with us on social media for updates in technology and events</p>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-icon" title="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-icon" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-icon" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-icon" title="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="social-icon" title="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-legal">
+                    <p>Stream Connect Events is a product of AngamTech. All trademarks and registered trademarks are the property of their respective owners.</p>
+                    <p class="mt-2">Privacy Policy | Terms of Service | Cookie Policy</p>
+                </div>
+                
+                <button class="back-to-top" onclick="scrollToTop()">
+                    <i class="fas fa-arrow-up"></i>
+                    Back to Top
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 50
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            initializeCountdown();
+            
+            // Check for saved preferences
+            if (localStorage.getItem('darkMode') === 'true') {
+                enableDarkMode();
+            }
+            
+            // Animate elements on scroll
+            setupScrollAnimations();
+        });
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            mobileMenuToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('active');
+                const icon = mobileMenuToggle.querySelector('i');
+                if (mobileMenu.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+
+            // Dark mode toggle
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+
+            // Fullscreen toggle
+            const fullscreenToggle = document.getElementById('fullscreenToggle');
+            fullscreenToggle.addEventListener('click', toggleFullscreen);
+
+            // Search functionality
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+            }
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (mobileMenu && !mobileMenu.contains(event.target) && mobileMenuToggle && !mobileMenuToggle.contains(event.target)) {
+                    mobileMenu.classList.remove('active');
+                    const icon = mobileMenuToggle.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            });
+            
+            // Timeline item click handlers
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const sessionId = this.getAttribute('onclick')?.match(/\d+/)?.[0] || 1;
+                    openSessionDetails(sessionId);
+                });
+            });
+            
+            // Notification click handler
+            const notificationLink = document.querySelector('a[href="notifications.html"]');
+            if (notificationLink) {
+                notificationLink.addEventListener('click', function(e) {
+                    // Clear notification badge
+                    const badge = this.querySelector('.notification-badge');
+                    if (badge) {
+                        badge.style.display = 'none';
+                    }
+                    // In a real app, you would mark notifications as read
+                    showNotification('Notifications marked as read', 'success');
+                });
+            }
+            
+            // Back to top button
+            const backToTopBtn = document.querySelector('.back-to-top');
+            if (backToTopBtn) {
+                backToTopBtn.addEventListener('click', scrollToTop);
+            }
+        }
+
+        // Initialize countdown timer
+        function initializeCountdown() {
+            // Set countdown date (7 days from now)
+            const countdownDate = new Date();
+            countdownDate.setDate(countdownDate.getDate() + 7);
+            countdownDate.setHours(23, 59, 59, 0); // End of day
+            
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = countdownDate - now;
+                
+                if (distance < 0) {
+                    document.getElementById('countdown-days').textContent = '00';
+                    document.getElementById('countdown-hours').textContent = '00';
+                    document.getElementById('countdown-minutes').textContent = '00';
+                    document.getElementById('countdown-seconds').textContent = '00';
+                    document.getElementById('countdown-text').textContent = 'Early bird ended';
+                    return;
+                }
+                
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                // Update countdown display
+                document.getElementById('countdown-days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('countdown-hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('countdown-minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('countdown-seconds').textContent = seconds.toString().padStart(2, '0');
+                
+                // Update text display
+                const countdownText = document.getElementById('countdown-text');
+                if (countdownText) {
+                    countdownText.textContent = `${days} days, ${hours} hours, ${minutes} minutes`;
+                }
+            }
+            
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+
+        // Setup scroll animations
+        function setupScrollAnimations() {
+            // Add scroll event listener for parallax effect
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const heroPattern = document.querySelector('.new-hero-pattern');
+                if (heroPattern) {
+                    heroPattern.style.transform = `translateY(${scrolled * 0.1}px)`;
+                }
+                
+                // Show/hide back to top button
+                const backToTopBtn = document.querySelector('.back-to-top');
+                if (backToTopBtn) {
+                    if (scrolled > 300) {
+                        backToTopBtn.style.opacity = '1';
+                        backToTopBtn.style.visibility = 'visible';
+                    } else {
+                        backToTopBtn.style.opacity = '0';
+                        backToTopBtn.style.visibility = 'hidden';
+                    }
+                }
+            });
+        }
+
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Open session details
+        function openSessionDetails(sessionId) {
+            showNotification(`Opening details for session ${sessionId}...`, 'info');
+            // In a real app, this would open a modal or navigate to session details
+        }
+
+        // Open booking modal
+        function openBookingModal() {
+            showNotification('Opening booking form...', 'info');
+            // In a real app, this would open a modal
+        }
+
+        // Open track event
+        function openTrackEvent() {
+            showNotification('Opening event tracking...', 'info');
+            // In a real app, this would open a tracking page or modal
+            window.location.href = 'track-event.html';
+        }
+
+        // Open join event
+        function openJoinEvent() {
+            showNotification('Opening event join page...', 'info');
+            // In a real app, this would open a join page or modal
+            window.location.href = 'join-event.html';
+        }
+
+        // View upcoming events
+        function viewUpcomingEvents() {
+            showNotification('Loading upcoming events...', 'info');
+            // Scroll to upcoming events section
+            const upcomingSection = document.querySelector('.upcoming-events-section');
+            if (upcomingSection) {
+                upcomingSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Open notifications
+        function openNotifications() {
+            showNotification('Opening notifications...', 'info');
+            // In a real app, this would open notifications page
+            window.location.href = 'notifications.html';
+        }
+
+        // Check authorized access
+        function checkAuthorizedAccess() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            
+            if (isLoggedIn) {
+                showNotification('✅ You have authorized access to this event!', 'success');
+                // Grant access to premium features
+                grantPremiumAccess();
+            } else {
+                showNotification('⚠️ Please login to access authorized features', 'warning');
+                // Redirect to login page
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            }
+        }
+
+        // View event details
+        function viewEventDetails(eventId) {
+            showNotification(`Loading details for event ${eventId}...`, 'info');
+            // In a real app, this would open event details page
+        }
+
+        // Register for event
+        function registerForEvent(eventId) {
+            showNotification(`Registering for event ${eventId}...`, 'info');
+            // In a real app, this would open registration form
+        }
+
+        // View all upcoming events
+        function viewAllUpcomingEvents() {
+            showNotification('Loading all upcoming events...', 'info');
+            // In a real app, this would navigate to events page
+        }
+
+        // Grant premium access
+        function grantPremiumAccess() {
+            // Add premium features
+            const actionButtons = document.querySelectorAll('.action-btn');
+            actionButtons.forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('disabled');
+            });
+            
+            // Show premium content
+            showNotification('🎉 Premium features unlocked! Enjoy exclusive access.', 'success');
+        }
+
+        // Share event
+        function shareEvent(platform) {
+            const eventUrl = window.location.href;
+            const eventTitle = document.querySelector('.hero-title').textContent;
+            
+            let shareUrl;
+            switch(platform) {
+                case 'facebook':
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(eventUrl)}`;
+                    break;
+                case 'twitter':
+                    shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(eventTitle)}&url=${encodeURIComponent(eventUrl)}`;
+                    break;
+                case 'linkedin':
+                    shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(eventUrl)}`;
+                    break;
+                default:
+                    // Copy to clipboard
+                    copyEventLink();
+                    return;
+            }
+            
+            window.open(shareUrl, '_blank', 'width=600,height=400');
+        }
+
+        // Copy event link
+        function copyEventLink() {
+            const eventLink = document.getElementById('eventLink');
+            if (eventLink) {
+                eventLink.select();
+                eventLink.setSelectionRange(0, 99999);
+                navigator.clipboard.writeText(eventLink.value);
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+            }
+            
+            // Show notification
+            showNotification('Event link copied to clipboard!', 'success');
+        }
+
+        // Add to calendar
+        function addToCalendar() {
+            showNotification('Adding event to your calendar...', 'info');
+            
+            // Create .ics file
+            const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+SUMMARY:Tech Innovators Summit 2023
+DESCRIPTION:Join 2,500+ technology leaders at Moscone Center, San Francisco
+LOCATION:Moscone Center, 747 Howard Street, San Francisco, CA 94103
+DTSTART:20231015T090000
+DTEND:20231016T180000
+END:VEVENT
+END:VCALENDAR`;
+            
+            const blob = new Blob([icsContent], { type: 'text/calendar' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Tech-Innovators-Summit.ics';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            showNotification('Calendar event downloaded. Import to your calendar app.', 'success');
+        }
+
+        // Open ticket options
+        function openTicketOptions() {
+            showNotification('Opening all ticket options...', 'info');
+        }
+
+        // Contact organizer
+        function contactOrganizer() {
+            showNotification('Opening organizer contact form...', 'info');
+        }
+
+        // Follow organizer
+        function followOrganizer() {
+            showNotification('You are now following TechCorp International', 'success');
+        }
+
+        // View all sponsors
+        function viewAllSponsors() {
+            showNotification('Loading all sponsors...', 'info');
+        }
+
+        // View all speakers
+        function viewAllSpeakers() {
+            showNotification('Loading all speakers...', 'info');
+        }
+
+        // Download full schedule
+        function downloadFullSchedule() {
+            showNotification('Downloading full schedule...', 'info');
+            // Simulate download
+            setTimeout(() => {
+                showNotification('✅ Schedule downloaded successfully!', 'success');
+            }, 1500);
+        }
+
+        // Download brochure
+        function downloadBrochure() {
+            showNotification('Downloading event brochure...', 'info');
+            // Simulate download
+            setTimeout(() => {
+                showNotification('✅ Brochure downloaded successfully!', 'success');
+            }, 1500);
+        }
+
+        // Notification system
+        function showNotification(message, type) {
+            // Remove any existing notifications
+            const existingAlerts = document.querySelectorAll('.alert-notification');
+            existingAlerts.forEach(alert => alert.remove());
+            
+            // Determine icon and color
+            let icon, colorClass;
+            switch(type) {
+                case 'success':
+                    icon = 'fa-check-circle';
+                    colorClass = 'alert-success';
+                    break;
+                case 'warning':
+                    icon = 'fa-exclamation-triangle';
+                    colorClass = 'alert-warning';
+                    break;
+                case 'danger':
+                    icon = 'fa-times-circle';
+                    colorClass = 'alert-danger';
+                    break;
+                case 'info':
+                default:
+                    icon = 'fa-info-circle';
+                    colorClass = 'alert-info';
+                    break;
+            }
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert ${colorClass} alert-dismissible fade show alert-notification`;
+            notification.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; max-width: 350px;';
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 me-3">
+                        <i class="fas ${icon} fa-lg"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }
+            }, 5000);
+        }
+
+        // Dark mode toggle
+        function toggleDarkMode() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            
+            if (isDarkMode) {
+                document.body.classList.remove('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('darkMode', 'false');
+            } else {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('darkMode', 'true');
+            }
+        }
+
+        function enableDarkMode() {
+            document.body.classList.add('dark-mode');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            if (darkModeToggle) {
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        }
+
+        // Fullscreen toggle
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                showNotification('Fullscreen mode activated', 'info');
+            } else {
+                document.exitFullscreen();
+                showNotification('Fullscreen mode exited', 'info');
+            }
+        }
+
+        // Search functionality
+        function performSearch() {
+            const searchInput = document.querySelector('.search-input');
+            const query = searchInput.value.trim();
+            
+            if (query === '') {
+                showNotification('Please enter a search term', 'warning');
+                return;
+            }
+            
+            showNotification(`Searching for: "${query}"`, 'info');
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout from Stream Connect?')) {
+                showNotification('Logging out...', 'info');
+                localStorage.setItem('isLoggedIn', 'false');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            // Ctrl/Cmd + K for search
+            if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+                event.preventDefault();
+                const searchInput = document.querySelector('.search-input');
+                if (searchInput) {
+                    searchInput.focus();
+                    searchInput.select();
+                }
+            }
+            
+            // Escape to close mobile menu
+            if (event.key === 'Escape') {
+                const mobileMenu = document.getElementById('mobileMenu');
+                if (mobileMenu && mobileMenu.classList.contains('active')) {
+                    mobileMenu.classList.remove('active');
+                    const icon = document.getElementById('mobileMenuToggle').querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            }
+            
+            // N for notifications
+            if (event.key === 'n' && (event.ctrlKey || event.metaKey)) {
+                event.preventDefault();
+                openNotifications();
+            }
+            
+            // J for join event
+            if (event.key === 'j' && (event.ctrlKey || event.metaKey)) {
+                event.preventDefault();
+                openJoinEvent();
+            }
+            
+            // T for track event
+            if (event.key === 't' && (event.ctrlKey || event.metaKey)) {
+                event.preventDefault();
+                openTrackEvent();
+            }
+            
+            // U for upcoming events
+            if (event.key === 'u' && (event.ctrlKey || event.metaKey)) {
+                event.preventDefault();
+                viewUpcomingEvents();
+            }
+            
+            // A for authorized access
+            if (event.key === 'a' && (event.ctrlKey || event.metaKey)) {
+                event.preventDefault();
+                checkAuthorizedAccess();
+            }
+        });
+
+        // Window resize handling
+        window.addEventListener('resize', function() {
+            // Close mobile menu on resize if window is large
+            if (window.innerWidth >= 992) {
+                const mobileMenu = document.getElementById('mobileMenu');
+                if (mobileMenu && mobileMenu.classList.contains('active')) {
+                    mobileMenu.classList.remove('active');
+                    const icon = document.getElementById('mobileMenuToggle').querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            }
+        });
+
+        // Initialize demo user (for testing)
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userRole', 'premium');
+    </script>
+</body>
+</html>

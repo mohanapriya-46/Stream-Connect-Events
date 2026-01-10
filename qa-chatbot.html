@@ -1,0 +1,3010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Connect - AI Q/A Assistant</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Typing Effect Library -->
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --ai-primary: #10b981;
+            --ai-secondary: #059669;
+            --ai-accent: #34d399;
+            --user-primary: #3b82f6;
+            --user-secondary: #2563eb;
+            --dark-color: #1e1e2d;
+            --light-color: #f8f9fa;
+            --success-color: #4bb543;
+            --danger-color: #ff4d4d;
+            --warning-color: #ffc107;
+            --gray-color: #6c757d;
+            --light-gray: #f8f9fa;
+            --border-color: #e9ecef;
+            --purple-color: #7209b7;
+            --pink-color: #f72585;
+            --orange-color: #ff9e00;
+            --teal-color: #20c997;
+            --cyan-color: #06d6a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: #333;
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        body.dark-mode {
+            background-color: #121826;
+            color: #e0e0e0;
+        }
+
+        /* Header Styles - Same as previous page */
+        .header {
+            background: white;
+            height: 65px;
+            border-bottom: 1px solid #e9ecef;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0 15px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode .header {
+            background-color: var(--dark-color);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Logo Section */
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 180px;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .logo-icon {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+
+        .dark-mode .logo {
+            color: var(--accent-color);
+        }
+
+        /* Search Bar */
+        .search-section {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 15px;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border-radius: 20px;
+            border: 1px solid #e9ecef;
+            background: #f8f9fa;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .dark-mode .search-input {
+            background: #25253d;
+            border-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .dark-mode .search-input:focus {
+            background: #1e1e2d;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+        }
+
+        /* Navigation Menu */
+        .nav-section {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 2px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--gray-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 8px 10px;
+            border-radius: 6px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--ai-primary);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .dark-mode .nav-link {
+            color: #b0b7c3;
+        }
+
+        .dark-mode .nav-link:hover,
+        .dark-mode .nav-link.active {
+            color: var(--ai-accent);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .nav-icon {
+            font-size: 0.9rem;
+        }
+
+        /* Header Controls */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 5px;
+        }
+
+        .control-btn {
+            background: rgba(67, 97, 238, 0.1);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .control-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .dark-mode .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger-color);
+            color: white;
+            font-size: 10px;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            border: 2px solid white;
+            font-weight: 600;
+        }
+
+        .dark-mode .notification-badge {
+            border-color: var(--dark-color);
+        }
+
+        /* Profile Dropdown */
+        .profile-mp {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--ai-primary), var(--ai-accent));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: 2px solid white;
+            transition: all 0.3s;
+        }
+
+        .dark-mode .profile-mp {
+            border-color: var(--dark-color);
+        }
+
+        .profile-mp:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Dropdown Styles */
+        .dropdown-menu {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 10px 0;
+            min-width: 240px;
+            animation: dropdownFade 0.2s ease;
+        }
+
+        @keyframes dropdownFade {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            color: #333;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            margin: 2px 10px;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--ai-primary);
+            transform: translateX(5px);
+        }
+
+        .dark-mode .dropdown-menu {
+            background: #1e1e2d;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dark-mode .dropdown-item {
+            color: #e0e0e0;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 85px;
+            padding: 20px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: calc(100vh - 85px);
+        }
+
+        .dark-mode .main-content {
+            background-color: #121826;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--ai-primary), var(--ai-accent), #4361ee);
+        }
+
+        .dark-mode .page-header {
+            background: #1e1e2d;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .page-title h1 {
+            font-weight: 700;
+            font-size: 1.9rem;
+            margin: 0;
+            background: linear-gradient(135deg, var(--ai-primary), var(--ai-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dark-mode .page-title h1 {
+            background: linear-gradient(135deg, var(--ai-accent), var(--ai-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-subtitle {
+            color: var(--gray-color);
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        /* AI Chatbot Container */
+        .chatbot-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 25px;
+            margin-bottom: 40px;
+            height: calc(100vh - 200px);
+            min-height: 600px;
+        }
+
+        @media (max-width: 992px) {
+            .chatbot-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
+
+        /* Chat Area */
+        .chat-area {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .dark-mode .chat-area {
+            background: #1e1e2d;
+        }
+
+        .chat-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dark-mode .chat-header {
+            background: linear-gradient(135deg, #25253d, #1e1e2d);
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            color: var(--ai-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ai-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .ai-indicator {
+            width: 10px;
+            height: 10px;
+            background: var(--ai-primary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Chat Messages Area */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background-color: #fafafa;
+        }
+
+        .dark-mode .chat-messages {
+            background-color: #1a1a2e;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            position: relative;
+            animation: messageSlide 0.3s ease;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--user-primary), var(--user-secondary));
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .ai-message {
+            align-self: flex-start;
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .dark-mode .ai-message {
+            background: #25253d;
+            color: #e0e0e0;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+        .message-sender {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .message-time {
+            opacity: 0.7;
+            font-size: 0.8rem;
+        }
+
+        .message-content {
+            line-height: 1.5;
+        }
+
+        .ai-message .message-sender {
+            color: var(--ai-primary);
+        }
+
+        .user-message .message-sender {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Message Actions */
+        .message-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ai-message .message-actions {
+            border-top-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .ai-message .message-actions {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: inherit;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 6px;
+            transition: all 0.3s;
+            opacity: 0.8;
+        }
+
+        .action-btn:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .ai-message .action-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode .ai-message .action-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Chat Input Area */
+        .chat-input-area {
+            padding: 20px 25px;
+            border-top: 1px solid var(--border-color);
+            background: white;
+        }
+
+        .dark-mode .chat-input-area {
+            background: #1e1e2d;
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: #f8f9fa;
+            font-size: 1rem;
+            resize: none;
+            min-height: 50px;
+            max-height: 150px;
+            transition: all 0.3s;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--ai-primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .dark-mode .chat-input {
+            background: #25253d;
+            border-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .dark-mode .chat-input:focus {
+            background: #1e1e2d;
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .input-action-btn {
+            background: rgba(16, 185, 129, 0.1);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            color: var(--ai-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .input-action-btn:hover {
+            background: var(--ai-primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .send-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Sidebar */
+        .chat-sidebar {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .dark-mode .chat-sidebar {
+            background: #1e1e2d;
+        }
+
+        .sidebar-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        }
+
+        .dark-mode .sidebar-header {
+            background: linear-gradient(135deg, #25253d, #1e1e2d);
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: var(--ai-primary);
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+        }
+
+        /* AI Models Section */
+        .ai-models-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--ai-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .model-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .dark-mode .model-card {
+            background: #25253d;
+        }
+
+        .model-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .model-card.active {
+            border-color: var(--ai-primary);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .model-icon {
+            font-size: 1.2rem;
+            color: var(--ai-primary);
+            margin-bottom: 8px;
+        }
+
+        .model-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .model-desc {
+            font-size: 0.75rem;
+            color: var(--gray-color);
+        }
+
+        /* Suggested Questions */
+        .suggested-questions {
+            margin-bottom: 30px;
+        }
+
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .question-btn {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 10px;
+            padding: 12px 15px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .dark-mode .question-btn {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: #e0e0e0;
+        }
+
+        .question-btn:hover {
+            background: rgba(16, 185, 129, 0.1);
+            transform: translateX(5px);
+        }
+
+        /* Chat History */
+        .chat-history {
+            margin-bottom: 30px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .history-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dark-mode .history-item {
+            background: #25253d;
+        }
+
+        .history-item:hover {
+            background: rgba(16, 185, 129, 0.1);
+            transform: translateX(5px);
+        }
+
+        .history-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .history-date {
+            font-size: 0.75rem;
+            color: var(--gray-color);
+        }
+
+        /* AI Capabilities */
+        .ai-capabilities {
+            margin-bottom: 30px;
+        }
+
+        .capabilities-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .capability-badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--ai-primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            align-self: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .dark-mode .typing-indicator {
+            background: #25253d;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: var(--ai-primary);
+            border-radius: 50%;
+            display: inline-block;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        /* AI Insights Section */
+        .ai-insights {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .dark-mode .ai-insights {
+            background: #1e1e2d;
+        }
+
+        .insights-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .insights-header h3 {
+            margin: 0;
+            color: var(--ai-primary);
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .insight-card {
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s;
+            border-left: 4px solid var(--ai-primary);
+        }
+
+        .dark-mode .insight-card {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .insight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.1);
+        }
+
+        .insight-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--ai-primary), var(--ai-accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .insight-content h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .dark-mode .insight-content h4 {
+            color: #e0e0e0;
+        }
+
+        .insight-content p {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1400px) {
+            .header-container {
+                padding: 0 10px;
+            }
+            
+            .search-section {
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .nav-link span {
+                display: none;
+            }
+            
+            .nav-link {
+                padding: 8px;
+            }
+            
+            .logo span {
+                display: inline;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .header {
+                height: auto;
+                padding: 10px;
+            }
+            
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            .logo-section {
+                order: 1;
+            }
+            
+            .search-section {
+                order: 3;
+                flex: 0 0 100%;
+                margin: 10px 0;
+                max-width: 100%;
+            }
+            
+            .nav-section {
+                order: 2;
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block !important;
+                order: 2;
+            }
+            
+            .header-controls {
+                order: 4;
+                margin-left: auto;
+            }
+            
+            .main-content {
+                margin-top: 120px;
+                padding: 15px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+                text-align: center;
+            }
+            
+            .page-title {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 30px;
+            }
+            
+            .footer-section {
+                max-width: 100% !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-title h1 {
+                font-size: 1.6rem;
+            }
+            
+            .page-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .message {
+                max-width: 95%;
+            }
+            
+            .models-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .logo span {
+                font-size: 1.2rem;
+            }
+            
+            .page-header {
+                padding: 15px;
+            }
+            
+            .page-title h1 {
+                font-size: 1.4rem;
+            }
+            
+            .control-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+            
+            .input-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .send-btn {
+                width: 100%;
+                height: 50px;
+            }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--ai-primary);
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 65px;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            display: none;
+            max-height: calc(100vh - 65px);
+            overflow-y: auto;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .dark-mode .mobile-menu {
+            background: #1e1e2d;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-nav {
+            list-style: none;
+            padding: 20px 0;
+            margin: 0;
+        }
+
+        .mobile-nav-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode .mobile-nav-item {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 25px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .mobile-nav-link:hover,
+        .mobile-nav-link.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--ai-primary);
+            padding-left: 30px;
+        }
+
+        .dark-mode .mobile-nav-link {
+            color: #e0e0e0;
+        }
+
+        .mobile-nav-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Alert Notification */
+        .alert-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 350px;
+            animation: slideInRight 0.3s ease, fadeOut 0.3s ease 4.7s forwards;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #25253d;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--ai-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--ai-secondary);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary));
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.2), 
+                transparent);
+            transform: translateX(-100%);
+        }
+
+        .btn-primary:hover::after {
+            animation: btnShine 0.8s;
+        }
+
+        @keyframes btnShine {
+            to { transform: translateX(100%); }
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--ai-primary);
+            color: var(--ai-primary);
+            background: transparent;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--ai-primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* New Footer Styles */
+        .footer {
+            background: white;
+            border-top: 1px solid var(--border-color);
+            padding: 60px 20px 30px;
+            margin-top: 50px;
+        }
+
+        .dark-mode .footer {
+            background: #1e1e2d;
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dark-mode .footer-container {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dark-mode .footer-title {
+            color: var(--accent-color);
+        }
+
+        .footer-tagline {
+            color: var(--gray-color);
+            margin-bottom: 20px;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .copyright {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .dark-mode .copyright {
+            color: #b0b7c3;
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .quick-links-title,
+        .contact-title,
+        .follow-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--ai-primary);
+        }
+
+        .footer-links-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links-list li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links-list a {
+            color: var(--gray-color);
+            text-decoration: none;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-links-list a:hover {
+            color: var(--ai-primary);
+            transform: translateX(5px);
+        }
+
+        .dark-mode .footer-links-list a {
+            color: #b0b7c3;
+        }
+
+        .contact-info {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .contact-info li {
+            margin-bottom: 12px;
+            color: var(--gray-color);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .dark-mode .contact-info li {
+            color: #b0b7c3;
+        }
+
+        .contact-info strong {
+            color: var(--dark-color);
+            min-width: 120px;
+        }
+
+        .dark-mode .contact-info strong {
+            color: #e0e0e0;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(67, 97, 238, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .dark-mode .social-link {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+        }
+
+        .separator {
+            width: 100%;
+            height: 1px;
+            background: var(--border-color);
+            margin: 20px 0;
+        }
+
+        .dark-mode .separator {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 30px auto 0;
+            text-align: center;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+
+        .ai-powered {
+            background: linear-gradient(135deg, var(--ai-primary), var(--ai-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="fas fa-satellite-dish logo-icon"></i>
+                    <span>Stream Connect</span>
+                </div>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Menu -->
+            <div class="nav-section">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="user-dash.html" class="nav-link">
+                            <i class="fas fa-user-circle nav-icon"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-calendar-alt nav-icon"></i>
+                            <span>Events</span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="event-details.html"><i class="fas fa-info-circle me-2"></i>Event Details</a>
+                            <a class="dropdown-item" href="track-event.html"><i class="fas fa-map-marked-alt me-2"></i>Track Event</a>
+                            <a class="dropdown-item" href="join-event.html"><i class="fas fa-door-open me-2"></i>Join Event</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="live-stream.html" class="nav-link">
+                            <i class="fas fa-video nav-icon"></i>
+                            <span>Live</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="ai-matchmaking.html" class="nav-link">
+                            <i class="fas fa-robot nav-icon"></i>
+                            <span>AI Match</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="paid-events.html" class="nav-link">
+                            <i class="fas fa-ticket-alt nav-icon"></i>
+                            <span>Paid</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="qa-chatbot.html" class="nav-link active">
+                            <i class="fas fa-robot nav-icon"></i>
+                            <span>Q/A chatbot</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="notifications.html" class="nav-link">
+                            <i class="fas fa-bell nav-icon"></i>
+                            <span>notification</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Header Controls -->
+            <div class="header-controls">
+
+                
+                <!-- Profile MP -->
+                <div class="dropdown">
+                    <div class="profile-mp dropdown-toggle" data-bs-toggle="dropdown" title="Mohanapriya R">
+                        MP
+                    </div>
+                    <!-- Profile Dropdown -->
+                    <div class="dropdown-menu dropdown-menu-end p-0">
+                        <div class="p-3 text-center border-bottom">
+                            <div class="profile-mp mx-auto mb-2" style="width: 60px; height: 60px; font-size: 1.2rem;">
+                                MP
+                            </div>
+                            <h6 class="mb-1" id="profileName">Mohanapriya R</h6>
+                            <small class="text-muted d-block" id="profileTier">Premium Member • Gold Tier</small>
+                            <div class="mt-2">
+                                <span class="badge bg-gradient-primary">Event Organizer</span>
+                                <span class="badge bg-gradient-success ms-1">VIP Access</span>
+                            </div>
+                        </div>
+                        <a class="dropdown-item" href="settings.html">
+                            <i class="fas fa-cog me-2"></i>Profile
+                        </a>
+                        <a class="dropdown-item" href="logout.html">
+                            <i class="fas fa-question-circle me-2"></i>logout
+                        </a>
+                        <div class="dropdown-divider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <ul class="mobile-nav">
+                <li class="mobile-nav-item">
+                    <a href="user-dash.html" class="mobile-nav-link">
+                        <i class="fas fa-user-circle mobile-nav-icon"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="event-details.html" class="mobile-nav-link">
+                        <i class="fas fa-calendar-alt mobile-nav-icon"></i>
+                        <span>Events</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="track-event.html" class="mobile-nav-link">
+                        <i class="fas fa-map-marked-alt mobile-nav-icon"></i>
+                        <span>Track Event</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="live-stream.html" class="mobile-nav-link">
+                        <i class="fas fa-video mobile-nav-icon"></i>
+                        <span>Live Streaming</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="ai-matchmaking.html" class="mobile-nav-link">
+                        <i class="fas fa-robot mobile-nav-icon"></i>
+                        <span>AI Matchmaking</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="paid-events.html" class="mobile-nav-link">
+                        <i class="fas fa-ticket-alt mobile-nav-icon"></i>
+                        <span>Paid Events</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="qa-chatbot.html" class="mobile-nav-link active">
+                        <i class="fas fa-robot mobile-nav-icon"></i>
+                        <span>AI Assistant</span>
+                        <span class="badge bg-success rounded-pill ms-auto">New</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="notifications.html" class="mobile-nav-link">
+                        <i class="fas fa-bell mobile-nav-icon"></i>
+                        <span>Alerts & Notifications</span>
+                        <span class="badge bg-danger rounded-pill ms-auto">3</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="settings.html" class="mobile-nav-link">
+                        <i class="fas fa-cog mobile-nav-icon"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="#" class="mobile-nav-link text-danger" onclick="logout()">
+                        <i class="fas fa-sign-out-alt mobile-nav-icon"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-title">
+                <div class="page-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <h1>AI Q/A Assistant</h1>
+                    <p class="page-subtitle">Get instant answers to your questions about events, tickets, networking, and more</p>
+                    <div class="d-flex align-items-center gap-3 mt-2">
+                        <span class="badge bg-success"><i class="fas fa-bolt me-1"></i>Real-time AI</span>
+                        <span class="badge bg-primary"><i class="fas fa-brain me-1"></i>Multi-Model Support</span>
+                        <span class="badge bg-warning"><i class="fas fa-lightbulb me-1"></i>Context-Aware</span>
+                        <span class="badge bg-info"><i class="fas fa-history me-1"></i>Chat History</span>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary" onclick="clearChat()">
+                    <i class="fas fa-trash-alt me-2"></i>Clear Chat
+                </button>
+                <button class="btn btn-primary" onclick="exportChat()">
+                    <i class="fas fa-download me-2"></i>Export Chat
+                </button>
+            </div>
+        </div>
+
+        <!-- Chatbot Container -->
+        <div class="chatbot-container">
+            <!-- Chat Area -->
+            <div class="chat-area">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <h3>
+                        <i class="fas fa-robot"></i>
+                        Stream Connect AI Assistant
+                    </h3>
+                    <div class="ai-status">
+                        <div class="ai-indicator"></div>
+                        <span>AI is online</span>
+                    </div>
+                </div>
+
+                <!-- Chat Messages -->
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Welcome Message -->
+                    <div class="message ai-message">
+                        <div class="message-header">
+                            <div class="message-sender">
+                                <i class="fas fa-robot"></i>
+                                Stream Connect AI
+                            </div>
+                            <div class="message-time">Just now</div>
+                        </div>
+                        <div class="message-content">
+                            <p>Hello! I'm your Stream Connect AI Assistant. I can help you with:</p>
+                            <ul>
+                                <li>Finding events based on your interests</li>
+                                <li>Answering questions about event details</li>
+                                <li>Helping with ticket purchases and refunds</li>
+                                <li>Connecting you with other attendees</li>
+                                <li>Providing event recommendations</li>
+                                <li>Answering general questions about our platform</li>
+                            </ul>
+                            <p>How can I assist you today?</p>
+                        </div>
+                        <div class="message-actions">
+                            <button class="action-btn" onclick="copyMessage(this)">
+                                <i class="far fa-copy"></i> Copy
+                            </button>
+                            <button class="action-btn" onclick="suggestRelated(this)">
+                                <i class="fas fa-lightbulb"></i> Suggest Related
+                            </button>
+                            <button class="action-btn" onclick="rateResponse(this, 'positive')">
+                                <i class="far fa-thumbs-up"></i> Helpful
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- User Example Message -->
+                    <div class="message user-message">
+                        <div class="message-header">
+                            <div class="message-sender">
+                                <i class="fas fa-user"></i>
+                                You
+                            </div>
+                            <div class="message-time">2 mins ago</div>
+                        </div>
+                        <div class="message-content">
+                            What tech events are happening in San Francisco this month?
+                        </div>
+                    </div>
+
+                    <!-- AI Example Response -->
+                    <div class="message ai-message">
+                        <div class="message-header">
+                            <div class="message-sender">
+                                <i class="fas fa-robot"></i>
+                                Stream Connect AI
+                            </div>
+                            <div class="message-time">1 min ago</div>
+                        </div>
+                        <div class="message-content">
+                            <p>Based on your location and interests, here are the top tech events in San Francisco this month:</p>
+                            <ol>
+                                <li><strong>Tech Innovators Summit</strong> - October 15-16 at Moscone Center
+                                    <br><small>Focus: AI, Cloud Computing, Cybersecurity</small>
+                                </li>
+                                <li><strong>Startup Launchpad Conference</strong> - October 22 at Pier 27
+                                    <br><small>Focus: Entrepreneurship, Venture Capital, Pitch Sessions</small>
+                                </li>
+                                <li><strong>Women in Tech Symposium</strong> - October 28 at SF Design Center
+                                    <br><small>Focus: Diversity, Leadership, Networking</small>
+                                </li>
+                            </ol>
+                            <p>Would you like more details about any of these events or should I search for specific topics?</p>
+                        </div>
+                        <div class="message-actions">
+                            <button class="action-btn" onclick="copyMessage(this)">
+                                <i class="far fa-copy"></i> Copy
+                            </button>
+                            <button class="action-btn" onclick="showEventDetails('Tech Innovators Summit')">
+                                <i class="fas fa-calendar-alt"></i> View Event
+                            </button>
+                            <button class="action-btn" onclick="rateResponse(this, 'positive')">
+                                <i class="far fa-thumbs-up"></i> Helpful
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Typing Indicator (Hidden by default) -->
+                <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span style="margin-left: 10px; font-size: 0.9rem;">AI is thinking...</span>
+                </div>
+
+                <!-- Chat Input -->
+                <div class="chat-input-area">
+                    <div class="input-container">
+                        <textarea class="chat-input" id="chatInput" placeholder="Type your question here... Press Enter to send" rows="1"></textarea>
+                        <button class="send-btn" id="sendMessageBtn" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="input-actions">
+                        <button class="input-action-btn" onclick="attachFile()" title="Attach file">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <button class="input-action-btn" onclick="useVoiceInput()" title="Voice input">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button class="input-action-btn" onclick="toggleContextMode()" title="Context mode">
+                            <i class="fas fa-history"></i>
+                        </button>
+                        <button class="input-action-btn" onclick="suggestQuestions()" title="Suggest questions">
+                            <i class="fas fa-lightbulb"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="chat-sidebar">
+                <!-- Sidebar Header -->
+                <div class="sidebar-header">
+                    <h3>
+                        <i class="fas fa-cog"></i>
+                        AI Assistant Settings
+                    </h3>
+                </div>
+
+                <!-- Sidebar Content -->
+                <div class="sidebar-content">
+                    <!-- AI Models Section -->
+                    <div class="ai-models-section">
+                        <div class="section-title">
+                            <i class="fas fa-brain"></i>
+                            AI Models
+                        </div>
+                        <div class="models-grid">
+                            <div class="model-card active" data-model="gpt-4" onclick="selectModel(this, 'gpt-4')">
+                                <div class="model-icon">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="model-name">GPT-4</div>
+                                <div class="model-desc">Most capable</div>
+                            </div>
+                            <div class="model-card" data-model="claude" onclick="selectModel(this, 'claude')">
+                                <div class="model-icon">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <div class="model-name">Claude 3</div>
+                                <div class="model-desc">Creative</div>
+                            </div>
+                            <div class="model-card" data-model="gemini" onclick="selectModel(this, 'gemini')">
+                                <div class="model-icon">
+                                    <i class="fas fa-gem"></i>
+                                </div>
+                                <div class="model-name">Gemini Pro</div>
+                                <div class="model-desc">Multimodal</div>
+                            </div>
+                            <div class="model-card" data-model="llama" onclick="selectModel(this, 'llama')">
+                                <div class="model-icon">
+                                    <i class="fas fa-code"></i>
+                                </div>
+                                <div class="model-name">Llama 3</div>
+                                <div class="model-desc">Open source</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Suggested Questions -->
+                    <div class="suggested-questions">
+                        <div class="section-title">
+                            <i class="fas fa-question-circle"></i>
+                            Suggested Questions
+                        </div>
+                        <div class="questions-list">
+                            <button class="question-btn" onclick="askQuestion(this)">
+                                What events match my interests?
+                            </button>
+                            <button class="question-btn" onclick="askQuestion(this)">
+                                How do I purchase event tickets?
+                            </button>
+                            <button class="question-btn" onclick="askQuestion(this)">
+                                Can you recommend networking events?
+                            </button>
+                            <button class="question-btn" onclick="askQuestion(this)">
+                                What's the refund policy?
+                            </button>
+                            <button class="question-btn" onclick="askQuestion(this)">
+                                How do I connect with speakers?
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Chat History -->
+                    <div class="chat-history">
+                        <div class="section-title">
+                            <i class="fas fa-history"></i>
+                            Recent Chats
+                        </div>
+                        <div class="history-list">
+                            <div class="history-item" onclick="loadChatHistory('tech-events')">
+                                <div>
+                                    <div class="history-title">Tech Events Inquiry</div>
+                                    <div class="history-date">Today, 10:30 AM</div>
+                                </div>
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                            <div class="history-item" onclick="loadChatHistory('ticket-help')">
+                                <div>
+                                    <div class="history-title">Ticket Purchase Help</div>
+                                    <div class="history-date">Yesterday, 3:45 PM</div>
+                                </div>
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                            <div class="history-item" onclick="loadChatHistory('networking')">
+                                <div>
+                                    <div class="history-title">Networking Questions</div>
+                                    <div class="history-date">Oct 5, 11:20 AM</div>
+                                </div>
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Capabilities -->
+                    <div class="ai-capabilities">
+                        <div class="section-title">
+                            <i class="fas fa-bolt"></i>
+                            AI Capabilities
+                        </div>
+                        <div class="capabilities-list">
+                            <span class="capability-badge">
+                                <i class="fas fa-calendar"></i> Event Search
+                            </span>
+                            <span class="capability-badge">
+                                <i class="fas fa-ticket-alt"></i> Ticket Help
+                            </span>
+                            <span class="capability-badge">
+                                <i class="fas fa-users"></i> Networking
+                            </span>
+                            <span class="capability-badge">
+                                <i class="fas fa-map"></i> Directions
+                            </span>
+                            <span class="capability-badge">
+                                <i class="fas fa-lightbulb"></i> Recommendations
+                            </span>
+                            <span class="capability-badge">
+                                <i class="fas fa-comments"></i> Multi-language
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Insights Section -->
+        <div class="ai-insights">
+            <div class="insights-header">
+                <h3>
+                    <i class="fas fa-chart-line"></i>
+                    AI Insights & Analytics
+                </h3>
+                <button class="btn btn-outline-primary btn-sm" onclick="refreshInsights()">
+                    <i class="fas fa-sync-alt me-1"></i>Refresh
+                </button>
+            </div>
+            
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <div class="insight-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="insight-content">
+                        <h4>Conversation Analysis</h4>
+                        <p>Your chat patterns show strong interest in tech events (85%) and networking opportunities (72%). Based on this, I can provide more targeted recommendations.</p>
+                    </div>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="insight-content">
+                        <h4>Event Recommendations</h4>
+                        <p>Based on your interests and past events, here are personalized recommendations: AI Developer Conference (Match: 94%), Startup Networking Mixer (Match: 87%), Cloud Security Summit (Match: 82%).</p>
+                    </div>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div class="insight-content">
+                        <h4>Networking Opportunities</h4>
+                        <p>AI has identified 24 potential connections in upcoming events who share your interests in AI development and cloud technologies. Would you like to see their profiles?</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            
+
+            <!-- Quick Links Section -->
+            <div class="footer-section">
+                <h3 class="quick-links-title">Quick Links</h3>
+                <ul class="footer-links-list">
+                    <li><a href="#"><i class="fas fa-chevron-right me-2"></i>Features</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right me-2"></i>How It Works</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right me-2"></i>Pricing</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right me-2"></i>Event Categories</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Us Section -->
+            <div class="footer-section">
+                <h3 class="contact-title">Contact Us</h3>
+                <ul class="contact-info">
+                    <li>
+                        <strong>Company Name:</strong>
+                        <span>AngamTech</span>
+                    </li>
+                    <li>
+                        <strong>Email:</strong>
+                        <span>support@streamconnectevents</span>
+                    </li>
+                    <li>
+                        <strong>Phone:</strong>
+                        <span>+91 8056484806</span>
+                    </li>
+                    <li>
+                        <strong>Address:</strong>
+                        <span>Dharmapuri, TamilNadu, India</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Follow Us Section -->
+            <div class="footer-section">
+                <h3 class="follow-title">Follow Us</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link" title="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Separator -->
+        <div class="separator"></div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            AI Assistant powered by multiple models including GPT-4, Claude, and Gemini | 
+            <span class="ai-powered">AI Powered Experience</span>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            loadChatHistory();
+            initTypingEffect();
+            
+            // Check for saved preferences
+            if (localStorage.getItem('darkMode') === 'true') {
+                enableDarkMode();
+            }
+            
+            // Set current AI model
+            const savedModel = localStorage.getItem('aiModel') || 'gpt-4';
+            selectModel(document.querySelector(`[data-model="${savedModel}"]`), savedModel);
+            
+            // Initialize auto-resize for textarea
+            initAutoResize();
+            
+            // Load conversation suggestions
+            loadConversationSuggestions();
+        });
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            mobileMenuToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('active');
+                const icon = mobileMenuToggle.querySelector('i');
+                if (mobileMenu.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            // Dark mode toggle
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+            
+            // Fullscreen toggle
+            const fullscreenToggle = document.getElementById('fullscreenToggle');
+            fullscreenToggle.addEventListener('click', toggleFullscreen);
+            
+            // Search functionality
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+            }
+            
+            // Chat input
+            const chatInput = document.getElementById('chatInput');
+            chatInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Auto-resize textarea
+            chatInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (mobileMenu && mobileMenu.classList.contains('active') && 
+                    !mobileMenu.contains(event.target) && 
+                    !mobileMenuToggle.contains(event.target)) {
+                    mobileMenu.classList.remove('active');
+                    const icon = mobileMenuToggle.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            });
+        }
+        
+        // Initialize auto-resize for textarea
+        function initAutoResize() {
+            const textarea = document.getElementById('chatInput');
+            textarea.addEventListener('focus', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        }
+        
+        // Initialize typing effect for welcome message
+        function initTypingEffect() {
+            // This would be used if we want to animate the initial message
+            // For now, we'll keep it simple
+        }
+        
+        // Load conversation suggestions
+        function loadConversationSuggestions() {
+            // In a real app, this would load from an API
+            // For now, we'll use static suggestions
+        }
+        
+        // Send a message
+        function sendMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const message = chatInput.value.trim();
+            
+            if (message === '') {
+                showNotification('Please enter a message', 'warning');
+                return;
+            }
+            
+            // Add user message to chat
+            addMessageToChat(message, 'user');
+            
+            // Clear input
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Simulate AI response after delay
+            setTimeout(() => {
+                // Hide typing indicator
+                hideTypingIndicator();
+                
+                // Generate AI response
+                const aiResponse = generateAIResponse(message);
+                
+                // Add AI response to chat
+                addMessageToChat(aiResponse, 'ai');
+                
+                // Save to chat history
+                saveToHistory(message, aiResponse);
+                
+                // Scroll to bottom
+                scrollToBottom();
+            }, 1500 + Math.random() * 1000);
+        }
+        
+        // Add message to chat
+        function addMessageToChat(content, sender) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageId = 'msg_' + Date.now();
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            messageDiv.id = messageId;
+            
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            let actionsHtml = '';
+            if (sender === 'ai') {
+                actionsHtml = `
+                    <div class="message-actions">
+                        <button class="action-btn" onclick="copyMessage(this)">
+                            <i class="far fa-copy"></i> Copy
+                        </button>
+                        <button class="action-btn" onclick="suggestRelated(this)">
+                            <i class="fas fa-lightbulb"></i> Suggest Related
+                        </button>
+                        <button class="action-btn" onclick="rateResponse(this, 'positive')">
+                            <i class="far fa-thumbs-up"></i> Helpful
+                        </button>
+                    </div>
+                `;
+            }
+            
+            messageDiv.innerHTML = `
+                <div class="message-header">
+                    <div class="message-sender">
+                        <i class="fas fa-${sender === 'user' ? 'user' : 'robot'}"></i>
+                        ${sender === 'user' ? 'You' : 'Stream Connect AI'}
+                    </div>
+                    <div class="message-time">${time}</div>
+                </div>
+                <div class="message-content">
+                    ${sender === 'ai' ? formatAIResponse(content) : content}
+                </div>
+                ${actionsHtml}
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            
+            // Add animation
+            setTimeout(() => {
+                messageDiv.style.animation = 'messageSlide 0.3s ease';
+            }, 10);
+            
+            scrollToBottom();
+        }
+        
+        // Format AI response with proper HTML
+        function formatAIResponse(content) {
+            // Simple formatting for lists and paragraphs
+            let formatted = content.replace(/\n/g, '<br>');
+            
+            // Convert numbered lists
+            formatted = formatted.replace(/(\d+)\.\s+(.+?)(?=\n\d+\.|\n\n|$)/g, '<li>$2</li>');
+            
+            // Convert bullet points
+            formatted = formatted.replace(/[-•]\s+(.+?)(?=\n[-•]|\n\n|$)/g, '<li>$1</li>');
+            
+            // Wrap lists in appropriate tags
+            if (formatted.includes('<li>')) {
+                formatted = formatted.replace(/(<li>.*<\/li>)/s, '<ol>$1</ol>');
+            }
+            
+            return formatted;
+        }
+        
+        // Generate AI response based on user input
+        function generateAIResponse(userMessage) {
+            const lowerMessage = userMessage.toLowerCase();
+            const currentModel = localStorage.getItem('aiModel') || 'gpt-4';
+            
+            // Simple keyword-based responses
+            if (lowerMessage.includes('event') || lowerMessage.includes('conference') || lowerMessage.includes('summit')) {
+                return `I found several events that might interest you:
+
+1. **Tech Innovators Summit** - October 15-16 at Moscone Center
+   - Focus: AI, Cloud Computing, Cybersecurity
+   - Speakers: 25+ industry leaders
+   - Networking: Dedicated sessions and AI-powered matchmaking
+
+2. **Startup Launchpad Conference** - October 22 at Pier 27
+   - Perfect for entrepreneurs and investors
+   - Pitch competitions with $100K in prizes
+   - One-on-one meetings with venture capitalists
+
+3. **Women in Tech Symposium** - October 28 at SF Design Center
+   - Focus on diversity and inclusion
+   - Leadership workshops and career development
+   - Networking with 500+ women in tech
+
+Which event would you like to know more about? I can provide detailed schedules, speaker information, or help with registration.`;
+            }
+            else if (lowerMessage.includes('ticket') || lowerMessage.includes('purchase') || lowerMessage.includes('buy')) {
+                return `I can help you with ticket purchases! Here's how:
+
+**Ticket Options Available:**
+- General Admission: $199 (access to all sessions)
+- VIP Pass: $499 (includes networking events, meals, and premium seating)
+- Student Pass: $99 (valid student ID required)
+
+**How to Purchase:**
+1. Visit the event page on Stream Connect
+2. Select your ticket type and quantity
+3. Choose payment method (credit card, PayPal, or crypto)
+4. Complete the checkout process
+
+**Special Offers:**
+- Early bird discount: 20% off if purchased 30 days in advance
+- Group discount: 15% off for 5+ tickets
+- Referral program: Get $50 credit for each friend who signs up
+
+Would you like me to direct you to a specific event's ticket page or help you with any payment issues?`;
+            }
+            else if (lowerMessage.includes('network') || lowerMessage.includes('connect') || lowerMessage.includes('meet')) {
+                return `Great! Networking is a key part of event success. Here's how I can help:
+
+**AI-Powered Matchmaking:**
+Our system analyzes profiles, interests, and goals to suggest the most relevant connections for you. Based on your profile, I've identified:
+
+**Potential Connections:**
+- Sarah Johnson (AI Research Director) - Shares your interest in machine learning
+- Michael Chen (Startup Founder) - Looking for technical co-founders
+- Dr. Elena Rodriguez (Professor) - Expert in your field of study
+
+**Networking Features:**
+1. **AI Matchmaking**: Get daily connection suggestions
+2. **Interest-based Groups**: Join discussions on specific topics
+3. **Virtual Business Cards**: Digital profiles with QR codes
+4. **Meeting Scheduler**: Arrange 1:1 meetings during events
+
+Would you like me to:
+- Show you more potential connections?
+- Help you schedule meetings?
+- Suggest networking events based on your industry?`;
+            }
+            else if (lowerMessage.includes('refund') || lowerMessage.includes('cancel') || lowerMessage.includes('money back')) {
+                return `I understand you have questions about refunds. Here's our policy:
+
+**Refund Policy:**
+- Full refund: Available up to 30 days before the event
+- Partial refund (50%): Available 15-29 days before the event
+- No refund: Within 14 days of the event (except for special circumstances)
+
+**How to Request a Refund:**
+1. Go to "My Events" in your dashboard
+2. Select the event you want to cancel
+3. Click "Request Refund"
+4. Provide a reason for cancellation
+5. Submit the request
+
+**Processing Time:**
+- Refunds typically process within 5-7 business days
+- You'll receive confirmation via email
+- The refund will go back to your original payment method
+
+**Exceptions:**
+- Event cancellation by organizer: Full automatic refund
+- Medical emergencies: Case-by-case review with documentation
+
+Do you need help with a specific refund request or would you like me to check your eligibility for a particular event?`;
+            }
+            else if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                return `Hello! I'm your Stream Connect AI Assistant. I'm here to help you with all things related to events, networking, and connections on our platform.
+
+I see you're using our ${currentModel} model. I can help you with:
+- Finding and registering for events
+- Purchasing and managing tickets
+- Networking with other attendees
+- Getting event recommendations
+- Answering questions about our platform
+- Providing directions and event logistics
+
+What would you like to explore today?`;
+            }
+            else {
+                // Generic response for other queries
+                const responses = [
+                    `I understand you're asking about "${userMessage}". As your Stream Connect AI Assistant, I can help you find relevant events, connect with like-minded professionals, or answer questions about our platform features. Could you provide more details about what you're looking for?`,
+                    
+                    `That's an interesting question! Based on your query about "${userMessage}", I recommend checking out our event discovery feature. I can also help you with ticket purchases, event recommendations, or connecting with other attendees who share similar interests.`,
+                    
+                    `Thanks for your question! I'm here to help you make the most of Stream Connect. For "${userMessage}", I suggest exploring our upcoming events section or using our AI matchmaking feature to connect with professionals in your field. Would you like me to show you how?`,
+                    
+                    `I've processed your query about "${userMessage}". As an AI assistant specialized in event management and networking, I can provide personalized recommendations, help with ticket issues, or connect you with relevant resources. What specific aspect would you like me to focus on?`
+                ];
+                
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+        }
+        
+        // Show typing indicator
+        function showTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            typingIndicator.style.display = 'flex';
+            scrollToBottom();
+        }
+        
+        // Hide typing indicator
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            typingIndicator.style.display = 'none';
+        }
+        
+        // Scroll to bottom of chat
+        function scrollToBottom() {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Ask a suggested question
+        function askQuestion(button) {
+            const question = button.textContent.trim();
+            const chatInput = document.getElementById('chatInput');
+            chatInput.value = question;
+            chatInput.style.height = 'auto';
+            chatInput.style.height = (chatInput.scrollHeight) + 'px';
+            chatInput.focus();
+        }
+        
+        // Select AI model
+        function selectModel(element, modelName) {
+            // Remove active class from all models
+            document.querySelectorAll('.model-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to selected model
+            element.classList.add('active');
+            
+            // Save selection
+            localStorage.setItem('aiModel', modelName);
+            
+            // Show notification
+            showNotification(`Switched to ${modelName.toUpperCase()} model`, 'info');
+            
+            // Update AI status
+            updateAIStatus(modelName);
+        }
+        
+        // Update AI status display
+        function updateAIStatus(modelName) {
+            const statusElement = document.querySelector('.ai-status span');
+            if (statusElement) {
+                statusElement.textContent = `Using ${modelName.toUpperCase()}`;
+            }
+        }
+        
+        // Copy message to clipboard
+        function copyMessage(button) {
+            const messageContent = button.closest('.message').querySelector('.message-content').textContent;
+            navigator.clipboard.writeText(messageContent).then(() => {
+                showNotification('Message copied to clipboard!', 'success');
+            });
+        }
+        
+        // Suggest related questions
+        function suggestRelated(button) {
+            const messageContent = button.closest('.message').querySelector('.message-content').textContent;
+            
+            // Generate related questions based on message content
+            const relatedQuestions = [
+                "Can you tell me more about the speakers?",
+                "What are the networking opportunities?",
+                "How do I register for this event?",
+                "Are there any discounts available?",
+                "What's the schedule for this event?",
+                "Can you recommend similar events?"
+            ];
+            
+            // Show related questions in a notification
+            showNotification(`Related questions: ${relatedQuestions.slice(0, 3).join(', ')}`, 'info');
+        }
+        
+        // Rate a response
+        function rateResponse(button, rating) {
+            const message = button.closest('.message');
+            if (rating === 'positive') {
+                button.innerHTML = '<i class="fas fa-thumbs-up"></i> Thank you!';
+                button.style.color = '#10b981';
+                showNotification('Thanks for your feedback! This helps improve the AI.', 'success');
+            } else {
+                // For negative feedback
+                button.innerHTML = '<i class="fas fa-thumbs-down"></i> Noted';
+                button.style.color = '#ef4444';
+                showNotification('Sorry to hear that. How can I improve my response?', 'warning');
+            }
+            
+            // Disable both rating buttons
+            const ratingButtons = message.querySelectorAll('.action-btn');
+            ratingButtons.forEach(btn => {
+                if (btn.textContent.includes('thumbs')) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                    btn.style.cursor = 'default';
+                }
+            });
+        }
+        
+        // Show event details
+        function showEventDetails(eventName) {
+            showNotification(`Opening details for "${eventName}"...`, 'info');
+            // In a real app, this would redirect to the event page
+            setTimeout(() => {
+                window.location.href = `event-details.html?event=${encodeURIComponent(eventName)}`;
+            }, 1000);
+        }
+        
+        // Clear chat
+        function clearChat() {
+            if (confirm('Are you sure you want to clear the chat history? This action cannot be undone.')) {
+                const chatMessages = document.getElementById('chatMessages');
+                
+                // Keep only the welcome message
+                const welcomeMessage = chatMessages.querySelector('.ai-message');
+                chatMessages.innerHTML = '';
+                chatMessages.appendChild(welcomeMessage);
+                
+                showNotification('Chat cleared successfully', 'success');
+            }
+        }
+        
+        // Export chat
+        function exportChat() {
+            const messages = document.querySelectorAll('.message');
+            let chatText = 'Stream Connect AI Assistant Chat History\n';
+            chatText += '=========================================\n\n';
+            
+            messages.forEach(message => {
+                const sender = message.classList.contains('user-message') ? 'You' : 'AI Assistant';
+                const time = message.querySelector('.message-time').textContent;
+                const content = message.querySelector('.message-content').textContent;
+                
+                chatText += `[${time}] ${sender}:\n${content}\n\n`;
+            });
+            
+            // Create and download file
+            const blob = new Blob([chatText], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `stream-connect-chat-${new Date().toISOString().slice(0, 10)}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            showNotification('Chat exported successfully', 'success');
+        }
+        
+        // Load chat history
+        function loadChatHistory(historyId) {
+            // In a real app, this would load from an API or localStorage
+            showNotification(`Loading chat history: ${historyId}...`, 'info');
+            
+            // Simulate loading
+            setTimeout(() => {
+                // Clear current chat (keep welcome message)
+                const chatMessages = document.getElementById('chatMessages');
+                const welcomeMessage = chatMessages.querySelector('.ai-message');
+                chatMessages.innerHTML = '';
+                chatMessages.appendChild(welcomeMessage);
+                
+                // Add history messages
+                const historyMessages = getHistoryMessages(historyId);
+                historyMessages.forEach(msg => {
+                    addMessageToChat(msg.content, msg.sender);
+                });
+                
+                showNotification('Chat history loaded', 'success');
+                scrollToBottom();
+            }, 500);
+        }
+        
+        // Get history messages (simulated)
+        function getHistoryMessages(historyId) {
+            const histories = {
+                'tech-events': [
+                    { sender: 'user', content: 'What are the best tech events in San Francisco?' },
+                    { sender: 'ai', content: 'Here are the top tech events in SF this month...' },
+                    { sender: 'user', content: 'Tell me more about the AI conference' },
+                    { sender: 'ai', content: 'The AI Conference focuses on machine learning, neural networks, and practical applications...' }
+                ],
+                'ticket-help': [
+                    { sender: 'user', content: 'How do I buy tickets for the startup event?' },
+                    { sender: 'ai', content: 'You can purchase tickets directly through our platform...' },
+                    { sender: 'user', content: 'What payment methods do you accept?' },
+                    { sender: 'ai', content: 'We accept credit cards, PayPal, and cryptocurrency...' }
+                ],
+                'networking': [
+                    { sender: 'user', content: 'How can I network at events?' },
+                    { sender: 'ai', content: 'We offer AI-powered matchmaking to connect you with relevant professionals...' },
+                    { sender: 'user', content: 'Can you suggest people to connect with?' },
+                    { sender: 'ai', content: 'Based on your profile, I recommend connecting with these 5 people...' }
+                ]
+            };
+            
+            return histories[historyId] || [];
+        }
+        
+        // Save to history
+        function saveToHistory(userMessage, aiResponse) {
+            // In a real app, this would save to localStorage or an API
+            const chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+            chatHistory.push({
+                timestamp: new Date().toISOString(),
+                user: userMessage,
+                ai: aiResponse
+            });
+            
+            // Keep only last 50 conversations
+            if (chatHistory.length > 50) {
+                chatHistory.shift();
+            }
+            
+            localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        }
+        
+        // Refresh insights
+        function refreshInsights() {
+            showNotification('Refreshing AI insights...', 'info');
+            
+            // Simulate API call
+            setTimeout(() => {
+                showNotification('Insights updated with latest data', 'success');
+            }, 1500);
+        }
+        
+        // Attach file
+        function attachFile() {
+            showNotification('File attachment feature coming soon!', 'info');
+        }
+        
+        // Use voice input
+        function useVoiceInput() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                showNotification('Voice input activated. Start speaking...', 'info');
+                
+                // In a real app, this would use the Web Speech API
+                setTimeout(() => {
+                    const sampleQuestions = [
+                        "What events are happening this weekend?",
+                        "How do I connect with other attendees?",
+                        "Can you recommend networking events for developers?",
+                        "What's the schedule for the tech summit?"
+                    ];
+                    
+                    const randomQuestion = sampleQuestions[Math.floor(Math.random() * sampleQuestions.length)];
+                    const chatInput = document.getElementById('chatInput');
+                    chatInput.value = randomQuestion;
+                    chatInput.style.height = 'auto';
+                    chatInput.style.height = (chatInput.scrollHeight) + 'px';
+                    
+                    showNotification('Voice input processed', 'success');
+                }, 2000);
+            } else {
+                showNotification('Voice input is not supported in your browser', 'warning');
+            }
+        }
+        
+        // Toggle context mode
+        function toggleContextMode() {
+            const isContextMode = localStorage.getItem('contextMode') === 'true';
+            localStorage.setItem('contextMode', !isContextMode);
+            
+            if (!isContextMode) {
+                showNotification('Context mode enabled. AI will remember conversation history.', 'success');
+            } else {
+                showNotification('Context mode disabled. Each message will be treated independently.', 'info');
+            }
+        }
+        
+        // Suggest questions
+        function suggestQuestions() {
+            const questions = [
+                "What are the upcoming AI conferences?",
+                "How can I get a discount on event tickets?",
+                "What networking events are good for startups?",
+                "How do I become an event speaker?",
+                "What's the cancellation policy for events?",
+                "Can you help me find events in New York?"
+            ];
+            
+            let suggestionsHTML = '<strong>Suggested Questions:</strong><br>';
+            questions.forEach((q, i) => {
+                suggestionsHTML += `${i+1}. ${q}<br>`;
+            });
+            
+            showNotification(suggestionsHTML, 'info');
+        }
+        
+        // Toggle dark mode
+        function toggleDarkMode() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            
+            if (isDarkMode) {
+                document.body.classList.remove('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('darkMode', 'false');
+                showNotification('Light mode activated', 'info');
+            } else {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('darkMode', 'true');
+                showNotification('Dark mode activated', 'info');
+            }
+        }
+        
+        function enableDarkMode() {
+            document.body.classList.add('dark-mode');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            const fullscreenToggle = document.getElementById('fullscreenToggle');
+            
+            if (!document.fullscreenElement) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                }
+                fullscreenToggle.innerHTML = '<i class="fas fa-compress"></i>';
+                showNotification('Fullscreen mode activated', 'info');
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+                fullscreenToggle.innerHTML = '<i class="fas fa-expand"></i>';
+                showNotification('Fullscreen mode exited', 'info');
+            }
+        }
+        
+        // Handle fullscreen change events
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        
+        function handleFullscreenChange() {
+            const fullscreenToggle = document.getElementById('fullscreenToggle');
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                fullscreenToggle.innerHTML = '<i class="fas fa-expand"></i>';
+            }
+        }
+        
+        // Search functionality
+        function performSearch() {
+            const searchInput = document.querySelector('.search-input');
+            const query = searchInput.value.trim();
+            
+            if (query === '') {
+                showNotification('Please enter a search term', 'warning');
+                return;
+            }
+            
+            showNotification(`Searching for: "${query}"`, 'info');
+            
+            // Simulate search
+            setTimeout(() => {
+                const results = [
+                    'AI Assistant features',
+                    'Event search functionality',
+                    'Chatbot settings',
+                    'How to use the AI Assistant'
+                ];
+                
+                const randomResult = results[Math.floor(Math.random() * results.length)];
+                showNotification(`Found results for "${query}". Try: "${randomResult}"`, 'success');
+            }, 1000);
+        }
+        
+        // Notification click handlers
+        function openNotification(type) {
+            switch(type) {
+                case 'ai-assistant-update':
+                    showNotification('Opening AI Assistant updates...', 'info');
+                    break;
+                case 'event-match':
+                    showNotification('Opening event matches...', 'info');
+                    window.location.href = 'ai-matchmaking.html';
+                    break;
+                case 'chatbot-feedback':
+                    showNotification('Opening feedback...', 'info');
+                    break;
+                default:
+                    window.location.href = 'notifications.html';
+            }
+        }
+        
+        // Enhanced Notification System
+        function showNotification(message, type) {
+            // Remove any existing notifications
+            const existingAlerts = document.querySelectorAll('.alert-notification');
+            existingAlerts.forEach(alert => alert.remove());
+            
+            // Determine icon and color
+            let icon, colorClass;
+            switch(type) {
+                case 'success':
+                    icon = 'fa-check-circle';
+                    colorClass = 'alert-success';
+                    break;
+                case 'warning':
+                    icon = 'fa-exclamation-triangle';
+                    colorClass = 'alert-warning';
+                    break;
+                case 'danger':
+                    icon = 'fa-times-circle';
+                    colorClass = 'alert-danger';
+                    break;
+                case 'info':
+                default:
+                    icon = 'fa-info-circle';
+                    colorClass = 'alert-info';
+                    break;
+            }
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert ${colorClass} alert-notification alert-dismissible fade show`;
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 me-3">
+                        <i class="fas ${icon} fa-lg"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }
+            }, 5000);
+        }
+        
+        // Logout function
+        function logout() {
+            const confirmLogout = confirm('Are you sure you want to logout from Stream Connect?');
+            if (confirmLogout) {
+                showNotification('Logging out...', 'info');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+            }
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            // Ctrl/Cmd + K for search
+            if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+                event.preventDefault();
+                const searchInput = document.querySelector('.search-input');
+                if (searchInput) {
+                    searchInput.focus();
+                    searchInput.select();
+                }
+            }
+            
+            // Ctrl/Cmd + D for dark mode
+            if ((event.ctrlKey || event.metaKey) && event.key === 'd') {
+                event.preventDefault();
+                toggleDarkMode();
+            }
+            
+            // Escape to close mobile menu
+            if (event.key === 'Escape') {
+                const mobileMenu = document.getElementById('mobileMenu');
+                if (mobileMenu && mobileMenu.classList.contains('active')) {
+                    mobileMenu.classList.remove('active');
+                    const icon = document.getElementById('mobileMenuToggle').querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            }
+        });
+        
+        // Window resize handling
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                // Close mobile menu on resize if window is large
+                if (window.innerWidth >= 992) {
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+                    if (mobileMenu && mobileMenu.classList.contains('active')) {
+                        mobileMenu.classList.remove('active');
+                        const icon = mobileMenuToggle.querySelector('i');
+                        if (icon) {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                }
+            }, 250);
+        });
+    </script>
+</body>
+</html>
